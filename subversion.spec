@@ -13,7 +13,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.33.1
-Release:	2
+Release:	3
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
