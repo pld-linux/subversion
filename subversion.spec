@@ -1,3 +1,5 @@
+# TODO:
+# - move modules to some directory (+ link with rpath)
 Summary:	A Concurrent Versioning system similar to but better than CVS.
 Summary(pl):	System Concurrent Versioning System ale lepszy ni¿ CVS
 Name:		subversion
@@ -136,7 +138,7 @@ for i in 1 2; do
 	base_libdir=$RPM_BUILD_ROOT%{_libdir} \
 	bindir=$RPM_BUILD_ROOT%{_bindir} \
 	fs_bindir=$RPM_BUILD_ROOT%{_bindir} \
-	includedir=$RPM_BUILD_ROOT%{_includedir}/svn
+	includedir=$RPM_BUILD_ROOT%{_includedir}/%{name}
 done
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_libexecdir}
@@ -181,14 +183,19 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc *.gz
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/lib*.so.*
+%attr(755,root,root) %{_libdir}/libsvn_[cdsw]*.so.*
+%attr(755,root,root) %{_libdir}/libsvn_ra.so.*
+%attr(755,root,root) %{_libdir}/libsvn_fs*.so*
+%attr(755,root,root) %{_libdir}/libsvn_ra_*.so*
+%attr(755,root,root) %{_libdir}/libsvn_repos.so*
 %{_mandir}/man1/*
 %{_infodir}/svn*
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/svn
-%attr(755,root,root) %{_libdir}/lib*.so
+%{_includedir}/%{name}
+%attr(755,root,root) %{_libdir}/libsvn_[cdsw]*.so
+%attr(755,root,root) %{_libdir}/libsvn_ra.so
 %attr(755,root,root) %{_libdir}/lib*.la
 
 %files static
