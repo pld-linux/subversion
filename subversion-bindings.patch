@@ -29,7 +29,7 @@ diff -urN subversion-0.35.0.org/subversion/bindings/swig/perl/Makefile.PL subver
  my $apr_config = $ENV{APR_CONFIG} || '/usr/local/lib/apache2/apr-config';
  $apr_config = 'apr-config' unless -e $apr_config;
 +my $apu_config = $ENV{APU_CONFIG} || '/usr/local/lib/apache2/apu-config';
-+$apr_config = 'apu-config' unless -e $apu_config;
++$apu_config = 'apu-config' unless -e $apu_config;
  
  my $apr_shlib_path_var = `$apr_config --shlib-path-var`;
  my $apr_cflags = `$apr_config --includes`;
