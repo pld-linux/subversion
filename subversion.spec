@@ -335,7 +335,7 @@ ln -s /usr/share/sgml/docbook/xsl-stylesheets doc/book/tools/xsl
 
 # prepare for %%doc below
 mv -f doc/book/book/html-chunk svn-handbook
-mkdir svn-handbook/images/
+#mkdir svn-handbook/images/
 cp -f doc/book/book/images/*.png svn-handbook/images/
 
 %install
