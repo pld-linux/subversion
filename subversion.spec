@@ -126,7 +126,7 @@ Summary(pl):	Pliki nag³ówkowe i dokumetacja do subversion
 Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	apr-util-devel >= 1:0.9.5
+Requires:	apr-util-devel >= 1:1.0.0
 %{!?with_internal_neon:Requires:	neon-devel >= 0.24.6}
 Obsoletes:	libsubversion0-devel
 
