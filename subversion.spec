@@ -1,12 +1,12 @@
 %include        /usr/lib/rpm/macros.python
 %define requires_eq_to()  %(LC_ALL="C" echo '%2' | xargs -r rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
-%define	repov 4038
+%define	repov 4218
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.22.1
-Release:	0.2
+Version:	0.23.0
+Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
@@ -230,7 +230,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc BUGS CHANGES COPYING IDEAS INSTALL README
 %doc svn-handbook doc/book/misc-docs/misc-docs.html 
 %attr(755,root,root) %{_bindir}/svn*
-%exclude %{_bindir}/svn-config
+#%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
 %{_infodir}/svn*
 
@@ -241,7 +241,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/%{name}*
-%attr(755,root,root) %{_bindir}/svn-config
+#%attr(755,root,root) %{_bindir}/svn-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 
