@@ -1,4 +1,4 @@
-%define	repov	2872
+%define	repov	3143
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
@@ -11,16 +11,15 @@ Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-r%{repov}.tar.gz
 Source1:	%{name}-dav_svn.conf
 Patch0:		%{name}-lib.patch
 Patch1:		%{name}-python.patch
-Patch2:		%{name}-DESTDIR.patch
 URL:		http://subversion.tigris.org/
-BuildRequires:	apache-devel >= 2.0.39
-BuildRequires:	apr-devel >= 2.0.39
+BuildRequires:	apache-devel >= 2.0.42
+BuildRequires:	apr-devel >= 2.0.42
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db4-devel >= 4.0.14
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
-BuildRequires:	neon-devel >= 0.21.3
+BuildRequires:	neon-devel >= 0.23.3
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	swig >= 1.3.12
@@ -122,8 +121,8 @@ Dowi±zania do subversion dla pythona.
 Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
-Requires:	apache >= 2.0.35
-Requires:	apache-mod_dav >= 2.0.35
+%requires_eq	apache
+%requires_eq	apache-mod_dav
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -135,7 +134,6 @@ Modu³ apache: Serwer Subversion.
 %setup -q -n %{name}-r%{repov}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
