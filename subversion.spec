@@ -329,17 +329,17 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install \
-%if !%{with net_client_only} && %{with python}
+%if !%{with net_client_only}
+%if %{with python}
 	install-swig-py \
+%endif
+%if %{with perl}
+	install-swig-pl \
+%endif
 %endif
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
-
-%if !%{with net_client_only} && %{with perl}
-%{__make} install-swig-pl
-	DESTDIR=$RPM_BUILD_ROOT
-%endif
 
 %if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
