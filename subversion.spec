@@ -393,6 +393,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
+%post   -n python-subversion -p /sbin/ldconfig
+%postun -n perl-subversion -p /sbin/ldconfig
 
 %post svnserve
 if [ -f /var/lock/subsys/svnserve ]; then
@@ -441,6 +443,9 @@ fi
 %files libs -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so.*
+%if %{with perl} || %{with python}
+%exclude %{_libdir}/lib*_swig_*.so.*
+%endif
 
 %files devel
 %defattr(644,root,root,755)
@@ -484,6 +489,7 @@ fi
 %{py_sitedir}/libsvn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
+%attr(755,root,root) %{_libdir}/lib*_swig_py*.so.*
 %endif
 
 %if %{with perl}
@@ -495,6 +501,7 @@ fi
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
+%attr(755,root,root) %{_libdir}/lib*_swig_perl*.so.*
 %endif
 
 %if %{with apache}
