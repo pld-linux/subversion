@@ -4,7 +4,7 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.26
+Version:	0.26.0
 Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
