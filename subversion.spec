@@ -13,7 +13,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.33.1
-Release:	3
+Release:	4
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
@@ -22,6 +22,7 @@ Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
+Patch0:		%{name}-perl.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -31,7 +32,7 @@ BuildRequires:  db-devel >= 4.1.25
 BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
 BuildRequires:  swig-python >= 1.3.17
-BuildRequires:	perl-devel
+BuildRequires:	perl-devel >= 5.8.0
 BuildRequires:  rpm-perlprov
 %endif
 BuildRequires:	apr-devel >= 1:0.9.5
@@ -232,6 +233,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
