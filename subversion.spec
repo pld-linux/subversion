@@ -12,12 +12,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.35.1
-Release:	2
+Version:	0.36.0
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
-# Source0-md5:	c4473988acdd82e8b0e176eefc7d0fb7
+# Source0-md5:	84749fc90377e8ac23dbcd7aa4d99f75
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
