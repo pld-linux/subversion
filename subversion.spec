@@ -1,5 +1,8 @@
-%bcond_with	internal_neon
-%bcond_with	net_client_only
+#
+# Conditional build:
+%bcond_with	internal_neon		# build with internal neon
+%bcond_with	net_client_only		# build only net client
+#	
 %include        /usr/lib/rpm/macros.python
 %define	distdir	15/6494
 Summary:	A Concurrent Versioning system similar to but better than CVS
@@ -36,8 +39,6 @@ BuildRequires:	libxslt-progs
 BuildRequires:  python >= 2.2
 BuildRequires:  rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
-Requires(post):	/usr/sbin/fix-info-dir
-Requires(postun):	/usr/sbin/fix-info-dir
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_apachelibdir	/usr/lib/apache
@@ -137,7 +138,6 @@ Summary:	Subversion tools and scripts
 Summary(pl):	Narzêdzia oraz skrypty dla subversion
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
-Requires:	python >= 2.2
 %pyrequires_eq	python
 Requires:	python-rcsparse
 Requires:	python-subversion = %{version}
@@ -154,9 +154,8 @@ Summary:	Subversion python bindings
 Summary(pl):	Dowi±zania do subversion dla pythona
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
-Requires:	python >= 2.2
-Obsoletes:	subversion-python
 %pyrequires_eq	python
+Obsoletes:	subversion-python
 
 %description -n python-subversion
 Subversion python bindings.
