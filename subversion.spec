@@ -13,13 +13,14 @@ Patch0:		%{name}-lib.patch
 Patch1:		%{name}-apache2.patch
 URL:		http://subversion.tigris.org/
 BuildRequires:	apache-devel >= 2.0.35
+BuildRequires:	apr-devel >= 2.0.35
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db4-devel >= 4.0.14
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4
 BuildRequires:	neon-devel >= 0.19.2
-BuildRequires:	python >= 2.0
+BuildRequires:	python >= 2.2
 BuildRequires:	texinfo
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(post):	/sbin/ldconfig
@@ -125,7 +126,7 @@ rm -rf expat-lite/xmlrole* expat-lite/xmltok* neon apr
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd,%{_libexecdir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_libexecdir}}
 
 # relinking sux
 for i in 1 2; do
@@ -142,7 +143,7 @@ for i in 1 2; do
 done
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_libexecdir}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/mod_dav_svn.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
 
 gzip -9nf BUGS CHANGES IDEAS INSTALL README
 
@@ -155,10 +156,6 @@ gzip -9nf BUGS CHANGES IDEAS INSTALL README
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post -n apache-mod_dav_svn
-%{_sbindir}/apxs -e -a -n dav_svn %{_libexecdir}/libmod_dav_svn.so 1>&2
-if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_dav_svn.conf" /etc/httpd/httpd.conf; then
-        echo "Include /etc/httpd/mod_dav_svn.conf" >> /etc/httpd/httpd.conf
-fi
 if [ -f /var/lock/subsys/httpd ]; then
         /etc/rc.d/init.d/httpd restart 1>&2
 else
@@ -167,10 +164,6 @@ fi
 
 %preun -n apache-mod_dav_svn
 if [ "$1" = "0" ]; then
-        %{_sbindir}/apxs -e -A -n dav_svn %{_libexecdir}/libmod_dav_svn.so 1>&2
-        grep -v "^Include.*mod_dav_svn.conf" /etc/httpd/httpd.conf > \
-                /etc/httpd/httpd.conf.tmp
-        mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
         if [ -f /var/lock/subsys/httpd ]; then
                 /etc/rc.d/init.d/httpd restart 1>&2
         fi
@@ -204,5 +197,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/mod_dav_svn.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/httpd.conf/*_mod_dav_svn.conf
 %attr(755,root,root) %{_libexecdir}/*.so
