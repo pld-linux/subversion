@@ -1,4 +1,5 @@
 %bcond_with	internal_neon
+%bcond_with	net_client_only
 %include        /usr/lib/rpm/macros.python
 %define	repov 5977
 Summary:	A Concurrent Versioning system similar to but better than CVS
@@ -15,22 +16,24 @@ Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{v
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
+%if ! %{with net_client_only}
 BuildRequires:	apache-devel >= 2.0.47-0.6
+BuildRequires:  rpmbuild(macros) >= 1.120
+BuildRequires:  swig >= 1.3.17
+BuildRequires:  swig-python >= 1.3.17
+BuildRequires:  db-devel >= 4.1.25
+%endif
+BuildRequires:  python >= 2.2
+BuildRequires:  rpm-pythonprov >= 4.0.2-50
 BuildRequires:	apr-devel >= 1:0.9.4
 BuildRequires:	apr-util-devel >= 1:0.9.4
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
-BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	docbook-style-xsl >= 1.60.1
+BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	libxslt-progs
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
-BuildRequires:	python >= 2.2
-BuildRequires:	rpm-pythonprov >= 4.0.2-50
-BuildRequires:	rpmbuild(macros) >= 1.120
-BuildRequires:	swig >= 1.3.17
-BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	texinfo
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
@@ -182,17 +185,28 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 # don't enable dso - currently it's broken
 %configure \
+%if %{with net_client_only}
+	--without-apache \
+	--without-swig \
+	--without-apxs \
+	--without-berkeley-db \
+%else
 	--disable-dso \
 	--disable-mod-activation \
+	--with-apxs=%{_sbindir}/apxs \
+	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
+%endif
 	%{!?with_internal_neon:--with-neon=%{_prefix}} \
 	--with-apr=%{_bindir}/apr-config \
-	--with-apr-util=%{_bindir}/apu-config \
-	--with-apxs=%{_sbindir}/apxs \
-	--with-berkeley-db=%{_includedir}/db4:%{_libdir}
+	--with-apr-util=%{_bindir}/apu-config
+
 %{__make}
+
+%if ! %{with net_client_only}
 %{__make} swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
+%endif
 
 # build documentation; build process for documentation is severely
 # braindamaged -- authors suggests to untar docbook distribution in
@@ -210,7 +224,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_i
 
 %{__make} LC_ALL=C \
 	install \
-	install-swig-py \
+	%{!?with_net_client_only:install-swig-py} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
@@ -219,8 +233,10 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
 install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
+%if ! %{with net_client_only}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -273,6 +289,8 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
+%if ! %{with net_client_only}
+
 %files -n python-subversion
 %defattr(644,root,root,755)
 %doc tools/backup tools/cvs2svn/*.py tools/examples/*.py
@@ -292,3 +310,5 @@ fi
 %doc subversion/mod_authz_svn/INSTALL
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
+
+%endif
