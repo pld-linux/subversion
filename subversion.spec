@@ -96,10 +96,8 @@ Biblioteka statyczna subversion.
 Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
-Requires:	apache(EAPI) >= 2.0.35
+Requires:	apache >= 2.0.35
 Requires:	apache-mod_dav >= 2.0.35
-Requires(post):	%{_sbindir}/apxs
-Requires(preun):%{_sbindir}/apxs
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -141,8 +139,7 @@ for i in 1 2; do
 	swig_py_libdir=$RPM_BUILD_ROOT%{_libdir} \
 	bindir=$RPM_BUILD_ROOT%{_bindir} \
 	fs_bindir=$RPM_BUILD_ROOT%{_bindir} \
-	includedir=$RPM_BUILD_ROOT%{_includedir}/%{name} \
-	
+	includedir=$RPM_BUILD_ROOT%{_includedir}/%{name}
 done
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_libexecdir}
