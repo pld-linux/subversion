@@ -1,18 +1,18 @@
 %bcond_with	internal_neon
 %bcond_with	net_client_only
 %include        /usr/lib/rpm/macros.python
-%define	repov 5977
+%define	distdir	15/6494
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.29.0
-Release:	0.3
+Version:	0.30.0
+Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
-Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
-# Source0-md5:	5de4d92eae7ea5d83fe6c3964a08e261
+Source0:	http://subversion.tigris.org/files/documents/%{distdir}/subversion-%{version}.tar.gz
+# Source0-md5:	9dac76a67a217dc6b7f63259761ff93f
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
@@ -269,7 +269,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc BUGS CHANGES COPYING IDEAS INSTALL README
+%doc BUGS CHANGES COPYING INSTALL README
 %doc svn-handbook doc/book/misc-docs/misc-docs.html
 %attr(755,root,root) %{_bindir}/svn*
 #%exclude %{_bindir}/svn-config
