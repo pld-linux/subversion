@@ -7,7 +7,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.29.0
-Release:	0.1
+Release:	0.2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
