@@ -15,8 +15,9 @@ Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{v
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
-BuildRequires:	apache-devel >= 2.0.47-0.2
-BuildRequires:	apr-devel >= 2.0.47-0.2
+BuildRequires:	apache-devel >= 2.0.47-0.6
+BuildRequires:	apr-devel >= 1:0.9.4
+BuildRequires:	apr-util-devel >= 1:0.9.4
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db-devel >= 4.1.25
