@@ -11,6 +11,7 @@ License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
 Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
+# Source0-md5:	59661f2145976437b371a0ab3a555dbd
 Source1:	%{name}-dav_svn.conf
 URL:		http://subversion.tigris.org/
 BuildRequires:	apache-devel >= 2.0.45-0.2
