@@ -214,7 +214,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_i
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
-install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/ 
+install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
@@ -248,7 +248,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc BUGS CHANGES COPYING IDEAS INSTALL README
-%doc svn-handbook doc/book/misc-docs/misc-docs.html 
+%doc svn-handbook doc/book/misc-docs/misc-docs.html
 %attr(755,root,root) %{_bindir}/svn*
 #%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
