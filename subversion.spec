@@ -1,17 +1,17 @@
 %bcond_with	internal_neon
 %include        /usr/lib/rpm/macros.python
-%define	repov 5870
+%define	repov 5977
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.28
+Version:	0.29.0
 Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
 Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
-# Source0-md5:	62a10c5ec13815e29f9bc100a1ee6dcc
+# Source0-md5:	5de4d92eae7ea5d83fe6c3964a08e261
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
@@ -23,7 +23,7 @@ BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	docbook-style-xsl >= 1.60.1
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
-%{!?with_internal_neon:BuildRequires:	neon-devel = 0.23.9}
+%{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	rpmbuild(macros) >= 1.120
@@ -253,6 +253,7 @@ fi
 %attr(755,root,root) %{_bindir}/svn*
 #%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
+%{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
 
 %files libs
 %defattr(644,root,root,755)
