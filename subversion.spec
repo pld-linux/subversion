@@ -54,7 +54,6 @@ BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.7}
 %if %{with python}
 BuildRequires:	python-devel >= 2.2
-BuildRequires:	rpm-pythonprov >= 4.0.2-50
 %endif
 BuildRequires:	texinfo
 BuildRequires:	which
