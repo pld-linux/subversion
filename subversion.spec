@@ -5,7 +5,7 @@ Summary:	A Concurrent Versioning system similar to but better than CVS.
 Summary(pl):	System Concurrent Versioning System ale lepszy ni¿ CVS
 Name:		subversion
 Version:	1587
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/%{name}-r%{version}.tar.gz
