@@ -52,7 +52,7 @@ BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_apachelibdir	/usr/lib/apache
+%define		_apachelibdir	/usr/%{_lib}/apache
 %define		_libexecdir	%{_libdir}/svn
 
 %description
