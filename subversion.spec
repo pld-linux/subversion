@@ -306,7 +306,12 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 # perl
 %if %{with perl}
-%{__make} swig-pl
+%{__make} swig-pl-lib
+odir=$(pwd)
+cd subversion/bindings/swig/perl/native
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+%{__make}
+cd $odir
 %endif
 %endif
 
@@ -328,23 +333,25 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
-# subversion perl bindings hack
-install -d $RPM_BUILD_ROOT%{_prefix}
-ln -s ../ $RPM_BUILD_ROOT%{_prefix}/local
-#
-
 %{__make} install \
-%if !%{with net_client_only}
-%if %{with python}
+%if !%{with net_client_only} && %{with python}
 	install-swig-py \
-%endif
-%if %{with perl}
-	install-swig-pl \
-%endif
 %endif
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
+
+%if !%{with net_client_only} && %{with perl}
+%{__make} install-swig-pl-lib \
+	DESTDIR=$RPM_BUILD_ROOT
+odir=$(pwd)
+cd subversion/bindings/swig/perl/native
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
+	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
+cd $odir
+%endif
 
 %if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
