@@ -44,8 +44,8 @@ BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 %endif
 %endif
-BuildRequires:	apr-devel >= 1:0.9.5
-BuildRequires:	apr-util-devel >= 1:0.9.5
+BuildRequires:	apr-devel >= 1:1.0.0
+BuildRequires:	apr-util-devel >= 1:1.0.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
@@ -301,8 +301,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 %endif
 	%{!?with_internal_neon:--with-neon=%{_prefix}} \
-	--with-apr=%{_bindir}/apr-config \
-	--with-apr-util=%{_bindir}/apu-config
+	--with-apr=%{_bindir}/apr-1-config \
+	--with-apr-util=%{_bindir}/apu-1-config
 
 %{__make}
 
