@@ -16,7 +16,9 @@ Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{v
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
-%if ! %{with net_client_only}
+%if %{with net_client_only}
+%global apache_modules_api 0
+%else
 BuildRequires:	apache-devel >= 2.0.47-0.6
 BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
