@@ -17,7 +17,7 @@ Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 %define	_rc	rc2
 Version:	1.1.0
-Release:	0.%{_rc}.1
+Release:	0.%{_rc}.2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}-%{_rc}.tar.bz2
@@ -179,7 +179,6 @@ Summary(pl):	Narzêdzia oraz skrypty dla subversion
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 %pyrequires_eq	python
-Requires:	bash-completion
 Requires:	python-rcsparse >= 0.1-0.20031026.0
 Requires:	python-subversion = %{version}
 Requires:	%{name} = %{version}-%{release}
@@ -189,6 +188,20 @@ Subversion tools and scripts.
 
 %description tools -l pl
 Narzêdzia oraz skrypty dla subversion.
+
+%package -n bash-completion-subversion
+Summary:	bash completion for subversion
+Summary(pl):	Dope³nienia basha dla subversion
+Group:		Applications/Shells
+Requires:	bash-completion
+Requires:	%{name} = %{version}-%{release}
+Conflicts:	%{name}-tools <= 1.1.0-0.rc2.1
+
+%description -n bash-completion-subversion
+Bash completion for subversion.
+
+%description -n bash-completion-subversion -l pl
+Dope³nienia basha dla subversion.
 
 %package -n python-subversion
 Summary:	Subversion python bindings
@@ -462,6 +475,8 @@ fi
 %files tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svn-hot-backup
+
+%files -n bash-completion-subversion
 /etc/bash_completion.d/%{name}
 
 %if %{with python}
