@@ -12,17 +12,18 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.33.1
-Release:	4
+Version:	0.34.0
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
-# Source0-md5:	2d45e838243cb0bc71c80582d089be15
+# Source0-md5:	52f3a73858566d4d7045e449d94390e3
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-perl.patch
+Patch1:		%{name}-svnlook.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -233,6 +234,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p0
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
@@ -278,8 +280,8 @@ cd ../../../../
 # build documentation; build process for documentation is severely
 # braindamaged -- authors suggests to untar docbook distribution in
 # build directory, hence the hack here
-%{__make} -C doc/book all-html \
-	XSL_DIR=/usr/share/sgml/docbook/xsl-stylesheets/
+ln -s /usr/share/sgml/docbook/xsl-stylesheets doc/book/tools/xsl
+%{__make} -C doc/book all-html
 
 # prepare for %%doc below
 mv -f doc/book/book/html-chunk svn-handbook
@@ -382,7 +384,6 @@ fi
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/%{name}*
-#%attr(755,root,root) %{_bindir}/svn-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %{_infodir}/svn*
