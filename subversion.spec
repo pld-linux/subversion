@@ -1,18 +1,17 @@
-# TODO:
-# - move modules to some directory (+ link with rpath)
-%define	snap	20020724
+%define	repov	2817
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
 Name:		subversion
 Version:	0.14.0
-Release:	0.%{snap}
+Release:	r%{repov}.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-%{snap}.tar.gz
+Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-r%{repov}.tar.gz
 Source1:	%{name}-dav_svn.conf
 Patch0:		%{name}-lib.patch
 Patch1:		%{name}-python.patch
+Patch2:		%{name}-DESTDIR.patch
 URL:		http://subversion.tigris.org/
 BuildRequires:	apache-devel >= 2.0.39
 BuildRequires:	apr-devel >= 2.0.39
@@ -132,17 +131,15 @@ Apache module: Subversion Server.
 Modu³ apache: Serwer Subversion.
 
 %prep
-%setup -q -n %{name}-%{snap}
+%setup -q -n %{name}-r%{repov}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
-# EXPAT is external so get rid of all except (patched) xmlparse.h
-rm -rf expat-lite/[a-w]*.[ch] expat-lite/xmldef.h expat-lite/xmlparse.c
-rm -rf expat-lite/xmlrole* expat-lite/xmltok* neon apr
 %configure \
-	--enable-dso \
+	--disable-dso \
 	--with-neon=%{_prefix} \
 	--with-apr=%{_bindir}/apr-config \
 	--with-apr-util=%{_bindir}/apu-config \
@@ -159,14 +156,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir}}
 
 %{__make} install \
 	INSTALL_MOD_SHARED=echo \
-	DESTDIR=$RPM_BUILD_ROOT \
-	libdir=$RPM_BUILD_ROOT%{_libdir} \
-	fs_libdir=$RPM_BUILD_ROOT%{_libdir} \
-	base_libdir=$RPM_BUILD_ROOT%{_libdir} \
-	swig_py_libdir=$RPM_BUILD_ROOT%{_libdir} \
-	bindir=$RPM_BUILD_ROOT%{_bindir} \
-	fs_bindir=$RPM_BUILD_ROOT%{_bindir} \
-	includedir=$RPM_BUILD_ROOT%{_includedir}/%{name}
+	DESTDIR=$RPM_BUILD_ROOT
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_apachelibdir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
@@ -212,11 +202,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libsvn_*.so*
+%attr(755,root,root) %{_libdir}/lib*.so.*
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/%{name}
+%{_includedir}/%{name}*
+%attr(755,root,root) %{_libdir}/lib*.so
 %attr(755,root,root) %{_libdir}/lib*.la
 
 %files static
