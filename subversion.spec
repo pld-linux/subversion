@@ -1,10 +1,10 @@
-%define	repov	2817
+%define	repov	2867
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
 Name:		subversion
 Version:	0.14.0
-Release:	r%{repov}.1
+Release:	r%{repov}.0
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-r%{repov}.tar.gz
@@ -104,17 +104,18 @@ Static subversion library.
 %description static -l pl
 Biblioteka statyczna subversion.
 
-%package python
+%package -n python-subversion
 Summary:	Subversion python bindings
 Summary(pl):	Dowi±zania do subversion dla pythona
 Group:		Development/Languages/Python
 Requires:	python >= 2.2
+Obsoletes:	subversion-python
 %pyrequires_eq	python
 
-%description python
+%description -n python-subversion
 Subversion python bindings.
 
-%description python -l pl
+%description -n python-subversion -l pl
 Dowi±zania do subversion dla pythona.
 
 %package -n apache-mod_dav_svn
@@ -138,6 +139,7 @@ Modu³ apache: Serwer Subversion.
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
+# don't enable dso - currently it's broken
 %configure \
 	--disable-dso \
 	--with-neon=%{_prefix} \
@@ -196,7 +198,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc  BUGS CHANGES IDEAS INSTALL README
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/svn*
+%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
 %{_infodir}/svn*
 
@@ -207,6 +210,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/%{name}*
+%attr(755,root,root) %{_bindir}/svn-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %attr(755,root,root) %{_libdir}/lib*.la
 
@@ -214,7 +218,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
-%files python
+%files -n python-subversion
 %defattr(644,root,root,755)
 %doc tools/backup tools/cvs2svn/*.py tools/examples/*.py
 %dir %{py_sitedir}/svn
