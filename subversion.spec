@@ -477,6 +477,7 @@ fi
 %attr(755,root,root) %{_bindir}/svn-hot-backup
 
 %files -n bash-completion-subversion
+%defattr(644,root,root,755)
 /etc/bash_completion.d/%{name}
 
 %if %{with python}
