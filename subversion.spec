@@ -119,7 +119,7 @@ rm -rf expat-lite/xmlrole* expat-lite/xmltok* neon apr
 %configure \
 	--enable-dso \
 	--with-neon \
-	--with-apr=%{_sbindir}/apr-config \
+	--with-apr=%{_bindir}/apr-config \
 	--with-apxs=%{_sbindir}/apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir}
 %{__make}
