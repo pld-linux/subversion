@@ -6,13 +6,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.30.0
+Version:	0.31.0
 Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-#Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
-Source0:	http://subversion.tigris.org/files/documents/%{distdir}/subversion-%{version}.tar.gz
-# Source0-md5:	9dac76a67a217dc6b7f63259761ff93f
+Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
+# Source0-md5:	a58df76993c1e6b1bfe80dd77d290ab2
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
@@ -254,7 +253,7 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_s
 install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %if ! %{with net_client_only}
-install tools/cvs2svn/cvs2svn.py	$RPM_BUILD_ROOT%{_bindir}
+install tools/cvs2svn/cvs2svn.py	$RPM_BUILD_ROOT%{_bindir}/cvs2svn
 install tools/cvs2svn/cvs2svn.1		$RPM_BUILD_ROOT%{_mandir}/man1
 cp tools/cvs2svn/README tools/cvs2svn/README.cvs2svn
 
