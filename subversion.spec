@@ -1,11 +1,11 @@
 # TODO:
 # - move modules to some directory (+ link with rpath)
-%define	snap	20020412
+%define	snap	20020724
 %include        /usr/lib/rpm/macros.python
-Summary:	A Concurrent Versioning system similar to but better than CVS.
-Summary(pl):	System Concurrent Versioning System ale lepszy ni¿ CVS
+Summary:	A Concurrent Versioning system similar to but better than CVS
+Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
 Name:		subversion
-Version:	0.11.0
+Version:	0.14.0
 Release:	0.%{snap}
 License:	Apache/BSD Style
 Group:		Development/Version Control
@@ -14,17 +14,17 @@ Source1:	%{name}-dav_svn.conf
 Patch0:		%{name}-lib.patch
 Patch1:		%{name}-python.patch
 URL:		http://subversion.tigris.org/
-BuildRequires:	apache-devel >= 2.0.35
-BuildRequires:	apr-devel >= 2.0.35
+BuildRequires:	apache-devel >= 2.0.39
+BuildRequires:	apr-devel >= 2.0.39
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db4-devel >= 4.0.14
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
-BuildRequires:	neon-devel >= 0.19.2
+BuildRequires:	neon-devel >= 0.21.3
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
-BuildRequires:	swig >= 1.3.11
+BuildRequires:	swig >= 1.3.12
 BuildRequires:	texinfo
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
@@ -137,15 +137,15 @@ Modu³ apache: Serwer Subversion.
 %patch1 -p1
 
 %build
-chmod +x ./autogen.sh
-./autogen.sh
+chmod +x ./autogen.sh && ./autogen.sh
 # EXPAT is external so get rid of all except (patched) xmlparse.h
 rm -rf expat-lite/[a-w]*.[ch] expat-lite/xmldef.h expat-lite/xmlparse.c
 rm -rf expat-lite/xmlrole* expat-lite/xmltok* neon apr
 %configure \
 	--enable-dso \
-	--with-neon \
+	--with-neon=%{_prefix} \
 	--with-apr=%{_bindir}/apr-config \
+	--with-apr-util=%{_bindir}/apu-config \
 	--with-apxs=%{_sbindir}/apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir}
 %{__make}
@@ -170,8 +170,6 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir}}
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_apachelibdir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
-
-gzip -9nf BUGS CHANGES IDEAS INSTALL README
 
 cd subversion/bindings/swig/python
 python setup.py install --root=$RPM_BUILD_ROOT
@@ -207,24 +205,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz notes/*.gz
+%doc  BUGS CHANGES IDEAS INSTALL README
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
 %{_infodir}/svn*
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libsvn_[cdsw]*.so.*
-%attr(755,root,root) %{_libdir}/libsvn_ra.so.*
-%attr(755,root,root) %{_libdir}/libsvn_fs*.so*
-%attr(755,root,root) %{_libdir}/libsvn_ra_*.so*
-%attr(755,root,root) %{_libdir}/libsvn_repos.so*
+%attr(755,root,root) %{_libdir}/libsvn_*.so*
 
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/%{name}
-%attr(755,root,root) %{_libdir}/libsvn_[cdsw]*.so
-%attr(755,root,root) %{_libdir}/libsvn_ra.so
 %attr(755,root,root) %{_libdir}/lib*.la
 
 %files static
