@@ -4,8 +4,8 @@
 #   without db => net_client_only - spec will be more simpler, I think)
 #
 # Conditional build:
-%bcond_with		internal_neon		# build with internal neon
-%bcond_with		net_client_only		# build only net client
+%bcond_with	internal_neon			# build with internal neon
+%bcond_with	net_client_only			# build only net client
 %bcond_without	python				# build without python bindings
 %bcond_without	perl				# build without perl bindings
 %bcond_without	apache				# build without apache support (webdav, etc)
