@@ -1,0 +1,13 @@
+Index: subversion/libsvn_repos/repos.c
+===================================================================
+--- subversion/libsvn_repos/repos.c	(revision 6695)
++++ subversion/libsvn_repos/repos.c	(working copy)
+@@ -413,7 +413,7 @@ create_hooks (svn_repos_t *repos, const 
+       APR_EOL_STR
+       "# Make sure that the log message contains some text."
+       APR_EOL_STR
+-      "SVNLOOK=/usr/local/bin/svnlook"
++      "SVNLOOK=/usr/bin/svnlook"
+       APR_EOL_STR
+       "LOG=`$SVNLOOK log -t \"$TXN\" \"$REPOS\"`"
+       APR_EOL_STR

@@ -1,20 +1,19 @@
-diff -urN subversion-0.33.1.org/subversion/bindings/swig/perl/Makefile.PL subversion-0.33.1/subversion/bindings/swig/perl/Makefile.PL
---- subversion-0.33.1.org/subversion/bindings/swig/perl/Makefile.PL	2003-11-30 10:35:26.391367742 +0100
-+++ subversion-0.33.1/subversion/bindings/swig/perl/Makefile.PL	2003-11-30 10:37:38.074975507 +0100
+diff -urN subversion-0.34.0.org/subversion/bindings/swig/perl/Makefile.PL subversion-0.34.0/subversion/bindings/swig/perl/Makefile.PL
+--- subversion-0.34.0.org/subversion/bindings/swig/perl/Makefile.PL	2003-12-04 14:17:49.244647569 +0100
++++ subversion-0.34.0/subversion/bindings/swig/perl/Makefile.PL	2003-12-04 14:19:39.765599240 +0100
 @@ -2,14 +2,17 @@
  use ExtUtils::MakeMaker;
  
  my @modules = qw/client delta fs ra repos wc/;
 +my @ldpaths = ('../.libs', map {"../../../libsvn_$_/.libs"} (@modules, qw/diff subr/));
- my @ldmodules = map {"-lsvn_$_-1"} (@modules, qw/subr/);
+ my @ldmodules = map {"-lsvn_$_-1"} (@modules, qw/diff subr/);
  
  my $apr_config = $ENV{APR_CONFIG} || '/usr/local/lib/apache2/apr-config';
  $apr_config = 'apr-config' unless -e $apr_config;
  
 +my $apr_shlib_path_var = `$apr_config --shlib-path-var`;
  my $apr_cflags = `$apr_config --includes`;
--my $apr_ldflags = `$apr_config --cflags --libs`;
-+my $apr_ldflags = `$apr_config --cflags --link-ld --libs`;
+ my $apr_ldflags = `$apr_config --cflags --libs`;
  
 +chomp $apr_shlib_path_var;
  chomp $apr_cflags;
@@ -38,3 +37,4 @@ diff -urN subversion-0.33.1.org/subversion/bindings/swig/perl/Makefile.PL subver
 +               " \$(FULLPERL)\n",
  	      );
  }
+
