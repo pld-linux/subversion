@@ -2,6 +2,7 @@
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
+Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.14.3
 Release:	r%{repov}.0
@@ -68,10 +69,16 @@ Cele projektu to:
 - Internacjonalizacja.
 - Postêpuj±ce wsparcie dla wielu jêzyków.
 
+%description -l pt_BR
+O objetivo do projeto Subversion é construir um sistema de controle de
+versões que seja um substituto para o CVS (Concurrent Versioning
+System) na comunidade opensource, fornecendo grandes melhorias.
+
 %package libs
 Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
+Obsoletetes:	libsubversion0
 
 %description libs
 Subversion libraries and modules.
@@ -82,8 +89,10 @@ Biblioteka subversion oraz ³adowalne modu³y.
 %package devel
 Summary:	Header files and develpment documentation for subversion
 Summary(pl):	Pliki nag³ówkowe i dokumetacja do subversion
+Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}
+Obsoletetes:	libsubversion0-devel
 
 %description devel
 Header files and develpment documentation for subversion.
@@ -91,11 +100,17 @@ Header files and develpment documentation for subversion.
 %description devel -l pl
 Pliki nag³ówkowe i dokumetacja do subversion.
 
+%description devel -l pt_BR
+Este pacote provê os arquivos necessários para desenvolvedores
+interagirem com o Subversion.
+
 %package static
 Summary:	Static subversion library
 Summary(pl):	Biblioteka statyczna subversion
+Summary(pt_BR):	Sistema de versionamento concorrente
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}
+Obsoletetes:	libsubversion0-static-devel
 
 %description static
 Static subversion library.
@@ -103,9 +118,13 @@ Static subversion library.
 %description static -l pl
 Biblioteka statyczna subversion.
 
+%description static -l pt_BR
+Este pacote provê um cliente estático do subversion.
+
 %package -n python-subversion
 Summary:	Subversion python bindings
 Summary(pl):	Dowi±zania do subversion dla pythona
+Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 Requires:	python >= 2.2
 Obsoletes:	subversion-python
@@ -116,6 +135,9 @@ Subversion python bindings.
 
 %description -n python-subversion -l pl
 Dowi±zania do subversion dla pythona.
+
+%description -n python-subversion -l pt_BR
+Módulos python para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
