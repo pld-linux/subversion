@@ -1,9 +1,9 @@
-%define	repov	3143
+%define	repov	3252
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
 Name:		subversion
-Version:	0.14.0
+Version:	0.14.3
 Release:	r%{repov}.0
 License:	Apache/BSD Style
 Group:		Development/Version Control
@@ -19,10 +19,10 @@ BuildRequires:	bison
 BuildRequires:	db4-devel >= 4.0.14
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
-BuildRequires:	neon-devel >= 0.23.3
+BuildRequires:	neon-devel >= 0.23.4
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
-BuildRequires:	swig >= 1.3.12
+BuildRequires:	swig >= 1.3.15
 BuildRequires:	texinfo
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
@@ -140,6 +140,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 # don't enable dso - currently it's broken
 %configure \
 	--disable-dso \
+	--disable-mod-activation \
 	--with-neon=%{_prefix} \
 	--with-apr=%{_bindir}/apr-config \
 	--with-apr-util=%{_bindir}/apu-config \
