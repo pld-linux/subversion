@@ -1,6 +1,28 @@
+diff -urN subversion-r1587.org/subversion/mod_dav_svn/dav_svn.h subversion-r1587/subversion/mod_dav_svn/dav_svn.h
+--- subversion-r1587.org/subversion/mod_dav_svn/dav_svn.h	Mon Apr  8 20:08:50 2002
++++ subversion-r1587/subversion/mod_dav_svn/dav_svn.h	Mon Apr  8 21:39:24 2002
+@@ -72,6 +72,9 @@
+   /* This records the filesystem path to the SVN FS */
+   const char *fs_path;
+ 
++  /* The name of this repository */
++  const char *repo_name;
++
+   /* the open repository */
+   svn_repos_t *repos;
+ 
+@@ -264,6 +267,8 @@
+ /* Return the special URI to be used for this resource. */
+ const char *dav_svn_get_special_uri(request_rec *r);
+ 
++/* Return a descriptive name for the repository */
++const char *dav_svn_get_repo_name(request_rec *r);
+ 
+ /* convert an svn_error_t into a dav_error, possibly pushing a message. use
+    the provided HTTP status for the DAV errors */
 diff -urN subversion-r1587.org/subversion/mod_dav_svn/log.c subversion-r1587/subversion/mod_dav_svn/log.c
 --- subversion-r1587.org/subversion/mod_dav_svn/log.c	Mon Apr  8 20:08:50 2002
-+++ subversion-r1587/subversion/mod_dav_svn/log.c	Mon Apr  8 21:40:00 2002
++++ subversion-r1587/subversion/mod_dav_svn/log.c	Mon Apr  8 21:39:26 2002
 @@ -193,7 +193,8 @@
        /* else unknown element; skip it */
      }
@@ -13,7 +35,7 @@ diff -urN subversion-r1587.org/subversion/mod_dav_svn/log.c subversion-r1587/sub
  
 diff -urN subversion-r1587.org/subversion/mod_dav_svn/merge.c subversion-r1587/subversion/mod_dav_svn/merge.c
 --- subversion-r1587.org/subversion/mod_dav_svn/merge.c	Mon Apr  8 20:08:50 2002
-+++ subversion-r1587/subversion/mod_dav_svn/merge.c	Mon Apr  8 21:40:01 2002
++++ subversion-r1587/subversion/mod_dav_svn/merge.c	Mon Apr  8 21:39:27 2002
 @@ -339,7 +339,7 @@
                                   "previous revision.");
      }
@@ -25,7 +47,7 @@ diff -urN subversion-r1587.org/subversion/mod_dav_svn/merge.c subversion-r1587/s
    
 diff -urN subversion-r1587.org/subversion/mod_dav_svn/mod_dav_svn.c subversion-r1587/subversion/mod_dav_svn/mod_dav_svn.c
 --- subversion-r1587.org/subversion/mod_dav_svn/mod_dav_svn.c	Mon Apr  8 20:08:50 2002
-+++ subversion-r1587/subversion/mod_dav_svn/mod_dav_svn.c	Mon Apr  8 21:40:25 2002
++++ subversion-r1587/subversion/mod_dav_svn/mod_dav_svn.c	Mon Apr  8 21:39:27 2002
 @@ -45,7 +45,7 @@
  /* per-dir configuration */
  typedef struct {
@@ -85,7 +107,7 @@ diff -urN subversion-r1587.org/subversion/mod_dav_svn/mod_dav_svn.c subversion-r
  
 diff -urN subversion-r1587.org/subversion/mod_dav_svn/repos.c subversion-r1587/subversion/mod_dav_svn/repos.c
 --- subversion-r1587.org/subversion/mod_dav_svn/repos.c	Mon Apr  8 20:08:50 2002
-+++ subversion-r1587/subversion/mod_dav_svn/repos.c	Mon Apr  8 21:40:02 2002
++++ subversion-r1587/subversion/mod_dav_svn/repos.c	Mon Apr  8 21:39:29 2002
 @@ -835,6 +835,7 @@
                                          dav_resource **resource)
  {
@@ -182,7 +204,7 @@ diff -urN subversion-r1587.org/subversion/mod_dav_svn/repos.c subversion-r1587/s
          /* ### what to do with status; and that HTTP code... */
 diff -urN subversion-r1587.org/subversion/mod_dav_svn/update.c subversion-r1587/subversion/mod_dav_svn/update.c
 --- subversion-r1587.org/subversion/mod_dav_svn/update.c	Mon Apr  8 20:08:50 2002
-+++ subversion-r1587/subversion/mod_dav_svn/update.c	Mon Apr  8 21:40:04 2002
++++ subversion-r1587/subversion/mod_dav_svn/update.c	Mon Apr  8 21:39:26 2002
 @@ -562,7 +562,7 @@
    uc.output = output;
    uc.anchor = resource->info->repos_path;
