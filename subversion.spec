@@ -25,6 +25,7 @@ Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
+Patch0:		svn-1.1.2-perl.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -266,6 +267,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
+%patch0 -p0
 
 rm -rf apr-util{,/xml/expat}/autom4te.cache
 
