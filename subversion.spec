@@ -20,6 +20,7 @@ BuildRequires:	apr-devel >= 2.0.46-0.2
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db-devel >= 4.1.25
+BuildRequires:	docbook-style-xsl >= 1.60.1
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	neon-devel >= 0.23.4
@@ -28,7 +29,6 @@ BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	swig >= 1.3.17
 BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	texinfo
-BuildRequires:	docbook-style-xsl >= 1.60.1
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -158,6 +158,7 @@ Modu³ apache: Serwer Subversion.
 
 %package -n apache-mod_authz_svn
 Summary:	Apache module: Subversion Server - path-based authorization
+Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
 Requires:	apache-mod_dav_svn = %{version}
 %requires_eq_to	apache apache-devel
@@ -165,6 +166,9 @@ Requires:	apache-mod_dav_svn = %{version}
 
 %description -n apache-mod_authz_svn
 Apache module: Subversion Server - path-based authorization.
+
+%description -n apache-mod_authz_svn -l pl
+Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
@@ -213,14 +217,17 @@ install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post devel
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun devel
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %post -n apache-mod_dav_svn
 if [ -f /var/lock/subsys/httpd ]; then
@@ -235,9 +242,6 @@ if [ "$1" = "0" ]; then
                 /etc/rc.d/init.d/httpd restart 1>&2
         fi
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
