@@ -1,7 +1,4 @@
 #
-# TODO:
-# - separate subpackage with svnserve + init.d script + sysconfig file
-#
 # Conditional build:
 %bcond_with	internal_neon		# build with internal neon
 %bcond_with	net_client_only		# build only net client
@@ -13,7 +10,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.37.0
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
@@ -25,6 +22,7 @@ Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-svnlook.patch
 Patch1:		%{name}-hot_backup_num.patch
 URL:		http://subversion.tigris.org/
+Requires:	%{name}-libs = %{version}-%{release}
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
@@ -114,7 +112,7 @@ Summary:	Header files and develpment documentation for subversion
 Summary(pl):	Pliki nag³ówkowe i dokumetacja do subversion
 Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}
+Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -150,6 +148,7 @@ Summary(pl):	Subversion svnserve
 Group:		Networking/Daemons
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name} = %{version}-%{release}
 
 %description svnserve
 Subversion svnserve server.
@@ -165,6 +164,7 @@ Group:		Applications
 %pyrequires_eq	python
 Requires:	python-rcsparse >= 0.1-0.20031026.0
 Requires:	python-subversion = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description tools
 Subversion tools and scripts.
@@ -179,6 +179,7 @@ Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 %pyrequires_eq	python
 Obsoletes:	subversion-python
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-subversion
 Subversion python bindings.
@@ -195,6 +196,7 @@ Summary(pl):	Dowi±zania do subversion dla perla
 Summary(pt_BR):	Módulos perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
 Obsoletes:	subversion-perl
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n perl-subversion
 Subversion perl bindings.
@@ -212,6 +214,7 @@ Group:		Networking/Daemons
 Requires:	apache >= 2.0.47
 Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache-mod_dav
+Requires:	%{name} = %{version}-%{release}
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -223,7 +226,7 @@ Modu³ apache: Serwer Subversion.
 Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
-Requires:	apache-mod_dav_svn = %{version}
+Requires:	apache-mod_dav_svn = %{version}-%{release}
 Requires:	apache >= 2.0.47
 Requires:	apache(modules-api) = %{apache_modules_api}
 
@@ -384,6 +387,7 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
+%exclude %{_bindir}/svn-hot-backup
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
