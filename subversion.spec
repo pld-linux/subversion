@@ -328,6 +328,11 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
+# subversion perl bindings hack
+install -d $RPM_BUILD_ROOT%{_prefix}
+ln -s ../ $RPM_BUILD_ROOT%{_prefix}/local
+#
+
 %{__make} install \
 %if !%{with net_client_only}
 %if %{with python}
@@ -361,6 +366,8 @@ install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{vers
 
 install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
 install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+
+%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -418,7 +425,7 @@ fi
 %exclude %{_mandir}/man?/svnserve*
 %{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
 
-%files libs
+%files libs -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so.*
 
