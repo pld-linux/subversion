@@ -17,7 +17,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.0.5
-Release:	2
+Release:	3
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -388,8 +388,7 @@ if [ -f /var/lock/subsys/svnserve ]; then
 	/etc/rc.d/init.d/svnserve restart 1>&2
 else
 	if [ ! -d /home/services/subversion/repos ]; then
-		echo "Creating default repository in /home/services/subversion/repos..."
-		svnadmin create /home/services/subversion/repos
+		echo "Run \"/etc/rc.d/init.d/svnserve init\" to create the default repository."
 	fi
 	echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
 fi
