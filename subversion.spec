@@ -7,7 +7,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.29.0
-Release:	0.2
+Release:	0.3
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
@@ -20,22 +20,22 @@ URL:		http://subversion.tigris.org/
 %global apache_modules_api 0
 %else
 BuildRequires:	apache-devel >= 2.0.47-0.6
+BuildRequires:  db-devel >= 4.1.25
 BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
 BuildRequires:  swig-python >= 1.3.17
-BuildRequires:  db-devel >= 4.1.25
 %endif
-BuildRequires:  python >= 2.2
-BuildRequires:  rpm-pythonprov >= 4.0.2-50
 BuildRequires:	apr-devel >= 1:0.9.4
 BuildRequires:	apr-util-devel >= 1:0.9.4
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
-BuildRequires:	libxslt-progs
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
+BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
+BuildRequires:  python >= 2.2
+BuildRequires:  rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
@@ -213,7 +213,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 # build documentation; build process for documentation is severely
 # braindamaged -- authors suggests to untar docbook distribution in
 # build directory, hence the hack here
-%{__make} -C doc/book XSL_DIR=/usr/share/sgml/docbook/xsl-stylesheets/ all-html
+%{__make} -C doc/book all-html \
+	XSL_DIR=/usr/share/sgml/docbook/xsl-stylesheets/
 
 # prepare for %%doc below
 mv -f doc/book/book/html-chunk svn-handbook
@@ -224,8 +225,8 @@ cp -f doc/book/book/images/*.png svn-handbook/images/
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}}
 
-%{__make} LC_ALL=C \
-	install \
+%{__make} install \
+	LC_ALL=C \
 	%{!?with_net_client_only:install-swig-py} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
