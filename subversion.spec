@@ -331,7 +331,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
-	$RPM_BUILD_ROOT/home/services/subversion
+	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install \
 	LC_ALL=C \
@@ -387,9 +387,6 @@ rm -rf $RPM_BUILD_ROOT
 if [ -f /var/lock/subsys/svnserve ]; then
 	/etc/rc.d/init.d/svnserve restart 1>&2
 else
-	if [ ! -d /home/services/subversion/repos ]; then
-		echo "Run \"/etc/rc.d/init.d/svnserve init\" to create the default repository."
-	fi
 	echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
 fi
 %preun svnserve
@@ -452,6 +449,7 @@ fi
 %attr(755,root,root) %{_bindir}/svnserve
 %{_mandir}/man?/svnserve*
 %dir /home/services/subversion
+%dir /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/svnserve
