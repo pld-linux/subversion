@@ -1,5 +1,6 @@
 # TODO:
 # - move modules to some directory (+ link with rpath)
+# - python bindings subpackage
 Summary:	A Concurrent Versioning system similar to but better than CVS.
 Summary(pl):	System Concurrent Versioning System ale lepszy ni¿ CVS
 Name:		subversion
@@ -137,9 +138,11 @@ for i in 1 2; do
 	libdir=$RPM_BUILD_ROOT%{_libdir} \
 	fs_libdir=$RPM_BUILD_ROOT%{_libdir} \
 	base_libdir=$RPM_BUILD_ROOT%{_libdir} \
+	swig_py_libdir=$RPM_BUILD_ROOT%{_libdir} \
 	bindir=$RPM_BUILD_ROOT%{_bindir} \
 	fs_bindir=$RPM_BUILD_ROOT%{_bindir} \
-	includedir=$RPM_BUILD_ROOT%{_includedir}/%{name}
+	includedir=$RPM_BUILD_ROOT%{_includedir}/%{name} \
+	
 done
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_libexecdir}
