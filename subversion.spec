@@ -32,6 +32,7 @@ BuildRequires:  db-devel >= 4.1.25
 BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
 BuildRequires:  swig-python >= 1.3.17
+BuildRequires:	swig-perl >= 1.3.17
 BuildRequires:	perl-devel >= 5.8.0
 BuildRequires:  rpm-perlprov
 %endif
