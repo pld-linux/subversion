@@ -8,7 +8,7 @@ diff -urN subversion-r1587.org/subversion/bindings/swig/python/setup.py subversi
 -INC_DIRS=['..', '../../../include', '../../../../apr/include']
 -LIB_DIRS=['/usr/local/svn/lib']
 +INC_DIRS=['..', '../../../include', '/usr/include/apache']
-+LIB_DIRS=['/usr/lib','../../../libsvn_delta/.libs','../.libs','../../../libsvn_ra/.libs','../../../libsvn_subr/.libs','../../../libsvn_fs/.libs']
++LIB_DIRS=['/usr/lib','../../../libsvn_delta/.libs','../.libs','../../../libsvn_ra/.libs','../../../libsvn_subr/.libs','../../../libsvn_fs/.libs','../../../libsvn_repos/.libs']
  
  class build_swig(build_ext.build_ext):
    def initialize_options(self):
