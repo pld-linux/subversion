@@ -9,12 +9,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.0.2
+Version:	1.0.3
 Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	246ffcc67ca629ae523956c4c1a67cce
+# Source0-md5:	a8961f86a2bbd8deb59b2b62db303461
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -22,7 +22,6 @@ Source4:	%{name}-svnserve.sysconfig
 #Patch0:		%{name}-svnlook.patch
 #Patch1:		%{name}-hot_backup_num.patch
 URL:		http://subversion.tigris.org/
-Requires:	%{name}-libs = %{version}-%{release}
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
@@ -44,11 +43,12 @@ BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
-%{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
+%{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.6}
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
 BuildRequires:	which
+Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_apachelibdir	/usr/%{_lib}/apache
@@ -101,6 +101,7 @@ Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
 Obsoletes:	libsubversion0
+%{!?with_internal_neon:Requires:	neon >= 0.24.6}
 
 %description libs
 Subversion libraries and modules.
@@ -114,6 +115,8 @@ Summary(pl):	Pliki nag³ówkowe i dokumetacja do subversion
 Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	apr-util-devel >= 1:0.9.5
+%{!?with_internal_neon:Requires:	neon-devel >= 0.24.6}
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -241,6 +244,8 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %setup -q
 #%patch0 -p0
 #%patch1 -p1
+
+rm -rf apr-util{,/xml/expat}/autom4te.cache
 
 %build
 cp -f /usr/share/automake/config.sub ac-helpers
