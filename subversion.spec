@@ -175,6 +175,9 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
+
+export LDFLAGS=$(echo -L$RPM_BUILD_DIR/subversion-%{version}/subversion/libsvn_{client,delta,fs,repos,ra{,_dav,_local,_svn},subr,wc}/.libs)
+
 # don't enable dso - currently it's broken
 %configure \
 	--disable-dso \
