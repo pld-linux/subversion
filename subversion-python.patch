@@ -1,6 +1,6 @@
-diff -urN subversion-r1587.org/subversion/bindings/swig/python/setup.py subversion-r1587/subversion/bindings/swig/python/setup.py
---- subversion-r1587.org/subversion/bindings/swig/python/setup.py	Fri Apr 12 18:33:13 2002
-+++ subversion-r1587/subversion/bindings/swig/python/setup.py	Fri Apr 12 18:38:11 2002
+diff -urN subversion-r3252.org/subversion/bindings/swig/python/setup.py subversion-r3252/subversion/bindings/swig/python/setup.py
+--- subversion-r3252.org/subversion/bindings/swig/python/setup.py	Sun Sep 29 19:21:31 2002
++++ subversion-r3252/subversion/bindings/swig/python/setup.py	Sun Sep 29 19:46:56 2002
 @@ -21,8 +21,8 @@
  from distutils.command import build_ext
  from distutils import dir_util
@@ -12,3 +12,12 @@ diff -urN subversion-r1587.org/subversion/bindings/swig/python/setup.py subversi
  
  class build_swig(build_ext.build_ext):
    def initialize_options(self):
+@@ -100,7 +100,7 @@
+                             ),
+              core.Extension("_util",
+                             ["../util.i"],
+-                            libraries=['svn_subr-1', 'swigpy', 'apr-0'],
++                            libraries=['svn_subr-1', 'swigpy', 'apr'],
+                             library_dirs=LIB_DIRS,
+                             ),
+ 
