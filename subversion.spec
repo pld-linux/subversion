@@ -1,16 +1,16 @@
 %include        /usr/lib/rpm/macros.python
-%define	repov 5322
+%define	repov 5642
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.26.0
+Version:	0.27.0
 Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
 Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
-# Source0-md5:	700caa3f59b585d173812c4a078feeba
+# Source0-md5:	0f4fa0ebb0b58b83bad9433b8baa3f9a
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
