@@ -1,10 +1,5 @@
-## Type:	string
-## Default	"-d -R -r /home/services/subversion/repos"
 #
 # default options for the svnserve process
-# it is recommended to provide only readonly access to your data.
-# there is no authentication possible, everyone can read and write at will
-# read the subversion documentation about more info
 #
 SVNSERVE_PATH="/home/services/subversion/repos";
-SVNSERVE_OPTIONS="-d -R"
+SVNSERVE_OPTIONS="-d"
