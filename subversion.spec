@@ -1,4 +1,4 @@
-%define	repov	2867
+%define	repov	2872
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
