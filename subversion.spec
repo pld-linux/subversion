@@ -27,6 +27,7 @@ BuildRequires:	swig >= 1.3.17
 BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	texinfo
 BuildRequires:	docbook-style-xsl >= 1.60.1
+BuildRequires:	gdbm-devel
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
