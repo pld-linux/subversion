@@ -324,7 +324,6 @@ install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %if ! %{with net_client_only}
 install tools/cvs2svn/cvs2svn.py	$RPM_BUILD_ROOT%{_bindir}/cvs2svn
-install tools/cvs2svn/cvs2svn.1		$RPM_BUILD_ROOT%{_mandir}/man1
 cp tools/cvs2svn/README tools/cvs2svn/README.cvs2svn
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 
@@ -424,7 +423,6 @@ fi
 %attr(755,root,root) %{_bindir}/cvs*
 %attr(755,root,root) %{_bindir}/svn-hot-backup
 /etc/bash_completion.d/%{name}
-%{_mandir}/man1/cvs*
 
 %files -n python-subversion
 %defattr(644,root,root,755)
