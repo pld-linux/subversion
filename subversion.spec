@@ -133,6 +133,23 @@ Biblioteka statyczna subversion.
 %description static -l pt_BR
 Este pacote provê um cliente estático do subversion.
 
+%package tools
+Summary:	Subversion tools and scripts
+Summary(pl):	Narzêdzia oraz skrypty dla subversion
+Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
+Group:		Applications
+Requires:	python >= 2.2
+%pyrequires_eq	python
+Requires:	python-rcsparse
+Requires:	python-subversion = %{version}
+
+%description tools
+Subversion tools and scripts.
+
+%description tools -l pl
+Narzêdzia oraz skrypty dla subversion.
+
+
 %package -n python-subversion
 Summary:	Subversion python bindings
 Summary(pl):	Dowi±zania do subversion dla pythona
@@ -237,6 +254,10 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_s
 install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %if ! %{with net_client_only}
+install tools/cvs2svn/cvs2svn.py	$RPM_BUILD_ROOT%{_bindir}
+install tools/cvs2svn/cvs2svn.1		$RPM_BUILD_ROOT%{_mandir}/man1
+cp tools/cvs2svn/README tools/cvs2svn/README.cvs2svn
+
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %endif
@@ -271,6 +292,8 @@ fi
 %defattr(644,root,root,755)
 %doc BUGS CHANGES COPYING INSTALL README
 %doc svn-handbook doc/book/misc-docs/misc-docs.html
+%doc tools/hook-scripts/*.{pl,py,example}
+%doc tools/hook-scripts/mailer/*.{py,example}
 %attr(755,root,root) %{_bindir}/svn*
 #%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
@@ -293,10 +316,15 @@ fi
 %{_libdir}/lib*.a
 
 %if ! %{with net_client_only}
+%files tools
+%defattr(644,root,root,755)
+%doc tools/cvs2svn/README*
+%attr(755,root,root) %{_bindir}/cvs*
+%{_mandir}/man1/cvs*
 
 %files -n python-subversion
 %defattr(644,root,root,755)
-%doc tools/backup tools/cvs2svn/*.py tools/examples/*.py
+%doc tools/backup/*.py tools/examples/*.py
 %dir %{py_sitedir}/svn
 %dir %{py_sitedir}/libsvn
 %{py_sitedir}/svn/*.py[co]
