@@ -48,6 +48,7 @@ BuildRequires:	libxslt-progs
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
+BuildRequires:	which
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_apachelibdir	/usr/%{_lib}/apache
