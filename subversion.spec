@@ -28,12 +28,13 @@ URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
+BuildRequires:	automake
 BuildRequires:	apache-devel >= 2.0.47-0.6
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	rpmbuild(macros) >= 1.120
-BuildRequires:	swig >= 1.3.17
-BuildRequires:	swig-python >= 1.3.17
-BuildRequires:	swig-perl >= 1.3.17
+BuildRequires:	swig = 1.3.19
+BuildRequires:	swig-python = 1.3.19
+BuildRequires:	swig-perl = 1.3.19
 BuildRequires:	perl-devel >= 5.8.0
 BuildRequires:	rpm-perlprov
 %endif
@@ -238,6 +239,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %patch1 -p1
 
 %build
+cp -f /usr/share/automake/config.sub ac-helpers
 chmod +x ./autogen.sh && ./autogen.sh
 
 # don't enable dso - currently it's broken
