@@ -205,7 +205,7 @@ cp -f doc/book/book/images/*.png svn-handbook/images/
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}}
 
-%{__make} \
+%{__make} LC_ALL=C \
 	install \
 	install-swig-py \
 	DESTDIR=$RPM_BUILD_ROOT \
