@@ -270,6 +270,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 %configure \
 	--with-editor=vi \
 	--with-zlib \
+	--with-python=%{_bindir}/python \
+	--with-perl5=%{_bindir}/perl \
 %if %{with net_client_only}
 	--without-apache \
 	--without-swig \
@@ -304,18 +306,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 # perl
 %if %{with perl}
-bdir=$(pwd)
-%{__make} install-swig-pl-lib \
-	LC_ALL=C \
-	DESTDIR=${bdir}/swig-pl-lib-buildroot
-%{__make}
-cd subversion/bindings/swig/perl
-env APR_CONFIG=%{_bindir}/apr-config \
-    APU_CONFIG=%{_bindir}/apu-config \
-	%{__perl} Makefile.PL \
-	INSTALLDIRS=vendor
-env LIBRARY_PATH=${bdir}/swig-pl-lib-buildroot%{_libdir} %{__make}
-cd ../../../../
+%{__make} swig-pl
 %endif
 %endif
 
@@ -338,7 +329,6 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install \
-	LC_ALL=C \
 %if !%{with net_client_only} && %{with python}
 	install-swig-py \
 %endif
@@ -347,10 +337,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir_extra=%{py_sitedir}/svn
 
 %if !%{with net_client_only} && %{with perl}
-%{__make} install-swig-pl-lib \
-	LC_ALL=C \
-	DESTDIR=$RPM_BUILD_ROOT
-%{__make} -C subversion/bindings/swig/perl install \
+%{__make} install-swig-pl
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
