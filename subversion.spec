@@ -10,15 +10,15 @@ Source1:	%{name}-dav_svn.conf
 Patch0:		%{name}-lib.patch
 Patch1:		%{name}-apache2.patch
 URL:		http://subversion.tigris.org/
-BuildRequires:	db4-devel >= 4.0.14
 BuildRequires:	apache-devel >= 2.0.35
-BuildRequires:	neon-devel >= 0.19.2
-BuildRequires:	expat-devel
-BuildRequires:	python >= 2.0
-BuildRequires:	bison
-BuildRequires:	texinfo
 BuildRequires:	autoconf >= 2.53
+BuildRequires:	bison
+BuildRequires:	db4-devel >= 4.0.14
+BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4
+BuildRequires:	neon-devel >= 0.19.2
+BuildRequires:	python >= 2.0
+BuildRequires:	texinfo
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(post):	/sbin/ldconfig
 Requires(postun): /sbin/ldconfig 
