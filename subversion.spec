@@ -1,4 +1,8 @@
 #
+# todo:
+# - remove net_client_only and add db bcond (then without apache and
+#   without db => net_client_only - spec will be more simpler, I think)
+#
 # Conditional build:
 %bcond_with		internal_neon		# build with internal neon
 %bcond_with		net_client_only		# build only net client
