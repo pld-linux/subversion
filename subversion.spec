@@ -38,7 +38,7 @@ BuildRequires:	rpm-perlprov
 %endif
 BuildRequires:	apr-devel >= 1:0.9.5
 BuildRequires:	apr-util-devel >= 1:0.9.5
-BuildRequires:	autoconf >= 2.53
+BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	expat-devel
