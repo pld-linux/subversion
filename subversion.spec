@@ -16,12 +16,13 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.0.5
-Release:	3
+%define	_rc	rc1
+Version:	1.1.0
+Release:	0.%{_rc}.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	8e8288fee061f5278ec201fc5e5e141c
+Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}-%{_rc}.tar.bz2
+# Source0-md5:	ee3c29e8794fa70206680e0511fa04da
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -39,9 +40,9 @@ BuildRequires:	rpmbuild(macros) >= 1.120
 %if %{with python} || %{with perl}
 BuildRequires:	swig >= 1.3.19
 %endif
-%{?with_python:BuildRequires:	swig-python >= 1.3.19}
+%{?with_python:BuildRequires:	swig-python >= 1.3.21}
 %if %{with perl}
-BuildRequires:	swig-perl >= 1.3.19
+BuildRequires:	swig-perl >= 1.3.21
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 %endif
@@ -54,7 +55,7 @@ BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
-%{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.6}
+%{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.7}
 %if %{with python}
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
@@ -255,7 +256,7 @@ Apache module: Subversion Server - path-based authorization.
 Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-%{_rc}
 #%patch0 -p0
 #%patch1 -p1
 
@@ -267,6 +268,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 # don't enable dso - currently it's broken
 %configure \
+	--with-editor=vi \
+	--with-zlib \
 %if %{with net_client_only}
 	--without-apache \
 	--without-swig \
