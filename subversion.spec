@@ -1,21 +1,27 @@
 #
+# TODO:
+# - separate subpackage with svnserve + init.d script + sysconfig file
+#
 # Conditional build:
 %bcond_with	internal_neon		# build with internal neon
 %bcond_with	net_client_only		# build only net client
 #	
 %include        /usr/lib/rpm/macros.python
+%{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.33.1
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
 # Source0-md5:	2d45e838243cb0bc71c80582d089be15
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
+Source3:	%{name}-svnserve.init
+Source4:	%{name}-svnserve.sysconfig
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -25,6 +31,8 @@ BuildRequires:  db-devel >= 4.1.25
 BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
 BuildRequires:  swig-python >= 1.3.17
+BuildRequires:	perl-devel
+BuildRequires:  rpm-perlprov
 %endif
 BuildRequires:	apr-devel >= 1:0.9.5
 BuildRequires:	apr-util-devel >= 1:0.9.5
@@ -132,6 +140,19 @@ Biblioteka statyczna subversion.
 %description static -l pt_BR
 Este pacote provê um cliente estático do subversion.
 
+%package svnserve
+Summary:	Subversion svnserve
+Summary(pl):	Subversion svnserve
+Group:		Networking/Daemons
+PreReq:         rc-scripts
+Requires(post,preun):   /sbin/chkconfig
+
+%description svnserve
+Subversion svnserve server.
+
+%description svnserve -l pl
+Serwer subversion svnserve.
+
 %package tools
 Summary:	Subversion tools and scripts
 Summary(pl):	Narzêdzia oraz skrypty dla subversion
@@ -164,6 +185,22 @@ Dowi±zania do subversion dla pythona.
 
 %description -n python-subversion -l pt_BR
 Módulos python para acessar os recursos do Subversion.
+
+%package -n perl-subversion
+Summary:	Subversion perl bindings
+Summary(pl):	Dowi±zania do subversion dla perla
+Summary(pt_BR):	Módulos perl para acessar os recursos do Subversion
+Group:		Development/Languages/Perl
+Obsoletes:	subversion-perl
+
+%description -n perl-subversion
+Subversion perl bindings.
+
+%description -n perl-subversion -l pl
+Dowi±zania do subversion dla perl.
+
+%description -n perl-subversion -l pt_BR
+Módulos perl para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
@@ -219,9 +256,22 @@ chmod +x ./autogen.sh && ./autogen.sh
 %{__make}
 
 %if ! %{with net_client_only}
+# python
 %{__make} swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
+# perl
+bdir=$(pwd)
+%{__make} install-swig-pl-lib \
+        LC_ALL=C \
+        DESTDIR=${bdir}/swig-pl-lib-buildroot
+%{__make}
+cd subversion/bindings/swig/perl
+env APR_CONFIG=%{_bindir}/apr-config \
+        %{__perl} Makefile.PL \
+	INSTALLDIRS=vendor
+env LIBRARY_PATH=${bdir}/swig-pl-lib-buildroot%{_libdir} %{__make}
+cd ../../../../
 %endif
 
 # build documentation; build process for documentation is severely
@@ -237,6 +287,7 @@ cp -f doc/book/book/images/*.png svn-handbook/images/
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}}
 
 %{__make} install \
@@ -246,8 +297,18 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_i
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
+%if ! %{with net_client_only}
+%{__make} install-swig-pl-lib \
+	LC_ALL=C \
+	DESTDIR=$RPM_BUILD_ROOT
+%{__make} -C subversion/bindings/swig/perl install \
+	DESTDIR=$RPM_BUILD_ROOT
+%endif
+
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %if ! %{with net_client_only}
@@ -271,6 +332,20 @@ rm -rf $RPM_BUILD_ROOT
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
+%post svnserve
+if [ -f /var/lock/subsys/svnserve ]; then
+        /etc/rc.d/init.d/svnserve restart 1>&2
+else
+        echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
+fi
+
+%preun svnserve
+if [ "$1" = "0" ]; then
+        if [ -f /var/lock/subsys/svnserve ]; then
+                /etc/rc.d/init.d/svnserve restart 1>&2
+        fi
+fi
+
 %post -n apache-mod_dav_svn
 if [ -f /var/lock/subsys/httpd ]; then
         /etc/rc.d/init.d/httpd restart 1>&2
@@ -285,6 +360,7 @@ if [ "$1" = "0" ]; then
         fi
 fi
 
+
 %files
 %defattr(644,root,root,755)
 %doc BUGS CHANGES COPYING INSTALL README
@@ -292,10 +368,11 @@ fi
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
 %attr(755,root,root) %{_bindir}/svn*
-#%exclude %{_bindir}/svn-config
+%exclude %{_bindir}/svnserve
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
+%exclude %{_mandir}/man?/svnserve*
 %{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
 
 %files libs
@@ -315,6 +392,14 @@ fi
 %{_libdir}/lib*.a
 
 %if ! %{with net_client_only}
+%files svnserve
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/svnserve
+%{_mandir}/man?/svnserve*
+%attr(754,root,root) /etc/rc.d/init.d/svnserve
+%attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/svnserve
+
+
 %files tools
 %defattr(644,root,root,755)
 %doc tools/cvs2svn/README*
@@ -329,6 +414,15 @@ fi
 %{py_sitedir}/svn/*.py[co]
 %{py_sitedir}/libsvn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
+
+%files -n perl-subversion
+%defattr(644,root,root,755)
+%{perl_vendorarch}/SVN
+%dir %{perl_vendorarch}/auto/SVN
+%dir %{perl_vendorarch}/auto/SVN/*
+%attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
+%{perl_vendorarch}/auto/SVN/*/*.bs
+%{_mandir}/man3/*.3pm*
 
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
