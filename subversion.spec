@@ -4,17 +4,16 @@
 %bcond_with	net_client_only		# build only net client
 #	
 %include        /usr/lib/rpm/macros.python
-%define	distdir	15/6494
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.31.0
+Version:	0.32.1
 Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
-# Source0-md5:	a58df76993c1e6b1bfe80dd77d290ab2
+# Source0-md5:	b06717a8ef50db4b5c4d380af00bd901
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
