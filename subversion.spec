@@ -1,5 +1,4 @@
 %include        /usr/lib/rpm/macros.python
-%define requires_eq_to()  %(LC_ALL="C" echo '%2' | xargs -r rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
 %define	repov 5110
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
@@ -15,8 +14,8 @@ Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{v
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
-BuildRequires:	apache-devel >= 2.0.47
-BuildRequires:	apr-devel >= 2.0.46-0.2
+BuildRequires:	apache-devel >= 2.0.47-0.2
+BuildRequires:	apr-devel >= 2.0.47-0.2
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db-devel >= 4.1.25
@@ -26,6 +25,7 @@ BuildRequires:	libtool >= 1.4-9
 BuildRequires:	neon-devel >= 0.23.4
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
+BuildRequires:	rpmbuild(macros) >= 1.120
 BuildRequires:	swig >= 1.3.17
 BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	texinfo
@@ -147,8 +147,9 @@ Módulos python para acessar os recursos do Subversion.
 Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
-%requires_eq_to	apache apache-devel
-%requires_eq_to	apache-mod_dav apache-devel
+Requires:	apache >= 2.0.47
+Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache-mod_dav
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -161,8 +162,8 @@ Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
 Requires:	apache-mod_dav_svn = %{version}
-%requires_eq_to	apache apache-devel
-%requires_eq_to	apache-mod_dav apache-devel
+Requires:	apache >= 2.0.47
+Requires:	apache(modules-api) = %{apache_modules_api}
 
 %description -n apache-mod_authz_svn
 Apache module: Subversion Server - path-based authorization.
@@ -175,8 +176,6 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
-
-export LDFLAGS=$(echo -L$RPM_BUILD_DIR/subversion-%{version}/subversion/libsvn_{client,delta,fs,repos,ra{,_dav,_local,_svn},subr,wc}/.libs)
 
 # don't enable dso - currently it's broken
 %configure \
