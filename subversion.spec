@@ -10,7 +10,6 @@
 %bcond_without	perl				# build without perl bindings
 %bcond_without	apache				# build without apache support (webdav, etc)
 #	
-%include	/usr/lib/rpm/macros.python
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
