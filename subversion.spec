@@ -1,11 +1,12 @@
 %define	repov	5063
 %include        /usr/lib/rpm/macros.python
+%define requires_eq_to()  %(LC_ALL="C" echo '%2' | xargs -r rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.18.0
-Release:	0.r%{repov}.0
+Release:	0.r%{repov}.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-r%{repov}.tar.bz2
@@ -143,8 +144,8 @@ Módulos python para acessar os recursos do Subversion.
 Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
-%requires_eq	apache
-%requires_eq	apache-mod_dav
+%requires_eq_to	apache apache-devel
+%requires_eq_to	apache-mod_dav apache-devel
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
