@@ -1,0 +1,51 @@
+diff -urN subversion-0.35.0.org/Makefile.in subversion-0.35.0/Makefile.in
+--- subversion-0.35.0.org/Makefile.in	2003-12-20 00:04:45.942677312 +0100
++++ subversion-0.35.0/Makefile.in	2003-12-20 00:07:14.926667242 +0100
+@@ -94,7 +94,9 @@
+ SWIG = @SWIG@
+ SWIG_INCLUDES = -I$(SWIG_SRC_DIR) \
+                 -I$(abs_srcdir)/subversion/include \
+-                $(SVN_APR_INCLUDES)
++                $(SVN_APR_INCLUDES) \
++		$(SVN_APRUTIL_INCLUDES)
++
+ SWIG_LDFLAGS = @SWIG_LDFLAGS@
+ SWIG_PY_INCLUDES = @SWIG_PY_INCLUDES@
+ SWIG_PY_COMPILE = @SWIG_PY_COMPILE@
+@@ -109,6 +111,8 @@
+ SVN_APR_INCLUDES = @SVN_APR_INCLUDES@
+ SVN_APR_PREFIX = @SVN_APR_PREFIX@
+ 
++SVN_APRUTIL_INCLUDES = @SVN_APRUTIL_INCLUDES@
++
+ MKDIR = @MKDIR@
+ 
+ # the EXTRA_ exist so that extra flags can be passed at 'make' time
+diff -urN subversion-0.35.0.org/subversion/bindings/swig/perl/Makefile.PL subversion-0.35.0/subversion/bindings/swig/perl/Makefile.PL
+--- subversion-0.35.0.org/subversion/bindings/swig/perl/Makefile.PL	2003-12-07 18:25:10.000000000 +0100
++++ subversion-0.35.0/subversion/bindings/swig/perl/Makefile.PL	2003-12-20 00:36:41.326711208 +0100
+@@ -8,19 +8,23 @@
+ 
+ my $apr_config = $ENV{APR_CONFIG} || '/usr/local/lib/apache2/apr-config';
+ $apr_config = 'apr-config' unless -e $apr_config;
++my $apu_config = $ENV{APU_CONFIG} || '/usr/local/lib/apache2/apu-config';
++$apr_config = 'apu-config' unless -e $apu_config;
+ 
+ my $apr_shlib_path_var = `$apr_config --shlib-path-var`;
+ my $apr_cflags = `$apr_config --includes`;
++my $apu_cflags = `$apu_config --includes`;
+ my $apr_ldflags = `$apr_config --cflags --link-ld --libs`
+    if $^O eq 'darwin';
+ 
+ chomp $apr_shlib_path_var;
+ chomp $apr_cflags;
++chomp $apu_cflags;
+ chomp $apr_ldflags;
+ 
+ my %config = (
+     ABSTRACT => 'Perl bindings for Subversion',
+-    CCFLAGS  => join(' ', $apr_cflags, `perl -MExtUtils::Embed -e ccopts`,
++    CCFLAGS  => join(' ', $apr_cflags, $apu_cflags, `perl -MExtUtils::Embed -e ccopts`,
+ 		     ' -I.. -I../../../include -g'),
+     OBJECT => q/$(O_FILES)/,
+     dynamic_lib => {
