@@ -35,7 +35,7 @@ case "$1" in
 	# Start daemons.
 	if [ ! -f /var/lock/subsys/svnserve ]; then
 		msg_starting svnserve
-		daemon svnserve ${SVNSERVE_OPTIONS}
+		daemon svnserve ${SVNSERVE_OPTIONS} -r ${SVNSERVE_PATH}
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/svnserve
 	else
@@ -61,19 +61,12 @@ case "$1" in
 	status svnserve
 	exit $?
 	;;
-  init)
-	if [ ! -d /home/services/subversion/repos ]; then
-		echo "Creating default repository in /home/services/subversion/repos..."
-		svnadmin create /home/services/subversion/repos
-	fi
-	exit $?
-	;;
 #  reload)
 #	msg_reloading svnserve
 #	killproc svnserve -HUP
 #	;;
   *)
-	msg_usage "$0 {start|stop|init|restart|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
 	exit 3
 esac
 
