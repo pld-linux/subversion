@@ -138,7 +138,7 @@ Summary(pl):	Narzêdzia oraz skrypty dla subversion
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 %pyrequires_eq	python
-Requires:	python-rcsparse
+Requires:	python-rcsparse >= 0.1-0.20031026.0
 Requires:	python-subversion = %{version}
 
 %description tools
