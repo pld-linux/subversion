@@ -1,18 +1,18 @@
 # TODO:
 # - move modules to some directory (+ link with rpath)
+%define	snap	20020412
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS.
 Summary(pl):	System Concurrent Versioning System ale lepszy ni¿ CVS
 Name:		subversion
-Version:	1587
-Release:	3
+Version:	0.11.0
+Release:	0.%{snap}
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/%{name}-r%{version}.tar.gz
+Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-%{snap}.tar.gz
 Source1:	%{name}-dav_svn.conf
 Patch0:		%{name}-lib.patch
-Patch1:		%{name}-apache2.patch
-Patch2:		%{name}-python.patch
+Patch1:		%{name}-python.patch
 URL:		http://subversion.tigris.org/
 BuildRequires:	apache-devel >= 2.0.35
 BuildRequires:	apr-devel >= 2.0.35
@@ -132,12 +132,12 @@ Apache module: Subversion Server.
 Modu³ apache: Serwer Subversion.
 
 %prep
-%setup -q -n %{name}-r%{version}
+%setup -q -n %{name}-%{snap}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
+chmod +x ./autogen.sh
 ./autogen.sh
 # EXPAT is external so get rid of all except (patched) xmlparse.h
 rm -rf expat-lite/[a-w]*.[ch] expat-lite/xmldef.h expat-lite/xmlparse.c
@@ -207,7 +207,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz
+%doc *.gz notes/*.gz
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
 %{_infodir}/svn*
@@ -233,6 +233,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files python
 %defattr(644,root,root,755)
+%doc tools/backup tools/cvs2svn/*.py tools/examples/*.py
 %dir %{py_sitedir}/svn
 %{py_sitedir}/svn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/svn/*.so
