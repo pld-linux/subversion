@@ -292,8 +292,9 @@ cp -f doc/book/book/images/*.png svn-handbook/images/
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}}
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
+	$RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}} \
+	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version}/auth_provider,python-%{name}-%{version}}
 
 %{__make} install \
 	LC_ALL=C \
@@ -320,10 +321,17 @@ install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 install tools/cvs2svn/cvs2svn.py	$RPM_BUILD_ROOT%{_bindir}/cvs2svn
 install tools/cvs2svn/cvs2svn.1		$RPM_BUILD_ROOT%{_mandir}/man1
 cp tools/cvs2svn/README tools/cvs2svn/README.cvs2svn
+install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
+find $RPM_BUILD_ROOT%{py_sitedir} -name "*.py" -o -name "*.a" -o -name "*.la" | xargs rm -f
+install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
 %endif
+
+install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
+install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+install tools/examples/auth_provider/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}/auth_provider
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -371,6 +379,7 @@ fi
 %doc svn-handbook doc/book/misc-docs/misc-docs.html
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
+%doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
 %{_mandir}/man1/*
@@ -389,6 +398,7 @@ fi
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %{_infodir}/svn*
+%{_examplesdir}/%{name}-%{version}
 
 %files static
 %defattr(644,root,root,755)
@@ -406,6 +416,8 @@ fi
 %defattr(644,root,root,755)
 %doc tools/cvs2svn/README*
 %attr(755,root,root) %{_bindir}/cvs*
+%attr(755,root,root) %{_bindir}/svn-hot-backup
+/etc/bash_completion.d/%{name}
 %{_mandir}/man1/cvs*
 
 %files -n python-subversion
@@ -416,6 +428,7 @@ fi
 %{py_sitedir}/svn/*.py[co]
 %{py_sitedir}/libsvn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
+%{_examplesdir}/python-%{name}-%{version}
 
 %files -n perl-subversion
 %defattr(644,root,root,755)
