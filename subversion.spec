@@ -9,12 +9,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.0.0
+Version:	1.0.1
 Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	ee14f19960c7fa9f2640ff04acdce804
+# Source0-md5:	50ca608d260b76d99ed85909acb7ae92
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -299,7 +299,7 @@ cp -f doc/book/book/images/*.png svn-handbook/images/
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}} \
-	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version}/auth_provider,python-%{name}-%{version}}
+	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}}
 
 %{__make} install \
 	LC_ALL=C \
@@ -323,8 +323,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %if ! %{with net_client_only}
-install tools/cvs2svn/cvs2svn.py	$RPM_BUILD_ROOT%{_bindir}/cvs2svn
-cp tools/cvs2svn/README tools/cvs2svn/README.cvs2svn
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -335,7 +333,6 @@ install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{vers
 
 install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
 install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-install tools/examples/auth_provider/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}/auth_provider
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -419,8 +416,6 @@ fi
 
 %files tools
 %defattr(644,root,root,755)
-%doc tools/cvs2svn/README*
-%attr(755,root,root) %{_bindir}/cvs*
 %attr(755,root,root) %{_bindir}/svn-hot-backup
 /etc/bash_completion.d/%{name}
 
