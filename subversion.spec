@@ -8,12 +8,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.32.1
-Release:	0.2
+Version:	0.33.0
+Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
-# Source0-md5:	b06717a8ef50db4b5c4d380af00bd901
+# Source0-md5:	938b452b50d02eeb72b50c344b34d8de
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
@@ -26,8 +26,8 @@ BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
 BuildRequires:  swig-python >= 1.3.17
 %endif
-BuildRequires:	apr-devel >= 1:0.9.4-1
-BuildRequires:	apr-util-devel >= 1:0.9.4-1
+BuildRequires:	apr-devel >= 1:0.9.5
+BuildRequires:	apr-util-devel >= 1:0.9.5
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
@@ -294,6 +294,8 @@ fi
 %attr(755,root,root) %{_bindir}/svn*
 #%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
+%{_mandir}/man5/*
+%{_mandir}/man8/*
 %{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
 
 %files libs
