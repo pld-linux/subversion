@@ -78,7 +78,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
-Obsoletetes:	libsubversion0
+Obsoletes:	libsubversion0
 
 %description libs
 Subversion libraries and modules.
@@ -92,7 +92,7 @@ Summary(pl):	Pliki nag³ówkowe i dokumetacja do subversion
 Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}
-Obsoletetes:	libsubversion0-devel
+Obsoletes:	libsubversion0-devel
 
 %description devel
 Header files and develpment documentation for subversion.
@@ -110,7 +110,7 @@ Summary(pl):	Biblioteka statyczna subversion
 Summary(pt_BR):	Sistema de versionamento concorrente
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}
-Obsoletetes:	libsubversion0-static-devel
+Obsoletes:	libsubversion0-static-devel
 
 %description static
 Static subversion library.
@@ -149,7 +149,7 @@ Group:		Networking/Daemons
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
 
-%description -n apache-mod_dav_svn
+%description -n apache-mod_dav_svn -l pl
 Modu³ apache: Serwer Subversion.
 
 %prep
