@@ -15,17 +15,16 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.1.0
+Version:	1.1.1
 Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	a91b0d79b8c8ab8747587037c044c6c9
+# Source0-md5:	a180c3fe91680389c210c99def54d9e0
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
-Patch0:		%{name}-log-xml.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -267,7 +266,6 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
-%patch0 -p0
 
 rm -rf apr-util{,/xml/expat}/autom4te.cache
 
