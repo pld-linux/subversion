@@ -23,6 +23,7 @@ Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-svnlook.patch
+Patch1:		%{name}-hot_backup_num.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -235,6 +236,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p1
 
 %build
 cp -f /usr/share/automake/config.sub ac-helpers
