@@ -9,7 +9,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.32.1
-Release:	0.1
+Release:	0.2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
@@ -26,8 +26,8 @@ BuildRequires:  rpmbuild(macros) >= 1.120
 BuildRequires:  swig >= 1.3.17
 BuildRequires:  swig-python >= 1.3.17
 %endif
-BuildRequires:	apr-devel >= 1:0.9.4
-BuildRequires:	apr-util-devel >= 1:0.9.4
+BuildRequires:	apr-devel >= 1:0.9.4-1
+BuildRequires:	apr-util-devel >= 1:0.9.4-1
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
