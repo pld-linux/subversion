@@ -1,16 +1,16 @@
 %include        /usr/lib/rpm/macros.python
-%define	repov 5110
+%define	repov 5322
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.25
-Release:	0.2
+Version:	0.26
+Release:	0.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
 Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
-# Source0-md5:	a018220d5c790161bc712ccb7d0f1b38
+# Source0-md5:	700caa3f59b585d173812c4a078feeba
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
@@ -22,7 +22,7 @@ BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	docbook-style-xsl >= 1.60.1
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
-BuildRequires:	neon-devel >= 0.23.4
+BuildRequires:	neon-devel >= 0.24.0
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	rpmbuild(macros) >= 1.120
