@@ -1,11 +1,11 @@
 %include        /usr/lib/rpm/macros.python
 %define requires_eq_to()  %(LC_ALL="C" echo '%2' | xargs -r rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
-%define	repov 3712
+%define	repov 4038
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.21.0
+Version:	0.22.1
 Release:	0.2
 License:	Apache/BSD Style
 Group:		Development/Version Control
