@@ -1,18 +1,19 @@
 %include        /usr/lib/rpm/macros.python
 %define requires_eq_to()  %(LC_ALL="C" echo '%2' | xargs -r rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
-%define	repov 4218
+%define	repov 4761
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.23.0
+Version:	0.24.1
 Release:	0.2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
 Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
-# Source0-md5:	59661f2145976437b371a0ab3a555dbd
+# Source0-md5:	8e1402528f0db97d9a187decddde89d1
 Source1:	%{name}-dav_svn.conf
+Source2:	%{name}-authz_svn.conf
 URL:		http://subversion.tigris.org/
 BuildRequires:	apache-devel >= 2.0.46-0.2
 BuildRequires:	apr-devel >= 2.0.46-0.2
@@ -155,6 +156,16 @@ Apache module: Subversion Server.
 %description -n apache-mod_dav_svn -l pl
 Modu³ apache: Serwer Subversion.
 
+%package -n apache-mod_authz_svn
+Summary:	Apache module: Subversion Server - path-based authorization
+Group:		Networking/Daemons
+Requires:	apache-mod_dav_svn = %{version}
+%requires_eq_to	apache apache-devel
+%requires_eq_to	apache-mod_dav apache-devel
+
+%description -n apache-mod_authz_svn
+Apache module: Subversion Server - path-based authorization.
+
 %prep
 %setup -q
 
@@ -171,7 +182,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir}
 %{__make}
 %{__make} swig-py \
-	swig_pydir=%{py_sitedir}/svn
+	swig_pydir=%{py_sitedir}/libsvn \
+	swig_pydir_extra=%{py_sitedir}/svn
 
 # build documentation; build process for documentation is severely
 # braindamaged -- authors suggests to untar docbook distribution in
@@ -185,25 +197,26 @@ cp -f doc/book/book/images/*.png svn-handbook/images/
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}}
 
 %{__make} \
 	install \
 	install-swig-py \
-	INSTALL_MOD_SHARED=echo \
 	DESTDIR=$RPM_BUILD_ROOT \
-	swig_pydir=%{py_sitedir}/svn
+	swig_pydir=%{py_sitedir}/libsvn \
+	swig_pydir_extra=%{py_sitedir}/svn
 
-install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_apachelibdir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
+install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/ 
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 
-%post
+%post devel
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%postun
+%postun devel
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post libs -p /sbin/ldconfig
@@ -233,7 +246,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/svn*
 #%exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
-%{_infodir}/svn*
 
 %files libs
 %defattr(644,root,root,755)
@@ -245,6 +257,7 @@ rm -rf $RPM_BUILD_ROOT
 #%attr(755,root,root) %{_bindir}/svn-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
+%{_infodir}/svn*
 
 %files static
 %defattr(644,root,root,755)
@@ -254,10 +267,18 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc tools/backup tools/cvs2svn/*.py tools/examples/*.py
 %dir %{py_sitedir}/svn
+%dir %{py_sitedir}/libsvn
 %{py_sitedir}/svn/*.py[co]
-%attr(755,root,root) %{py_sitedir}/svn/*.so
+%{py_sitedir}/libsvn/*.py[co]
+%attr(755,root,root) %{py_sitedir}/libsvn/*.so
 
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
-%attr(755,root,root) %{_apachelibdir}/*.so
+%attr(755,root,root) %{_apachelibdir}/mod_dav_svn.so
+
+%files -n apache-mod_authz_svn
+%defattr(644,root,root,755)
+%doc subversion/mod_authz_svn/INSTALL
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
+%attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
