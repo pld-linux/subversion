@@ -12,18 +12,18 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.34.0
+Version:	0.35.0
 Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://svn.collab.net/tarballs/%{name}-%{version}.tar.gz
-# Source0-md5:	52f3a73858566d4d7045e449d94390e3
+# Source0-md5:	affeeda0a20d61a11fce2b1e19651062
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
-Patch0:		%{name}-perl.patch
-Patch1:		%{name}-svnlook.patch
+Patch0:		%{name}-svnlook.patch
+Patch1:		%{name}-bindings.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -234,8 +234,8 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p0
+%patch0 -p0
+%patch1 -p1
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
@@ -272,6 +272,7 @@ bdir=$(pwd)
 %{__make}
 cd subversion/bindings/swig/perl
 env APR_CONFIG=%{_bindir}/apr-config \
+    APU_CONFIG=%{_bindir}/apu-config \
 	%{__perl} Makefile.PL \
 	INSTALLDIRS=vendor
 env LIBRARY_PATH=${bdir}/swig-pl-lib-buildroot%{_libdir} %{__make}
