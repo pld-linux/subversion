@@ -6,15 +6,15 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	0.21.0
-Release:	0.1
+Release:	0.2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 #Source0Download:	http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=260
 Source0:	http://subversion.tigris.org/files/documents/15/%{repov}/subversion-%{version}.tar.gz
 Source1:	%{name}-dav_svn.conf
 URL:		http://subversion.tigris.org/
-BuildRequires:	apache-devel >= 2.0.44-0.3
-BuildRequires:	apr-devel >= 2.0.44-0.3
+BuildRequires:	apache-devel >= 2.0.45-0.2
+BuildRequires:	apr-devel >= 2.0.45-0.2
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db-devel >= 4.1.25
@@ -27,7 +27,6 @@ BuildRequires:	swig >= 1.3.17
 BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	texinfo
 BuildRequires:	docbook-style-xsl >= 1.60.1
-BuildRequires:	gdbm-devel
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
