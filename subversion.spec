@@ -44,7 +44,7 @@ BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
-BuildRequires:	python >= 2.2
+BuildRequires:	python-devel >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
