@@ -6,7 +6,7 @@
 %bcond_with	internal_neon		# build with internal neon
 %bcond_with	net_client_only		# build only net client
 #	
-%include        /usr/lib/rpm/macros.python
+%include	/usr/lib/rpm/macros.python
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
@@ -28,13 +28,12 @@ URL:		http://subversion.tigris.org/
 %global apache_modules_api 0
 %else
 BuildRequires:	apache-devel >= 2.0.47-0.6
-BuildRequires:  db-devel >= 4.1.25
-BuildRequires:  rpmbuild(macros) >= 1.120
-BuildRequires:  swig >= 1.3.17
-BuildRequires:  swig-python >= 1.3.17
-BuildRequires:	swig-perl >= 1.3.17
+BuildRequires:	db-devel >= 4.1.25
+BuildRequires:	rpmbuild(macros) >= 1.120
+BuildRequires:	swig >= 1.3.17
+BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	perl-devel >= 5.8.0
-BuildRequires:  rpm-perlprov
+BuildRequires:	rpm-perlprov
 %endif
 BuildRequires:	apr-devel >= 1:0.9.5
 BuildRequires:	apr-util-devel >= 1:0.9.5
@@ -45,8 +44,8 @@ BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
-BuildRequires:  python >= 2.2
-BuildRequires:  rpm-pythonprov >= 4.0.2-50
+BuildRequires:	python >= 2.2
+BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -146,8 +145,8 @@ Este pacote provê um cliente estático do subversion.
 Summary:	Subversion svnserve
 Summary(pl):	Subversion svnserve
 Group:		Networking/Daemons
-PreReq:         rc-scripts
-Requires(post,preun):   /sbin/chkconfig
+PreReq:		rc-scripts
+Requires(post,preun):	/sbin/chkconfig
 
 %description svnserve
 Subversion svnserve server.
@@ -169,7 +168,6 @@ Subversion tools and scripts.
 
 %description tools -l pl
 Narzêdzia oraz skrypty dla subversion.
-
 
 %package -n python-subversion
 Summary:	Subversion python bindings
@@ -266,12 +264,12 @@ chmod +x ./autogen.sh && ./autogen.sh
 # perl
 bdir=$(pwd)
 %{__make} install-swig-pl-lib \
-        LC_ALL=C \
-        DESTDIR=${bdir}/swig-pl-lib-buildroot
+	LC_ALL=C \
+	DESTDIR=${bdir}/swig-pl-lib-buildroot
 %{__make}
 cd subversion/bindings/swig/perl
 env APR_CONFIG=%{_bindir}/apr-config \
-        %{__perl} Makefile.PL \
+	%{__perl} Makefile.PL \
 	INSTALLDIRS=vendor
 env LIBRARY_PATH=${bdir}/swig-pl-lib-buildroot%{_libdir} %{__make}
 cd ../../../../
@@ -337,32 +335,31 @@ rm -rf $RPM_BUILD_ROOT
 
 %post svnserve
 if [ -f /var/lock/subsys/svnserve ]; then
-        /etc/rc.d/init.d/svnserve restart 1>&2
+	/etc/rc.d/init.d/svnserve restart 1>&2
 else
-        echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
+	echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
 fi
 
 %preun svnserve
 if [ "$1" = "0" ]; then
-        if [ -f /var/lock/subsys/svnserve ]; then
-                /etc/rc.d/init.d/svnserve restart 1>&2
-        fi
+	if [ -f /var/lock/subsys/svnserve ]; then
+		/etc/rc.d/init.d/svnserve restart 1>&2
+	fi
 fi
 
 %post -n apache-mod_dav_svn
 if [ -f /var/lock/subsys/httpd ]; then
-        /etc/rc.d/init.d/httpd restart 1>&2
+	/etc/rc.d/init.d/httpd restart 1>&2
 else
-        echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache http daemon."
+	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache http daemon."
 fi
 
 %preun -n apache-mod_dav_svn
 if [ "$1" = "0" ]; then
-        if [ -f /var/lock/subsys/httpd ]; then
-                /etc/rc.d/init.d/httpd restart 1>&2
-        fi
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
-
 
 %files
 %defattr(644,root,root,755)
@@ -402,7 +399,6 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/svnserve
 
-
 %files tools
 %defattr(644,root,root,755)
 %doc tools/cvs2svn/README*
@@ -437,5 +433,4 @@ fi
 %doc subversion/mod_authz_svn/INSTALL
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
-
 %endif
