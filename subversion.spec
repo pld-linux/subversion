@@ -1,7 +1,10 @@
 #
 # Conditional build:
-%bcond_with	internal_neon		# build with internal neon
-%bcond_with	net_client_only		# build only net client
+%bcond_with		internal_neon		# build with internal neon
+%bcond_with		net_client_only		# build only net client
+%bcond_without	python				# build without python bindings
+%bcond_without	perl				# build without perl bindings
+%bcond_without	apache				# build without apache support (webdav, etc)
 #	
 %include	/usr/lib/rpm/macros.python
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
@@ -26,14 +29,18 @@ URL:		http://subversion.tigris.org/
 %global apache_modules_api 0
 %else
 BuildRequires:	automake
-BuildRequires:	apache-devel >= 2.0.47-0.6
+%{?with_apache:BuildRequires:	apache-devel >= 2.0.47-0.6}
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	rpmbuild(macros) >= 1.120
+%if %{with python} || %{with perl}
 BuildRequires:	swig >= 1.3.19
-BuildRequires:	swig-python >= 1.3.19
+%endif
+%{?with_python:BuildRequires:	swig-python >= 1.3.19}
+%if %{with perl}
 BuildRequires:	swig-perl >= 1.3.19
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
+%endif
 %endif
 BuildRequires:	apr-devel >= 1:0.9.5
 BuildRequires:	apr-util-devel >= 1:0.9.5
@@ -44,8 +51,10 @@ BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.6}
+%if %{with python}
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
+%endif
 BuildRequires:	texinfo
 BuildRequires:	which
 Requires:	%{name}-libs = %{version}-%{release}
@@ -261,8 +270,16 @@ chmod +x ./autogen.sh && ./autogen.sh
 %else
 	--disable-dso \
 	--disable-mod-activation \
+%if %{with apache}
 	--with-apxs=%{_sbindir}/apxs \
+%else
+	--without-apache \
+	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
+%endif
+%if !%{with python} && !%{with perl}
+	--without-swig \
+%endif
 %endif
 	%{!?with_internal_neon:--with-neon=%{_prefix}} \
 	--with-apr=%{_bindir}/apr-config \
@@ -270,12 +287,15 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make}
 
-%if ! %{with net_client_only}
+%if !%{with net_client_only}
 # python
+%if %{with python}
 %{__make} swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
+%endif
 # perl
+%if %{with perl}
 bdir=$(pwd)
 %{__make} install-swig-pl-lib \
 	LC_ALL=C \
@@ -288,6 +308,7 @@ env APR_CONFIG=%{_bindir}/apr-config \
 	INSTALLDIRS=vendor
 env LIBRARY_PATH=${bdir}/swig-pl-lib-buildroot%{_libdir} %{__make}
 cd ../../../../
+%endif
 %endif
 
 # build documentation; build process for documentation is severely
@@ -309,12 +330,14 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 
 %{__make} install \
 	LC_ALL=C \
-	%{!?with_net_client_only:install-swig-py} \
+%if !%{with net_client_only} && %{with python}
+	install-swig-py \
+%endif
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if ! %{with net_client_only}
+%if !%{with net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	LC_ALL=C \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -322,19 +345,22 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
+%if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
+%endif
 install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
-%if ! %{with net_client_only}
+%if !%{with net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
-
+%if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 find $RPM_BUILD_ROOT%{py_sitedir} -name "*.py" -o -name "*.a" -o -name "*.la" | xargs rm -f
 install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
+%endif
 %endif
 
 install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
@@ -412,19 +438,22 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
-%if ! %{with net_client_only}
+%if !%{with net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
 %{_mandir}/man?/svnserve*
+%if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/svnserve
+%endif
 
 %files tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svn-hot-backup
 /etc/bash_completion.d/%{name}
 
+%if %{with python}
 %files -n python-subversion
 %defattr(644,root,root,755)
 %doc tools/backup/*.py tools/examples/*.py
@@ -434,7 +463,9 @@ fi
 %{py_sitedir}/libsvn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
+%endif
 
+%if %{with perl}
 %files -n perl-subversion
 %defattr(644,root,root,755)
 %{perl_vendorarch}/SVN
@@ -443,7 +474,9 @@ fi
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
+%endif
 
+%if %{with apache}
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
@@ -454,4 +487,5 @@ fi
 %doc subversion/mod_authz_svn/INSTALL
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
+%endif
 %endif
