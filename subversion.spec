@@ -21,6 +21,7 @@ BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	docbook-style-xsl >= 1.60.1
+BuildRequires:	libxslt-progs
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
