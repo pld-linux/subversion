@@ -1,30 +1,30 @@
-%define	repov	3252
+%define	repov	5063
 %include        /usr/lib/rpm/macros.python
 Summary:	A Concurrent Versioning system similar to but better than CVS
-Summary(pl):	System kontroli wersji ale lepszy ni¿ CVS
+Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	0.14.3
-Release:	r%{repov}.0
+Version:	0.18.0
+Release:	0.r%{repov}.0
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-r%{repov}.tar.gz
+Source0:	svn://svn.collab.net/repos/svn/trunk/%{name}-r%{repov}.tar.bz2
 Source1:	%{name}-dav_svn.conf
-Patch0:		%{name}-lib.patch
-Patch1:		%{name}-python.patch
 URL:		http://subversion.tigris.org/
-BuildRequires:	apache-devel >= 2.0.42
-BuildRequires:	apr-devel >= 2.0.42
+BuildRequires:	apache-devel >= 2.0.44
+BuildRequires:	apr-devel >= 2.0.44
 BuildRequires:	autoconf >= 2.53
 BuildRequires:	bison
-BuildRequires:	db4-devel >= 4.0.14
+BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	neon-devel >= 0.23.4
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
-BuildRequires:	swig >= 1.3.15
+BuildRequires:	swig >= 1.3.17
+BuildRequires:	swig-python >= 1.3.17
 BuildRequires:	texinfo
+BuildRequires:	docbook-style-xsl >= 1.60.1
 Requires(post):	/usr/sbin/fix-info-dir
 Requires(postun):	/usr/sbin/fix-info-dir
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -154,8 +154,6 @@ Modu³ apache: Serwer Subversion.
 
 %prep
 %setup -q -n %{name}-r%{repov}
-%patch0 -p1
-%patch1 -p1
 
 %build
 chmod +x ./autogen.sh && ./autogen.sh
@@ -169,23 +167,32 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--with-apxs=%{_sbindir}/apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir}
 %{__make}
+%{__make} swig-py \
+	swig_pydir=%{py_sitedir}/svn
 
-cd subversion/bindings/swig/python
-CFLAGS="%{rpmcflags}" python setup.py build
+# build documentation; build process for documentation is severely
+# braindamaged -- authors suggests to untar docbook distribution in
+# build directory, hence the hack here
+%{__make} -C doc/book XSL_DIR=/usr/share/sgml/docbook/xsl-stylesheets/ all-html
+
+# prepare for %%doc below
+mv -f doc/book/book/html-chunk svn-handbook
+mkdir svn-handbook/images/
+cp -f doc/book/book/images/*.png svn-handbook/images/
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir}}
 
-%{__make} install \
+%{__make} \
+	install \
+	install-swig-py \
 	INSTALL_MOD_SHARED=echo \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	swig_pydir=%{py_sitedir}/svn
 
 install subversion/mod_dav_svn/.libs/*.so $RPM_BUILD_ROOT%{_apachelibdir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
-
-cd subversion/bindings/swig/python
-python setup.py install --root=$RPM_BUILD_ROOT
 
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
@@ -218,7 +225,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc  BUGS CHANGES IDEAS INSTALL README
+%doc BUGS CHANGES COPYING IDEAS INSTALL README
+%doc svn-handbook doc/book/misc-docs/misc-docs.html 
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svn-config
 %{_mandir}/man1/*
