@@ -43,11 +43,9 @@ BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	expat-devel
-BuildRequires:	gdbm-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.1}
-BuildRequires:	openldap-devel
 BuildRequires:	python >= 2.2
 BuildRequires:	rpm-pythonprov >= 4.0.2-50
 BuildRequires:	texinfo
