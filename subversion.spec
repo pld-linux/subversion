@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_with	internal_neon		# build with internal neon
-%bcond_with	net_client_only		# build only net client
+%bcond_without	net_client_only		# build only net client
 #	
 %include	/usr/lib/rpm/macros.python
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
@@ -38,7 +38,7 @@ BuildRequires:	rpm-perlprov
 %endif
 BuildRequires:	apr-devel >= 1:0.9.5
 BuildRequires:	apr-util-devel >= 1:0.9.5
-BuildRequires:	autoconf >= 2.59
+BuildRequires:	autoconf >= 2.57
 BuildRequires:	bison
 BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	expat-devel
@@ -382,14 +382,13 @@ fi
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
 %doc tools/xslt/*
-%attr(755,root,root) %{_bindir}/svn*
-%exclude %{_bindir}/svnserve
-%exclude %{_bindir}/svn-hot-backup
-%{_mandir}/man1/*
+%attr(755,root,root) %{_bindir}/svn
+%attr(755,root,root) %{_bindir}/svn[!s-]*
+%{_mandir}/man1/svn*
+%if ! %{with net_client_only}
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%exclude %{_mandir}/man?/svnserve*
-%{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
+%endif
 
 %files libs
 %defattr(644,root,root,755)
