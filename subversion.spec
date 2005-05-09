@@ -16,7 +16,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.1.4
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -53,6 +53,7 @@ BuildRequires:	libtool >= 1.4-9
 BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.7}
 %if %{with python}
+BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
 %endif
 BuildRequires:	texinfo
