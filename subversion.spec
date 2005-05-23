@@ -15,12 +15,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.1.4
-Release:	2
+Version:	1.2.0
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	6e557ae65b6b8d7577cc7704ede85a23
+# Source0-md5:	f25c0c884201f411e99a6cb6c25529ff
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -47,10 +47,8 @@ BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.0.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
-BuildRequires:	docbook-style-xsl >= 1.56
 BuildRequires:	expat-devel
 BuildRequires:	libtool >= 1.4-9
-BuildRequires:	libxslt-progs
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.7}
 %if %{with python}
 BuildRequires:	python >= 2.2
@@ -322,17 +320,6 @@ cd $odir
 %endif
 %endif
 
-# build documentation; build process for documentation is severely
-# braindamaged -- authors suggests to untar docbook distribution in
-# build directory, hence the hack here
-ln -s /usr/share/sgml/docbook/xsl-stylesheets doc/book/tools/xsl
-%{__make} -C doc/book all-html
-
-# prepare for %%doc below
-mv -f doc/book/book/html-chunk svn-handbook
-#mkdir svn-handbook/images/
-cp -f doc/book/book/images/*.png svn-handbook/images/
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
@@ -366,7 +353,6 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_s
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
-install doc/programmer/design/*.info* $RPM_BUILD_ROOT%{_infodir}/
 
 %if !%{with net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
@@ -428,7 +414,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc BUGS CHANGES COPYING INSTALL README
-%doc svn-handbook doc/book/misc-docs/misc-docs.html
+%doc doc/*/*.html
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
 %doc tools/xslt/*
@@ -453,7 +439,6 @@ fi
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
-%{_infodir}/svn*
 %{_examplesdir}/%{name}-%{version}
 
 %files static
