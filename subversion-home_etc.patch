@@ -1,0 +1,12 @@
+--- subversion/libsvn_subr/config_file.c~	2005-03-28 19:36:02.000000000 +0200
++++ subversion/libsvn_subr/config_file.c	2005-06-08 10:35:41.000000000 +0200
+@@ -319,7 +319,8 @@
+     char *homedir;
+     const char *homedir_utf8;
+ 
+-    apr_err = apr_env_get (&homedir, "HOME", pool);
++    apr_err = apr_env_get (&homedir, "HOME_ETC", pool);
++    if ( apr_err || ! homedir ) apr_err = apr_env_get (&homedir, "HOME", pool);
+     if ( apr_err || ! homedir )
+       {
+         apr_uid_t uid;
