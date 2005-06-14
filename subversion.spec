@@ -49,6 +49,7 @@ BuildRequires:	apr-util-devel >= 1:1.0.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
+BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
 %{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.7}
 %if %{with python}
@@ -457,7 +458,7 @@ fi
 %dir /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
-%attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/svnserve
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/svnserve
 %endif
 
 %files tools
@@ -496,13 +497,13 @@ fi
 %if %{with apache}
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_dav_svn.so
 
 %files -n apache-mod_authz_svn
 %defattr(644,root,root,755)
 %doc subversion/mod_authz_svn/INSTALL
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
 %endif
 %endif
