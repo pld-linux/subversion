@@ -16,7 +16,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.2.0
-Release:	2
+Release:	3
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -26,6 +26,7 @@ Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
+Patch1:		%{name}-SWIGEXPORT.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -34,14 +35,10 @@ BuildRequires:	automake
 %{?with_apache:BuildRequires:	apache-devel >= 2.0.47-0.6}
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	rpmbuild(macros) >= 1.120
-%if %{with python} || %{with perl}
-BuildRequires:	swig >= 1.3.19
-%endif
-%{?with_python:BuildRequires:	swig-python >= 1.3.21}
 %if %{with perl}
-BuildRequires:	swig-perl >= 1.3.21
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	swig-perl >= 1.3.24
 %endif
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
@@ -56,6 +53,7 @@ BuildRequires:	libtool >= 1.4-9
 BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
+BuildRequires:	swig-python >= 1.3.24
 %endif
 BuildRequires:	texinfo
 BuildRequires:	which
@@ -268,6 +266,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p1
 
 rm -rf apr-util{,/xml/expat}/autom4te.cache
 
