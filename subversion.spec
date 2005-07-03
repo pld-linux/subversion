@@ -16,7 +16,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.2.0
-Release:	3
+Release:	4
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -350,6 +350,8 @@ cd subversion/bindings/swig/perl/native
 cd $odir
 %endif
 
+install svn-config $RPM_BUILD_ROOT%{_bindir}
+
 %if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
@@ -439,6 +441,7 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/svn-config
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
