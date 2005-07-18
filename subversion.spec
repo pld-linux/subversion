@@ -16,7 +16,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.2.1
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -53,6 +53,7 @@ BuildRequires:	libtool >= 1.4-9
 BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
+BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
 BuildRequires:	texinfo
@@ -322,6 +323,8 @@ cd subversion/bindings/swig/perl/native
 cd $odir
 %endif
 %endif
+
+%{__sed} -i -e 's/@SVN_DB_INCLUDES@//g' -e 's/@SVN_DB_LIBS@//g' svn-config
 
 %install
 rm -rf $RPM_BUILD_ROOT
