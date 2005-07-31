@@ -1,0 +1,45 @@
+Hi,
+
+This patch fixes `svn add <directory>/` sigsegv.
+Crash occuron only with pl_PL locales due to invalid
+format of localized error message.
+
+# BACKTRACE:
+
+Program received signal SIGSEGV, Segmentation fault.
+0xb77f430b in strlen () from /lib/tls/libc.so.6
+
+(gdb) bt
+#0  0xb77f430b in strlen () from /lib/tls/libc.so.6
+#1  0xb7d20d32 in apr_vformatter (flush_func=0xb7d29e60 <psprintf_flush>, vbuff=0xbfd0b380,
+    fmt=0xb76a6024 "s'", ap=0xbfd0b51c "t\202�") at strings/apr_snprintf.c:944
+#2  0xb7d2a017 in apr_pvsprintf (pool=0x808ad78, fmt=0x5 <Address 0x5 out of bounds>,
+    ap=0x5 <Address 0x5 out of bounds>) at memory/unix/apr_pools.c:981
+#3  0xb7dd84c4 in svn_error_wrap_apr (status=2,
+    fmt=0xb76a6004 "Nie można czyta�\207 z katalogu '%s'")
+    at subversion/libsvn_subr/error.c:171
+#4  0xb7dde0d6 in svn_io_dir_read (finfo=0xb76a6004, wanted=5, thedir=0x5, pool=0x80972e8)
+    at subversion/libsvn_subr/io.c:2530
+#5  0xb7eca1fc in add_dir_recursive (dirname=0x806a770 "bar", adm_access=0x8087ef0, force=0,
+    ctx=0x8069e00, pool=0x8087df0) at subversion/libsvn_client/add.c:305
+#6  0xb7eca3fa in add (path=0x806a770 "bar", recursive=1, force=0, adm_access=0x8087ef0,
+    ctx=0x8069e00, pool=0x8087df0) at subversion/libsvn_client/add.c:397
+#7  0xb7eca56e in svn_client_add2 (path=0x806a770 "bar", recursive=5, force=5, ctx=0x8069e00,
+    pool=0x8087df0) at subversion/libsvn_client/add.c:460
+#8  0x0804bc8a in svn_cl__add (os=0x5, baton=0x5, pool=0x806a770)
+    at subversion/clients/cmdline/add-cmd.c:66
+#9  0x080508b4 in main (argc=0, argv=0x5) at subversion/clients/cmdline/main.c:1449
+
+# FIX:
+
+--- subversion-1.2.1/subversion/po/pl.po.orig	2005-06-21 16:00:33.000000000 +0200
++++ subversion-1.2.1/subversion/po/pl.po	2005-07-31 23:18:53.628066112 +0200
+@@ -5867,7 +5867,7 @@
+ 
+ #: libsvn_subr/io.c:2529
+ msgid "Can't read directory"
+-msgstr "Nie można czytać z katalogu '%s'"
++msgstr "Nie można czytać z katalogu"
+ 
+ #: libsvn_subr/io.c:2600
+ #, c-format
