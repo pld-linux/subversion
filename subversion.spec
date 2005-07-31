@@ -16,7 +16,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.2.1
-Release:	2
+Release:	3
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -27,6 +27,7 @@ Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-SWIGEXPORT.patch
+Patch2:		%{name}-po.pl.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -268,6 +269,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %setup -q
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 
 rm -rf apr-util{,/xml/expat}/autom4te.cache
 
