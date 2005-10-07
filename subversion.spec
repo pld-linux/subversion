@@ -48,7 +48,10 @@ BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
-%{!?with_internal_neon:BuildRequires:	neon-devel = 0.24.7}
+%if %{without internal_neon}
+BuildRequires:	neon-devel >= 0.24.7
+BuildRequires:	neon-devel < 0.25.0
+%endif
 %if %{with python}
 BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
