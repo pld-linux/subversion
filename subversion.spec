@@ -431,6 +431,7 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
+%exclude %{_bindir}/svn-config
 %exclude %{_bindir}/svn-hot-backup
 %{_mandir}/man1/*
 %{_mandir}/man5/*
