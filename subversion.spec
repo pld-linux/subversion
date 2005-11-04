@@ -4,7 +4,6 @@
 #   without db => net_client_only - spec will be more simpler, I think)
 #
 # Conditional build:
-%bcond_with	internal_neon			# build with internal neon
 %bcond_with	net_client_only			# build only net client
 %bcond_without	python				# build without python bindings
 %bcond_without	perl				# build without perl bindings
@@ -15,16 +14,18 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.2.0
-Release:	1
+Version:	1.3.0
+Release:	0.rc2.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	f25c0c884201f411e99a6cb6c25529ff
+Source0:	http://lolut.utbm.info/pub/subversion-1.3.0/rc2/subversion-1.3.0-rc2-nodeps.tar.bz2
+# Source0-md5:	c72b74f545ba7f786cfbbde25906597d
+#Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
+Patch0:		%{name}-home_etc.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -33,14 +34,10 @@ BuildRequires:	automake
 %{?with_apache:BuildRequires:	apache-devel >= 2.0.47-0.6}
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	rpmbuild(macros) >= 1.120
-%if %{with python} || %{with perl}
-BuildRequires:	swig >= 1.3.19
-%endif
-%{?with_python:BuildRequires:	swig-python >= 1.3.21}
 %if %{with perl}
-BuildRequires:	swig-perl >= 1.3.21
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	swig-perl >= 1.3.24
 %endif
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
@@ -48,11 +45,15 @@ BuildRequires:	apr-util-devel >= 1:1.0.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
+BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
-%{!?with_internal_neon:BuildRequires:	neon-devel >= 0.24.7}
+BuildRequires:	neon-devel >= 0.24.7
 %if %{with python}
 BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
+BuildRequires:	python-modules >= 2.2
+BuildRequires:	sed >= 4.0
+BuildRequires:	swig-python >= 1.3.24
 %endif
 BuildRequires:	texinfo
 BuildRequires:	which
@@ -109,7 +110,7 @@ Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
 Obsoletes:	libsubversion0
-%{!?with_internal_neon:Requires:	neon >= 0.24.6}
+Requires:	neon >= 0.24.7
 
 %description libs
 Subversion libraries and modules.
@@ -124,7 +125,7 @@ Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
-%{!?with_internal_neon:Requires:	neon-devel >= 0.24.6}
+Requires:	neon-devel >= 0.24.7
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -263,7 +264,8 @@ Apache module: Subversion Server - path-based authorization.
 Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-rc2
+%patch0 -p0
 
 rm -rf apr-util{,/xml/expat}/autom4te.cache
 
@@ -296,7 +298,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-swig \
 %endif
 %endif
-	%{!?with_internal_neon:--with-neon=%{_prefix}} \
+	--with-neon=%{_prefix} \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
@@ -319,6 +321,8 @@ cd subversion/bindings/swig/perl/native
 cd $odir
 %endif
 %endif
+
+%{__sed} -i -e 's/@SVN_DB_INCLUDES@//g' -e 's/@SVN_DB_LIBS@//g' svn-config
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -346,6 +350,8 @@ cd subversion/bindings/swig/perl/native
 	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 cd $odir
 %endif
+
+install svn-config $RPM_BUILD_ROOT%{_bindir}
 
 %if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
@@ -420,12 +426,12 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
+%exclude %{_bindir}/svn-config
 %exclude %{_bindir}/svn-hot-backup
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %exclude %{_mandir}/man?/svnserve*
-%{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
 
 %files libs -f %{name}.lang
 %defattr(644,root,root,755)
@@ -436,6 +442,7 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/svn-config
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
@@ -454,7 +461,7 @@ fi
 %dir /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
-%attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/svnserve
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/svnserve
 %endif
 
 %files tools
@@ -493,13 +500,13 @@ fi
 %if %{with apache}
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_dav_svn.so
 
 %files -n apache-mod_authz_svn
 %defattr(644,root,root,755)
 %doc subversion/mod_authz_svn/INSTALL
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
 %endif
 %endif
