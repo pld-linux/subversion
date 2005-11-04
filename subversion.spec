@@ -432,7 +432,6 @@ fi
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %exclude %{_mandir}/man?/svnserve*
-%exclude %{_mandir}/man1/neon*
 
 %files libs -f %{name}.lang
 %defattr(644,root,root,755)
