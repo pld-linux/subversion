@@ -15,11 +15,12 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.3.0
-Release:	0.rc2.1
+%define		_rc	rc4
+Release:	0.%{_rc}.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://lolut.utbm.info/pub/subversion-1.3.0/rc2/subversion-1.3.0-rc2-nodeps.tar.bz2
-# Source0-md5:	c72b74f545ba7f786cfbbde25906597d
+Source0:	http://lolut.utbm.info/pub/subversion-1.3.0/%{_rc}/subversion-1.3.0-%{_rc}.tar.bz2
+# Source0-md5:	32bd8a7ff6855151704ae5d5773f7028
 #Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
@@ -191,7 +192,7 @@ Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
 Requires:	bash-completion
 Requires:	%{name} = %{version}-%{release}
-Conflicts:	%{name}-tools <= 1.1.0-0.rc2.1
+Conflicts:	%{name}-tools <= 1.1.0-0.%{_rc}.1
 
 %description -n bash-completion-subversion
 Bash completion for subversion.
@@ -264,10 +265,9 @@ Apache module: Subversion Server - path-based authorization.
 Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
-%setup -q -n %{name}-%{version}-rc2
+%setup -q -n %{name}-%{version}-%{_rc}
+rm -rf apr apr-util neon
 %patch0 -p0
-
-rm -rf apr-util{,/xml/expat}/autom4te.cache
 
 %build
 cp -f /usr/share/automake/config.sub ac-helpers
