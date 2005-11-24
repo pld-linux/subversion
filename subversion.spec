@@ -19,7 +19,8 @@ Version:	1.3.0
 Release:	0.%{_rc}.1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://lolut.utbm.info/pub/subversion-1.3.0/%{_rc}/subversion-1.3.0-%{_rc}.tar.bz2
+#Source0:	http://lolut.utbm.info/pub/subversion-1.3.0/%{_rc}/subversion-1.3.0-%{_rc}.tar.bz2
+Source:		http://lolut.utbm.info/pub/subversion-1.3.0/%{_rc}/archimedes/subversion-1.3.0-%{_rc}.tar.bz2
 # Source0-md5:	32bd8a7ff6855151704ae5d5773f7028
 #Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
 Source1:	%{name}-dav_svn.conf
