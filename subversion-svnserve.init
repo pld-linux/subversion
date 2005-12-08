@@ -4,9 +4,9 @@
 #
 # chkconfig:	2345 80 30
 # description:	svnserve is a subversion server
-#		
+#
 # processname:	svnserve
-# config:	
+# config:
 # pidfile:
 
 # Source function library.
@@ -50,7 +50,7 @@ case "$1" in
 		rm -f /var/lock/subsys/svnserve >/dev/null 2>&1
 	else
 		msg_not_running svnserve
-	fi	
+	fi
 	;;
   restart|force-reload)
 	$0 stop
