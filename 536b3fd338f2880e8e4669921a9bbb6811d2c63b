@@ -1,0 +1,2 @@
+- net_client_only bcond (allows to build networked client without need
+  to have apache2-devel nor db4-devel nor swig3-devel)
