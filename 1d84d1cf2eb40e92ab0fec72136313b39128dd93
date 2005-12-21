@@ -1,0 +1,3 @@
+- define %requires_eq_to and use it (fix problem with requires
+  generation if apache-mod_dav is not installed)
+- rel .1
