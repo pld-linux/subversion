@@ -1,0 +1,5 @@
+- remove internal version of %requires_eq_to (not used now)
+- use %{apache_modules_api} in Requires (to prevent rebuilding subversion on
+  apache version change but without modules API change)
+- BR apache-devel with fixed libtool (relink issue)
+- remove relink workaround
