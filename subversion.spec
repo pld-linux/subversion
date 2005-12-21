@@ -9,14 +9,14 @@
 %bcond_without	python				# build without python bindings
 %bcond_without	perl				# build without perl bindings
 %bcond_without	apache				# build without apache support (webdav, etc)
-#	
+#
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.2.3
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
@@ -31,8 +31,8 @@ URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
-BuildRequires:	automake
 %{?with_apache:BuildRequires:	apache-devel >= 2.0.47-0.6}
+BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	rpmbuild(macros) >= 1.120
 %if %{with perl}
@@ -49,13 +49,13 @@ BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
 %if %{without internal_neon}
-BuildRequires:	neon-devel >= 0.24.7
 BuildRequires:	neon-devel < 0.25.0
+BuildRequires:	neon-devel >= 0.24.7
 %endif
 %if %{with python}
-BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
+BuildRequires:	python >= 2.2
 BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
@@ -163,9 +163,9 @@ Este pacote provê um cliente estático do subversion.
 Summary:	Subversion svnserve
 Summary(pl):	Subversion svnserve
 Group:		Networking/Daemons
-PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
+Requires:	rc-scripts
 
 %description svnserve
 Subversion svnserve server.
@@ -179,9 +179,9 @@ Summary(pl):	Narzêdzia oraz skrypty dla subversion
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 %pyrequires_eq	python
+Requires:	%{name} = %{version}-%{release}
 Requires:	python-rcsparse >= 0.1-0.20031026.0
 Requires:	python-subversion = %{version}
-Requires:	%{name} = %{version}-%{release}
 
 %description tools
 Subversion tools and scripts.
@@ -193,8 +193,8 @@ Narzêdzia oraz skrypty dla subversion.
 Summary:	bash completion for subversion
 Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
-Requires:	bash-completion
 Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion
 Conflicts:	%{name}-tools <= 1.1.0-0.rc2.1
 
 %description -n bash-completion-subversion
@@ -242,10 +242,10 @@ Módulos perl para acessar os recursos do Subversion.
 Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
-Requires:	apache >= 2.0.47
+Requires:	%{name} = %{version}-%{release}
 Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache-mod_dav
-Requires:	%{name} = %{version}-%{release}
+Requires:	apache >= 2.0.47
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -257,9 +257,9 @@ Modu³ apache: Serwer Subversion.
 Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
+Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache-mod_dav_svn = %{version}-%{release}
 Requires:	apache >= 2.0.47
-Requires:	apache(modules-api) = %{apache_modules_api}
 
 %description -n apache-mod_authz_svn
 Apache module: Subversion Server - path-based authorization.
@@ -458,7 +458,7 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
@@ -515,4 +515,5 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
 %attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
 %endif
-%endif
+
+%endif # net_client_only
