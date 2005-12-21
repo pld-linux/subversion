@@ -1,0 +1,4 @@
+- updated to 0.28
+- added --with internal_neon bcond
+- fixed BR: neon-devel
+  WARNING: this version requires dump/load cycle from pre 0.28 repos
