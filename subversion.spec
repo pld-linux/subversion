@@ -15,7 +15,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.3.0
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -29,7 +29,7 @@ URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
-%{?with_apache:BuildRequires:	apache-devel >= 2.0.47-0.6}
+%{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	rpmbuild(macros) >= 1.120
@@ -333,6 +333,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if !%{with net_client_only} && %{with python}
 	install-swig-py \
 %endif
+	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
