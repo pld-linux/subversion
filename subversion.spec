@@ -4,7 +4,6 @@
 #   without db => net_client_only - spec will be more simpler, I think)
 #
 # Conditional build:
-%bcond_with	internal_neon			# build with internal neon
 %bcond_with	net_client_only			# build only net client
 %bcond_without	python				# build without python bindings
 %bcond_without	perl				# build without perl bindings
@@ -15,18 +14,17 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.2.3
-Release:	2
+Version:	1.3.0
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
-# Source0-md5:	a14bc6590241b6e5c2ff2b354cc184a1
+Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
+# Source0-md5:	0d91a7fe152d0373044c47c54deb2c9a
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
-Patch1:		%{name}-po.pl.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -48,10 +46,7 @@ BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
-%if %{without internal_neon}
-BuildRequires:	neon-devel < 0.25.0
 BuildRequires:	neon-devel >= 0.24.7
-%endif
 %if %{with python}
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
@@ -114,7 +109,7 @@ Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
 Obsoletes:	libsubversion0
-%{!?with_internal_neon:Requires:	neon >= 0.24.6}
+Requires:	neon >= 0.24.7
 
 %description libs
 Subversion libraries and modules.
@@ -129,7 +124,7 @@ Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
-%{!?with_internal_neon:Requires:	neon-devel >= 0.24.6}
+Requires:	neon-devel >= 0.24.7
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -193,9 +188,9 @@ Narzêdzia oraz skrypty dla subversion.
 Summary:	bash completion for subversion
 Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
-Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion
-Conflicts:	%{name}-tools <= 1.1.0-0.rc2.1
+Requires:	%{name} = %{version}-%{release}
+Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
 
 %description -n bash-completion-subversion
 Bash completion for subversion.
@@ -269,10 +264,8 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
+rm -rf apr apr-util neon
 %patch0 -p0
-%patch1 -p1
-
-rm -rf apr-util{,/xml/expat}/autom4te.cache
 
 %build
 cp -f /usr/share/automake/config.sub ac-helpers
@@ -303,7 +296,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-swig \
 %endif
 %endif
-	%{!?with_internal_neon:--with-neon=%{_prefix}} \
+	--with-neon=%{_prefix} \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
@@ -437,7 +430,6 @@ fi
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %exclude %{_mandir}/man?/svnserve*
-%{?with_internal_neon:%exclude %{_mandir}/man1/neon*}
 
 %files libs -f %{name}.lang
 %defattr(644,root,root,755)
