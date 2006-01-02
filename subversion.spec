@@ -15,13 +15,11 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.3.0
-%define		_rc	rc6
-Release:	0.%{_rc}.1
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
-Source0:	http://lolut.utbm.info/pub/subversion-1.3.0/%{_rc}/atlantis/subversion-1.3.0-%{_rc}.tar.bz2
-# Source0-md5:	fa789a070a47cf45d8017762d17208f8
-#Source0:	http://subversion.tigris.org/tarballs/%{name}-%{version}.tar.bz2
+Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
+# Source0-md5:	0d91a7fe152d0373044c47c54deb2c9a
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -192,7 +190,7 @@ Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
 Requires:	bash-completion
 Requires:	%{name} = %{version}-%{release}
-Conflicts:	%{name}-tools <= 1.1.0-0.%{_rc}.1
+Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
 
 %description -n bash-completion-subversion
 Bash completion for subversion.
@@ -265,7 +263,7 @@ Apache module: Subversion Server - path-based authorization.
 Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
-%setup -q -n %{name}-%{version}-%{_rc}
+%setup -q
 rm -rf apr apr-util neon
 %patch0 -p0
 
