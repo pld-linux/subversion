@@ -15,7 +15,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.3.0
-Release:	3
+Release:	4
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -447,6 +447,9 @@ fi
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
+%if %{with perl} || %{with python}
+%exclude %{_libdir}/lib*swig*.la
+%endif
 %{_examplesdir}/%{name}-%{version}
 
 %files static
@@ -484,6 +487,7 @@ fi
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
 %attr(755,root,root) %{_libdir}/lib*_swig_py*.so.*
+%{_libdir}/lib*_swig_py*.la
 %endif
 
 %if %{with perl}
@@ -496,6 +500,7 @@ fi
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
 %attr(755,root,root) %{_libdir}/lib*_swig_perl*.so.*
+%{_libdir}/lib*_swig_perl*.la
 %endif
 
 %if %{with apache}
