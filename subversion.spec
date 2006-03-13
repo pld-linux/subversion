@@ -10,6 +10,7 @@
 %bcond_without	apache				# build without apache support (webdav, etc)
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
+%define	apxs	/usr/sbin/apxs
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
@@ -60,8 +61,8 @@ BuildRequires:	which
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_apachelibdir	/usr/%{_lib}/apache
-%define		_libexecdir	%{_libdir}/svn
+%define		_apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
+%define		_libexecdir		%{_libdir}/svn
 
 %description
 The goal of the Subversion project is to build a version control
