@@ -33,7 +33,7 @@ URL:		http://subversion.tigris.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	rpmbuild(macros) >= 1.120
+BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -391,31 +391,21 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n perl-subversion -p /sbin/ldconfig
 
 %post svnserve
-if [ -f /var/lock/subsys/svnserve ]; then
-	/etc/rc.d/init.d/svnserve restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
-fi
+/sbin/chkconfig --add svnserve
+%service svnserve restart "svnserve daemon"
+
 %preun svnserve
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/svnserve ]; then
-		/etc/rc.d/init.d/svnserve restart 1>&2
-	fi
+	%service svnserve stop
+	/sbin/chkconfig --del svnserve
 fi
-
 
 %post -n apache-mod_dav_svn
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache HTTP daemon."
-fi
+%service -q httpd restart
 
 %preun -n apache-mod_dav_svn
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %files
