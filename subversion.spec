@@ -49,7 +49,7 @@ BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	neon-devel >= 0.24.7
-BuildConflicts:	neon-devel >= 0.25.5
+BuildConflicts:	neon-devel > 0.25.5
 %if %{with python}
 BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
@@ -299,6 +299,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 %endif
 	--with-neon=%{_prefix} \
+	--disable-neon-version-check \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
