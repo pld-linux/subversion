@@ -420,7 +420,9 @@ fi
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
 %exclude %{_bindir}/svn-config
+%if %{without net_client_only}
 %exclude %{_bindir}/svn-hot-backup
+%endif
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
