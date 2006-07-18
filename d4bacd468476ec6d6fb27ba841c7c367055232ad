@@ -1,0 +1,3 @@
+- block building with neon >= 0.25.5
+  checking neon library version... 0.26.0
+  You have neon version 0.26.0, but Subversion needs neon 0.25.4.
