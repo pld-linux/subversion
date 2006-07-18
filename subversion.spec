@@ -1,5 +1,4 @@
-#
-# todo:
+# TODO:
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
 #
@@ -11,6 +10,8 @@
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 %define	apxs	/usr/sbin/apxs
+%define	pdir	SVN
+%define	pnam	_Core
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
@@ -295,7 +296,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
-%if !%{with python} && !%{with perl}
+%if %{without python} && %{without perl}
 	--without-swig \
 %endif
 %endif
@@ -304,9 +305,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
-%{__make}
+%{__make} -j1
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 # python
 %if %{with python}
 %{__make} swig-py \
@@ -333,8 +334,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
-%{__make} install \
-%if !%{with net_client_only} && %{with python}
+%{__make} install -j1 \
+%if %{without net_client_only} && %{with python}
 	install-swig-py \
 %endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
@@ -342,7 +343,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if !%{with net_client_only} && %{with perl}
+%if %{without net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 odir=$(pwd)
@@ -363,7 +364,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
