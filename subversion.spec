@@ -14,17 +14,18 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.3.0
-Release:	2
+Version:	1.4.0
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
-# Source0-md5:	0d91a7fe152d0373044c47c54deb2c9a
+# Source0-md5:	6f7485986776204138a1d221ac5eec40
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
+Patch1:		%{name}-DESTDIR.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -40,7 +41,7 @@ BuildRequires:	swig-perl >= 1.3.24
 %endif
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
-BuildRequires:	apr-util-devel >= 1:1.0.0
+BuildRequires:	apr-util-devel >= 1:1.2.7-4
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
@@ -266,6 +267,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %setup -q
 rm -rf apr apr-util neon
 %patch0 -p0
+%patch1 -p1
 
 %build
 cp -f /usr/share/automake/config.sub ac-helpers
@@ -320,8 +322,6 @@ cd $odir
 %endif
 %endif
 
-%{__sed} -i -e 's/@SVN_DB_INCLUDES@//g' -e 's/@SVN_DB_LIBS@//g' svn-config
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
@@ -349,8 +349,6 @@ cd subversion/bindings/swig/perl/native
 	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 cd $odir
 %endif
-
-install svn-config $RPM_BUILD_ROOT%{_bindir}
 
 %if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
@@ -425,7 +423,6 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
-%exclude %{_bindir}/svn-config
 %exclude %{_bindir}/svn-hot-backup
 %{_mandir}/man1/*
 %{_mandir}/man5/*
@@ -441,7 +438,6 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/svn-config
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
