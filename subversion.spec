@@ -1,5 +1,4 @@
-#
-# todo:
+# TODO:
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
 #
@@ -10,12 +9,15 @@
 %bcond_without	apache				# build without apache support (webdav, etc)
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
+%define	apxs	/usr/sbin/apxs
+%define	pdir	SVN
+%define	pnam	_Core
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.0
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -33,7 +35,7 @@ URL:		http://subversion.tigris.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	rpmbuild(macros) >= 1.120
+BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -60,8 +62,8 @@ BuildRequires:	which
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_apachelibdir	/usr/%{_lib}/apache
-%define		_libexecdir	%{_libdir}/svn
+%define		_apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
+%define		_libexecdir		%{_libdir}/svn
 
 %description
 The goal of the Subversion project is to build a version control
@@ -239,8 +241,7 @@ Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
-Requires:	apache >= 2.0.47
-Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav
 
 %description -n apache-mod_dav_svn
@@ -253,8 +254,7 @@ Modu³ apache: Serwer Subversion.
 Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
-Requires:	apache >= 2.0.47
-Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav_svn = %{version}-%{release}
 
 %description -n apache-mod_authz_svn
@@ -294,7 +294,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
-%if !%{with python} && !%{with perl}
+%if %{without python} && %{without perl}
 	--without-swig \
 %endif
 %endif
@@ -302,9 +302,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
-%{__make}
+%{__make} -j1
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 # python
 %if %{with python}
 %{__make} swig-py \
@@ -329,8 +329,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
-%{__make} install \
-%if !%{with net_client_only} && %{with python}
+%{__make} install -j1 \
+%if %{without net_client_only} && %{with python}
 	install-swig-py \
 %endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
@@ -338,7 +338,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if !%{with net_client_only} && %{with perl}
+%if %{without net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 odir=$(pwd)
@@ -357,7 +357,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -387,31 +387,21 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n perl-subversion -p /sbin/ldconfig
 
 %post svnserve
-if [ -f /var/lock/subsys/svnserve ]; then
-	/etc/rc.d/init.d/svnserve restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
-fi
+/sbin/chkconfig --add svnserve
+%service svnserve restart "svnserve daemon"
+
 %preun svnserve
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/svnserve ]; then
-		/etc/rc.d/init.d/svnserve restart 1>&2
-	fi
+	%service svnserve stop
+	/sbin/chkconfig --del svnserve
 fi
-
 
 %post -n apache-mod_dav_svn
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache HTTP daemon."
-fi
+%service -q httpd restart
 
 %preun -n apache-mod_dav_svn
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %files
@@ -423,7 +413,9 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
+%if %{without net_client_only}
 %exclude %{_bindir}/svn-hot-backup
+%endif
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
@@ -441,6 +433,10 @@ fi
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
+%if %{with perl} || %{with python}
+%exclude %{_libdir}/lib*_swig_*.so
+%exclude %{_libdir}/lib*swig*.la
+%endif
 %{_examplesdir}/%{name}-%{version}
 
 %files static
@@ -477,7 +473,8 @@ fi
 %{py_sitedir}/libsvn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
-%attr(755,root,root) %{_libdir}/lib*_swig_py*.so.*
+%attr(755,root,root) %{_libdir}/lib*_swig_py*.so*
+%{_libdir}/lib*_swig_py*.la
 %endif
 
 %if %{with perl}
@@ -489,7 +486,8 @@ fi
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
-%attr(755,root,root) %{_libdir}/lib*_swig_perl*.so.*
+%attr(755,root,root) %{_libdir}/lib*_swig_perl*.so*
+%{_libdir}/lib*_swig_perl*.la
 %endif
 
 %if %{with apache}
