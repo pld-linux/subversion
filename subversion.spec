@@ -49,9 +49,9 @@ BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	neon-devel >= 0.24.7
 %if %{with python}
+BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
-BuildRequires:	python >= 2.2
 BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
@@ -109,8 +109,8 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
-Obsoletes:	libsubversion0
 Requires:	neon >= 0.24.7
+Obsoletes:	libsubversion0
 
 %description libs
 Subversion libraries and modules.
@@ -189,8 +189,8 @@ Narzêdzia oraz skrypty dla subversion.
 Summary:	bash completion for subversion
 Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
-Requires:	bash-completion
 Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion
 Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
 
 %description -n bash-completion-subversion
@@ -205,8 +205,8 @@ Summary(pl):	Dowi±zania do subversion dla pythona
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 %pyrequires_eq	python
-Obsoletes:	subversion-python
 Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	subversion-python
 
 %description -n python-subversion
 Subversion python bindings.
@@ -222,8 +222,8 @@ Summary:	Subversion perl bindings
 Summary(pl):	Dowi±zania do subversion dla perla
 Summary(pt_BR):	Módulos perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
-Obsoletes:	subversion-perl
 Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	subversion-perl
 
 %description -n perl-subversion
 Subversion perl bindings.
@@ -239,9 +239,9 @@ Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires:	apache >= 2.0.47
 Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache-mod_dav
-Requires:	apache >= 2.0.47
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -253,9 +253,9 @@ Modu³ apache: Serwer Subversion.
 Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
+Requires:	apache >= 2.0.47
 Requires:	apache(modules-api) = %{apache_modules_api}
 Requires:	apache-mod_dav_svn = %{version}-%{release}
-Requires:	apache >= 2.0.47
 
 %description -n apache-mod_authz_svn
 Apache module: Subversion Server - path-based authorization.
