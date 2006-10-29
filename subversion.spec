@@ -17,7 +17,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.0
-Release:	3
+Release:	4
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -243,7 +243,9 @@ Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
+Requires:	apache-mod_authn_file
 Requires:	apache-mod_dav
+Requires:	apache-mod_setenvif
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
