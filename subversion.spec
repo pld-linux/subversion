@@ -28,6 +28,7 @@ Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
+Patch2:		%{name}-neon.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -268,6 +269,7 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 
 %build
 cp -f /usr/share/automake/config.sub ac-helpers
