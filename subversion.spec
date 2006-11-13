@@ -296,7 +296,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
-%if %{without python} && %{without perl}
+%if !%{with python} && !%{with perl}
 	--without-swig \
 %endif
 %endif
@@ -307,7 +307,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make} -j1
 
-%if %{without net_client_only}
+%if !%{with net_client_only}
 # python
 %if %{with python}
 %{__make} swig-py \
@@ -333,7 +333,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install -j1 \
-%if %{without net_client_only} && %{with python}
+%if !%{with net_client_only} && %{with python}
 	install-swig-py \
 %endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
@@ -341,7 +341,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if %{without net_client_only} && %{with perl}
+%if !%{with net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 odir=$(pwd)
@@ -360,7 +360,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
 
-%if %{without net_client_only}
+%if !%{with net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -416,7 +416,7 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
-%if %{without net_client_only}
+%if !%{with net_client_only}
 %exclude %{_bindir}/svn-hot-backup
 %endif
 %{_mandir}/man1/*
@@ -446,7 +446,7 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
-%if %{without net_client_only}
+%if !%{with net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
