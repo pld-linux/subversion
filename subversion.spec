@@ -17,7 +17,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.2
-Release:	2
+Release:	3
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -44,7 +44,7 @@ BuildRequires:	swig-perl >= 1.3.24
 %endif
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
-BuildRequires:	apr-util-devel >= 1:1.2.7-4
+BuildRequires:	apr-util-devel >= 1:1.2.8-3
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
@@ -375,6 +375,8 @@ install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %find_lang %{name}
 
+rm -f $RPM_BUILD_ROOT%{_libdir}/lib*swig*.la
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -438,6 +440,7 @@ fi
 %{_libdir}/lib*.la
 %if %{with perl} || %{with python}
 %exclude %{_libdir}/lib*_swig_*.so
+# just in case:
 %exclude %{_libdir}/lib*swig*.la
 %endif
 %{_examplesdir}/%{name}-%{version}
@@ -477,7 +480,6 @@ fi
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
 %attr(755,root,root) %{_libdir}/lib*_swig_py*.so*
-%{_libdir}/lib*_swig_py*.la
 %endif
 
 %if %{with perl}
@@ -490,7 +492,6 @@ fi
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
 %attr(755,root,root) %{_libdir}/lib*_swig_perl*.so*
-%{_libdir}/lib*_swig_perl*.la
 %endif
 
 %if %{with apache}
