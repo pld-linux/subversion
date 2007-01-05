@@ -440,8 +440,6 @@ fi
 %{_libdir}/lib*.la
 %if %{with perl} || %{with python}
 %exclude %{_libdir}/lib*_swig_*.so
-# just in case:
-%exclude %{_libdir}/lib*swig*.la
 %endif
 %{_examplesdir}/%{name}-%{version}
 
