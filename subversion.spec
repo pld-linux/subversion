@@ -13,8 +13,8 @@
 %define	pdir	SVN
 %define	pnam	_Core
 Summary:	A Concurrent Versioning system similar to but better than CVS
-Summary(pl.UTF-8):   System kontroli wersji podobny, ale lepszy, niż CVS
-Summary(pt_BR.UTF-8):   Sistema de versionamento concorrente
+Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
+Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.3
 Release:	1
@@ -110,7 +110,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 
 %package libs
 Summary:	Subversion libraries and modules
-Summary(pl.UTF-8):   Biblioteka subversion oraz ładowalne moduły
+Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
 Requires:	neon >= 0.24.7
 Obsoletes:	libsubversion0
@@ -123,8 +123,8 @@ Biblioteka subversion oraz ładowalne moduły.
 
 %package devel
 Summary:	Header files and develpment documentation for subversion
-Summary(pl.UTF-8):   Pliki nagłówkowe i dokumetacja do subversion
-Summary(pt_BR.UTF-8):   Arquivos de desenvolvimento para o Subversion
+Summary(pl.UTF-8):	Pliki nagłówkowe i dokumetacja do subversion
+Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
@@ -143,8 +143,8 @@ interagirem com o Subversion.
 
 %package static
 Summary:	Static subversion library
-Summary(pl.UTF-8):   Biblioteka statyczna subversion
-Summary(pt_BR.UTF-8):   Sistema de versionamento concorrente
+Summary(pl.UTF-8):	Biblioteka statyczna subversion
+Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}
 Obsoletes:	libsubversion0-static-devel
@@ -160,7 +160,7 @@ Este pacote provê um cliente estático do subversion.
 
 %package svnserve
 Summary:	Subversion svnserve
-Summary(pl.UTF-8):   Subversion svnserve
+Summary(pl.UTF-8):	Subversion svnserve
 Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -174,8 +174,8 @@ Serwer subversion svnserve.
 
 %package tools
 Summary:	Subversion tools and scripts
-Summary(pl.UTF-8):   Narzędzia oraz skrypty dla subversion
-Summary(pt_BR.UTF-8):   Módulos python para acessar os recursos do Subversion
+Summary(pl.UTF-8):	Narzędzia oraz skrypty dla subversion
+Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 %pyrequires_eq	python
 Requires:	%{name} = %{version}-%{release}
@@ -190,7 +190,7 @@ Narzędzia oraz skrypty dla subversion.
 
 %package -n bash-completion-subversion
 Summary:	bash completion for subversion
-Summary(pl.UTF-8):   Dopełnienia basha dla subversion
+Summary(pl.UTF-8):	Dopełnienia basha dla subversion
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion
@@ -204,8 +204,8 @@ Dopełnienia basha dla subversion.
 
 %package -n python-subversion
 Summary:	Subversion python bindings
-Summary(pl.UTF-8):   Dowiązania do subversion dla pythona
-Summary(pt_BR.UTF-8):   Módulos python para acessar os recursos do Subversion
+Summary(pl.UTF-8):	Dowiązania do subversion dla pythona
+Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 %pyrequires_eq	python
 Requires:	%{name}-libs = %{version}-%{release}
@@ -222,8 +222,8 @@ Módulos python para acessar os recursos do Subversion.
 
 %package -n perl-subversion
 Summary:	Subversion perl bindings
-Summary(pl.UTF-8):   Dowiązania do subversion dla perla
-Summary(pt_BR.UTF-8):   Módulos perl para acessar os recursos do Subversion
+Summary(pl.UTF-8):	Dowiązania do subversion dla perla
+Summary(pt_BR.UTF-8):	Módulos perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	subversion-perl
@@ -239,7 +239,7 @@ Módulos perl para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
-Summary(pl.UTF-8):   Moduł apache: Serwer Subversion
+Summary(pl.UTF-8):	Moduł apache: Serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
@@ -253,7 +253,7 @@ Moduł apache: Serwer Subversion.
 
 %package -n apache-mod_authz_svn
 Summary:	Apache module: Subversion Server - path-based authorization
-Summary(pl.UTF-8):   Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion
+Summary(pl.UTF-8):	Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion
 Group:		Networking/Daemons
 Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav_svn = %{version}-%{release}
