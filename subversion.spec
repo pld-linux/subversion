@@ -16,12 +16,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.4.2
+Version:	1.4.3
 Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
-# Source0-md5:	7ab125937c4f3853149f33b09464b211
+# Source0-md5:	6b991b63e3e1f69670c9e15708e40176
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -165,6 +165,16 @@ Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
+Requires(postun):       /usr/sbin/groupdel
+Requires(postun):       /usr/sbin/userdel
+Requires(pre):  /bin/id
+Requires(pre):  /usr/bin/getgid
+Requires(pre):  /usr/lib/rpm/user_group.sh
+Requires(pre):  /usr/sbin/groupadd
+Requires(pre):  /usr/sbin/useradd
+Requires(pre):  /usr/sbin/usermod
+Provides:       group(svn)
+Provides:       user(svn)
 
 %description svnserve
 Subversion svnserve server.
@@ -301,7 +311,6 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 %endif
 	--with-neon=%{_prefix} \
-	--disable-neon-version-check \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
@@ -389,6 +398,10 @@ rm -rf $RPM_BUILD_ROOT
 %post   -n python-subversion -p /sbin/ldconfig
 %postun -n perl-subversion -p /sbin/ldconfig
 
+%pre svnserve
+%groupadd -g 86 svn
+%useradd -u 180 -r -d /home/services/subversion -s /bin/false -c "Subversion" -g svn svn
+
 %post svnserve
 /sbin/chkconfig --add svnserve
 %service svnserve restart "svnserve daemon"
@@ -397,6 +410,12 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = "0" ]; then
 	%service svnserve stop
 	/sbin/chkconfig --del svnserve
+fi
+
+%postun svnserve
+if [ "$1" == "0" ]; then
+	%userremove svn
+	%groupremove svn
 fi
 
 %post -n apache-mod_dav_svn
@@ -451,8 +470,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
 %{_mandir}/man?/svnserve*
-%dir /home/services/subversion
-%dir /home/services/subversion/repos
+%dir %attr(770,root,svn) /home/services/subversion
+%dir %attr(770,root,svn) /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/svnserve
