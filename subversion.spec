@@ -13,11 +13,11 @@
 %define	pdir	SVN
 %define	pnam	_Core
 Summary:	A Concurrent Versioning system similar to but better than CVS
-Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niÅ¼ CVS
-Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
+Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
+Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.3
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -44,7 +44,7 @@ BuildRequires:	swig-perl >= 1.3.24
 %endif
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
-BuildRequires:	apr-util-devel >= 1:1.2.8-3
+BuildRequires:	apr-util-devel >= 1:1.2.7-4
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
@@ -60,6 +60,8 @@ BuildRequires:	swig-python >= 1.3.24
 %endif
 BuildRequires:	texinfo
 BuildRequires:	which
+# update -neon patch before touchng this BC
+BuildConflicts:	neon-devel > 0.26.3
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -85,32 +87,32 @@ Our goals are:
 - Internationalization
 - Progressive multi-lingual support
 
-%description -l pl.UTF-8
+%description -l pl
 Celem projektu Subversion jest stworzenie systemu kontroli wersji jako
 zamiennika dla CVS.
 
 Cele projektu to:
-- Wszystkie aktualne moÅ¼liwoÅ›ci CVS.
-- Katalogi, zmiany nazw oraz meta-dane plikÃ³w sÄ… wersjonowane.
-- Wsparcie dla linkÃ³w symbolicznych itp.
-- Commity sÄ… w peÅ‚ni atomowe.
-- Branchowanie oraz tagowanie sÄ… tanimi (staÅ‚ymi w czasie) operacjami.
-- PowtarzajÄ…ce merge.
-- Wsparcie dla pluginÃ³w diff'a po stronie klienta.
+- Wszystkie aktualne mo¿liwo¶ci CVS.
+- Katalogi, zmiany nazw oraz meta-dane plików s± wersjonowane.
+- Wsparcie dla linków symbolicznych itp.
+- Commity s± w pe³ni atomowe.
+- Branchowanie oraz tagowanie s± tanimi (sta³ymi w czasie) operacjami.
+- Powtarzaj±ce merge.
+- Wsparcie dla pluginów diff'a po stronie klienta.
 - Natywny klient/serwer.
-- Klient/Serwer przesyÅ‚ajÄ… diffy w obu kierunkach.
+- Klient/Serwer przesy³aj± diffy w obu kierunkach.
 - Koszty proporcjonalne do rozmiaru zmiany, a nie rozmiaru projektu.
 - Internacjonalizacja.
-- PostÄ™pujÄ…ce wsparcie dla wielu jÄ™zykÃ³w.
+- Postêpuj±ce wsparcie dla wielu jêzyków.
 
-%description -l pt_BR.UTF-8
-O objetivo do projeto Subversion Ã© construir um sistema de controle de
-versÃµes que seja um substituto para o CVS (Concurrent Versioning
+%description -l pt_BR
+O objetivo do projeto Subversion é construir um sistema de controle de
+versões que seja um substituto para o CVS (Concurrent Versioning
 System) na comunidade opensource, fornecendo grandes melhorias.
 
 %package libs
 Summary:	Subversion libraries and modules
-Summary(pl.UTF-8):	Biblioteka subversion oraz Å‚adowalne moduÅ‚y
+Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
 Requires:	neon >= 0.24.7
 Obsoletes:	libsubversion0
@@ -118,13 +120,13 @@ Obsoletes:	libsubversion0
 %description libs
 Subversion libraries and modules.
 
-%description libs -l pl.UTF-8
-Biblioteka subversion oraz Å‚adowalne moduÅ‚y.
+%description libs -l pl
+Biblioteka subversion oraz ³adowalne modu³y.
 
 %package devel
 Summary:	Header files and develpment documentation for subversion
-Summary(pl.UTF-8):	Pliki nagÅ‚Ã³wkowe i dokumetacja do subversion
-Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
+Summary(pl):	Pliki nag³ówkowe i dokumetacja do subversion
+Summary(pt_BR):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
@@ -134,17 +136,17 @@ Obsoletes:	libsubversion0-devel
 %description devel
 Header files and develpment documentation for subversion.
 
-%description devel -l pl.UTF-8
-Pliki nagÅ‚Ã³wkowe i dokumetacja do subversion.
+%description devel -l pl
+Pliki nag³ówkowe i dokumetacja do subversion.
 
-%description devel -l pt_BR.UTF-8
-Este pacote provÃª os arquivos necessÃ¡rios para desenvolvedores
+%description devel -l pt_BR
+Este pacote provê os arquivos necessários para desenvolvedores
 interagirem com o Subversion.
 
 %package static
 Summary:	Static subversion library
-Summary(pl.UTF-8):	Biblioteka statyczna subversion
-Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
+Summary(pl):	Biblioteka statyczna subversion
+Summary(pt_BR):	Sistema de versionamento concorrente
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}
 Obsoletes:	libsubversion0-static-devel
@@ -152,30 +154,40 @@ Obsoletes:	libsubversion0-static-devel
 %description static
 Static subversion library.
 
-%description static -l pl.UTF-8
+%description static -l pl
 Biblioteka statyczna subversion.
 
-%description static -l pt_BR.UTF-8
-Este pacote provÃª um cliente estÃ¡tico do subversion.
+%description static -l pt_BR
+Este pacote provê um cliente estático do subversion.
 
 %package svnserve
 Summary:	Subversion svnserve
-Summary(pl.UTF-8):	Subversion svnserve
+Summary(pl):	Subversion svnserve
 Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
+Requires(postun):       /usr/sbin/groupdel
+Requires(postun):       /usr/sbin/userdel
+Requires(pre):  /bin/id
+Requires(pre):  /usr/bin/getgid
+Requires(pre):  /usr/lib/rpm/user_group.sh
+Requires(pre):  /usr/sbin/groupadd
+Requires(pre):  /usr/sbin/useradd
+Requires(pre):  /usr/sbin/usermod
+Provides:       group(svn)
+Provides:       user(svn)
 
 %description svnserve
 Subversion svnserve server.
 
-%description svnserve -l pl.UTF-8
+%description svnserve -l pl
 Serwer subversion svnserve.
 
 %package tools
 Summary:	Subversion tools and scripts
-Summary(pl.UTF-8):	NarzÄ™dzia oraz skrypty dla subversion
-Summary(pt_BR.UTF-8):	MÃ³dulos python para acessar os recursos do Subversion
+Summary(pl):	Narzêdzia oraz skrypty dla subversion
+Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 %pyrequires_eq	python
 Requires:	%{name} = %{version}-%{release}
@@ -185,12 +197,12 @@ Requires:	python-subversion = %{version}
 %description tools
 Subversion tools and scripts.
 
-%description tools -l pl.UTF-8
-NarzÄ™dzia oraz skrypty dla subversion.
+%description tools -l pl
+Narzêdzia oraz skrypty dla subversion.
 
 %package -n bash-completion-subversion
 Summary:	bash completion for subversion
-Summary(pl.UTF-8):	DopeÅ‚nienia basha dla subversion
+Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion
@@ -199,13 +211,13 @@ Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
 %description -n bash-completion-subversion
 Bash completion for subversion.
 
-%description -n bash-completion-subversion -l pl.UTF-8
-DopeÅ‚nienia basha dla subversion.
+%description -n bash-completion-subversion -l pl
+Dope³nienia basha dla subversion.
 
 %package -n python-subversion
 Summary:	Subversion python bindings
-Summary(pl.UTF-8):	DowiÄ…zania do subversion dla pythona
-Summary(pt_BR.UTF-8):	MÃ³dulos python para acessar os recursos do Subversion
+Summary(pl):	Dowi±zania do subversion dla pythona
+Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 %pyrequires_eq	python
 Requires:	%{name}-libs = %{version}-%{release}
@@ -214,16 +226,16 @@ Obsoletes:	subversion-python
 %description -n python-subversion
 Subversion python bindings.
 
-%description -n python-subversion -l pl.UTF-8
-DowiÄ…zania do subversion dla pythona.
+%description -n python-subversion -l pl
+Dowi±zania do subversion dla pythona.
 
-%description -n python-subversion -l pt_BR.UTF-8
-MÃ³dulos python para acessar os recursos do Subversion.
+%description -n python-subversion -l pt_BR
+Módulos python para acessar os recursos do Subversion.
 
 %package -n perl-subversion
 Summary:	Subversion perl bindings
-Summary(pl.UTF-8):	DowiÄ…zania do subversion dla perla
-Summary(pt_BR.UTF-8):	MÃ³dulos perl para acessar os recursos do Subversion
+Summary(pl):	Dowi±zania do subversion dla perla
+Summary(pt_BR):	Módulos perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	subversion-perl
@@ -231,15 +243,15 @@ Obsoletes:	subversion-perl
 %description -n perl-subversion
 Subversion perl bindings.
 
-%description -n perl-subversion -l pl.UTF-8
-DowiÄ…zania do subversion dla perl.
+%description -n perl-subversion -l pl
+Dowi±zania do subversion dla perl.
 
-%description -n perl-subversion -l pt_BR.UTF-8
-MÃ³dulos perl para acessar os recursos do Subversion.
+%description -n perl-subversion -l pt_BR
+Módulos perl para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
-Summary(pl.UTF-8):	ModuÅ‚ apache: Serwer Subversion
+Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
@@ -248,12 +260,12 @@ Requires:	apache-mod_dav
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
 
-%description -n apache-mod_dav_svn -l pl.UTF-8
-ModuÅ‚ apache: Serwer Subversion.
+%description -n apache-mod_dav_svn -l pl
+Modu³ apache: Serwer Subversion.
 
 %package -n apache-mod_authz_svn
 Summary:	Apache module: Subversion Server - path-based authorization
-Summary(pl.UTF-8):	ModuÅ‚ apache: autoryzacja na podstawie Å›cieÅ¼ki dla serwera Subversion
+Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
 Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav_svn = %{version}-%{release}
@@ -261,8 +273,8 @@ Requires:	apache-mod_dav_svn = %{version}-%{release}
 %description -n apache-mod_authz_svn
 Apache module: Subversion Server - path-based authorization.
 
-%description -n apache-mod_authz_svn -l pl.UTF-8
-ModuÅ‚ apache: autoryzacja na podstawie Å›cieÅ¼ki dla serwera Subversion.
+%description -n apache-mod_authz_svn -l pl
+Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 
 %prep
 %setup -q
@@ -296,18 +308,17 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
-%if !%{with python} && !%{with perl}
+%if %{without python} && %{without perl}
 	--without-swig \
 %endif
 %endif
 	--with-neon=%{_prefix} \
-	--disable-neon-version-check \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
 %{__make} -j1
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 # python
 %if %{with python}
 %{__make} swig-py \
@@ -333,7 +344,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install -j1 \
-%if !%{with net_client_only} && %{with python}
+%if %{without net_client_only} && %{with python}
 	install-swig-py \
 %endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
@@ -341,7 +352,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if !%{with net_client_only} && %{with perl}
+%if %{without net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 odir=$(pwd)
@@ -360,7 +371,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -374,8 +385,6 @@ install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/
 install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %find_lang %{name}
-
-rm -f $RPM_BUILD_ROOT%{_libdir}/lib*swig*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -391,6 +400,10 @@ rm -rf $RPM_BUILD_ROOT
 %post   -n python-subversion -p /sbin/ldconfig
 %postun -n perl-subversion -p /sbin/ldconfig
 
+%pre svnserve
+%groupadd -g 86 svn
+%useradd -u 180 -r -d /home/services/subversion -s /bin/false -c "Subversion" -g svn svn
+
 %post svnserve
 /sbin/chkconfig --add svnserve
 %service svnserve restart "svnserve daemon"
@@ -399,6 +412,12 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = "0" ]; then
 	%service svnserve stop
 	/sbin/chkconfig --del svnserve
+fi
+
+%postun svnserve
+if [ "$1" == "0" ]; then
+	%userremove svn
+	%groupremove svn
 fi
 
 %post -n apache-mod_dav_svn
@@ -418,7 +437,7 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
-%if !%{with net_client_only}
+%if %{without net_client_only}
 %exclude %{_bindir}/svn-hot-backup
 %endif
 %{_mandir}/man1/*
@@ -440,6 +459,7 @@ fi
 %{_libdir}/lib*.la
 %if %{with perl} || %{with python}
 %exclude %{_libdir}/lib*_swig_*.so
+%exclude %{_libdir}/lib*swig*.la
 %endif
 %{_examplesdir}/%{name}-%{version}
 
@@ -447,13 +467,13 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/lib*.a
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
 %{_mandir}/man?/svnserve*
-%dir /home/services/subversion
-%dir /home/services/subversion/repos
+%dir %attr(770,root,svn) /home/services/subversion
+%dir %attr(770,root,svn) /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/svnserve
@@ -478,6 +498,7 @@ fi
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
 %attr(755,root,root) %{_libdir}/lib*_swig_py*.so*
+%{_libdir}/lib*_swig_py*.la
 %endif
 
 %if %{with perl}
@@ -490,6 +511,7 @@ fi
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
 %attr(755,root,root) %{_libdir}/lib*_swig_perl*.so*
+%{_libdir}/lib*_swig_perl*.la
 %endif
 
 %if %{with apache}
