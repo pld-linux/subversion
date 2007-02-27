@@ -17,7 +17,7 @@ Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.3
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -60,6 +60,8 @@ BuildRequires:	swig-python >= 1.3.24
 %endif
 BuildRequires:	texinfo
 BuildRequires:	which
+# update -neon patch before touchng this BC
+BuildConflicts:	neon-devel > 0.26.3
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
