@@ -26,9 +26,11 @@ Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
+Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-neon.patch
+Patch3:		%{name}-python_bindings.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -51,10 +53,10 @@ BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	neon-devel >= 0.26.0
-%if %{with python}
 BuildRequires:	python >= 2.2
-BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
+%if %{with python}
+BuildRequires:	python-devel >= 2.2
 BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
@@ -98,7 +100,7 @@ Cele projektu to:
 - Commity są w pełni atomowe.
 - Branchowanie oraz tagowanie są tanimi (stałymi w czasie) operacjami.
 - Powtarzające merge.
-- Wsparcie dla pluginów diff'a po stronie klienta.
+- Wsparcie dla pluginów diff po stronie klienta.
 - Natywny klient/serwer.
 - Klient/Serwer przesyłają diffy w obu kierunkach.
 - Koszty proporcjonalne do rozmiaru zmiany, a nie rozmiaru projektu.
@@ -272,8 +274,11 @@ rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
+rm subversion/bindings/swig/proxy/*.swg 
+(cd subversion/bindings/swig && python "%{SOURCE5}")
 cp -f /usr/share/automake/config.sub ac-helpers
 chmod +x ./autogen.sh && ./autogen.sh
 
