@@ -95,12 +95,12 @@ zamiennika dla CVS.
 
 Cele projektu to:
 - Wszystkie aktualne możliwości CVS.
-- Katalogi, zmiany nazw oraz meta-dane plików są wersjonowane.
-- Wsparcie dla linków symbolicznych itp.
+- Katalogi, zmiany nazw oraz metadane plików są wersjonowane.
+- Obsługa dowiązań symbolicznych itp.
 - Commity są w pełni atomowe.
 - Branchowanie oraz tagowanie są tanimi (stałymi w czasie) operacjami.
-- Powtarzające merge.
-- Wsparcie dla pluginów diff po stronie klienta.
+- Dobra obsługa powtarzanego łączenia (merge).
+- Obsługa wtyczek diff po stronie klienta.
 - Natywny klient/serwer.
 - Klient/Serwer przesyłają diffy w obu kierunkach.
 - Koszty proporcjonalne do rozmiaru zmiany, a nie rozmiaru projektu.
@@ -116,7 +116,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-Requires:	neon >= 0.24.7
+Requires:	neon >= 0.26.0
 Obsoletes:	libsubversion0
 
 %description libs
@@ -132,7 +132,7 @@ Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
-Requires:	neon-devel >= 0.24.7
+Requires:	neon-devel >= 0.26.0
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -278,7 +278,7 @@ rm -rf apr apr-util neon
 
 %build
 rm subversion/bindings/swig/proxy/*.swg 
-(cd subversion/bindings/swig && python "%{SOURCE5}")
+cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
 cp -f /usr/share/automake/config.sub ac-helpers
 chmod +x ./autogen.sh && ./autogen.sh
 
