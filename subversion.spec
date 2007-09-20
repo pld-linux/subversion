@@ -4,7 +4,7 @@
 #
 # Conditional build:
 %bcond_with	net_client_only			# build only net client
-%bcond_without	python				# build without python bindings
+%bcond_without	python				# build without python bindings (broken)
 %bcond_without	perl				# build without perl bindings
 %bcond_without	apache				# build without apache support (webdav, etc)
 #
