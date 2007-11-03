@@ -31,6 +31,7 @@ Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-neon.patch
 Patch3:		%{name}-python_bindings.patch
+Patch4:		%{name}-swig.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -273,6 +274,7 @@ rm -rf apr apr-util neon
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 rm subversion/bindings/swig/proxy/*.swg 
