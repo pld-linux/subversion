@@ -1,0 +1,14 @@
+diff -ur subversion-1.4.5.org/subversion/bindings/swig/include/svn_global.swg subversion-1.4.5/subversion/bindings/swig/include/svn_global.swg
+--- subversion-1.4.5.org/subversion/bindings/swig/include/svn_global.swg	2006-08-19 00:48:13.000000000 +0200
++++ subversion-1.4.5/subversion/bindings/swig/include/svn_global.swg	2007-11-03 13:24:35.770703575 +0100
+@@ -40,9 +40,7 @@
+ #define $svn_argnum svn_argnum_$input
+ 
+ /* Pointers, references, and arrays */
+-%typemap (arginit) POOLINIT ( \
+-  PyObject *_global_svn_swig_py_pool, apr_pool_t *_global_pool,
+-  int _global_pool_is_application_pool) 
++%typemap (arginit) POOLINIT ( PyObject *_global_svn_swig_py_pool, apr_pool_t *_global_pool, int _global_pool_is_application_pool) 
+ {
+   _global_pool_is_application_pool = 1;
+   svn_swig_get_application_pool(&_global_svn_swig_py_pool, &_global_pool); 
