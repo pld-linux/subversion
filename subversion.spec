@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.6
-Release:	1
+Release:	2
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -66,8 +66,9 @@ BuildRequires:	which
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 %define		_libexecdir		%{_libdir}/svn
+%define		pkgconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
+%define		pkglibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
 %description
 The goal of the Subversion project is to build a version control
@@ -335,7 +336,7 @@ cd $odir
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
-	$RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_apachelibdir},%{_infodir}} \
+	$RPM_BUILD_ROOT{%{pkgconfdir},%{pkglibdir},%{_infodir}} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
@@ -361,8 +362,8 @@ cd $odir
 %endif
 
 %if %{with apache}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{pkgconfdir}/65_mod_dav_svn.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{pkgconfdir}/66_mod_authz_svn.conf
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
@@ -502,14 +503,14 @@ fi
 %if %{with apache}
 %files -n apache-mod_dav_svn
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_dav_svn.conf
-%attr(755,root,root) %{_apachelibdir}/mod_dav_svn.so
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{pkgconfdir}/*_mod_dav_svn.conf
+%attr(755,root,root) %{pkglibdir}/mod_dav_svn.so
 
 %files -n apache-mod_authz_svn
 %defattr(644,root,root,755)
 %doc subversion/mod_authz_svn/INSTALL
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/*_mod_authz_svn.conf
-%attr(755,root,root) %{_apachelibdir}/mod_authz_svn.so
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{pkgconfdir}/*_mod_authz_svn.conf
+%attr(755,root,root) %{pkglibdir}/mod_authz_svn.so
 %endif
 
 %endif # net_client_only
