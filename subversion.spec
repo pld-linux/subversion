@@ -18,7 +18,7 @@ Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.6
 Release:	3
-License:	Apache/BSD Style
+License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
 # Source0-md5:	32786fe2f322982c0567346de18f6460
