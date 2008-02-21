@@ -5,13 +5,13 @@
        AC_MSG_RESULT([$NEON_VERSION])
  
 -      if test -n "`echo \"$NEON_VERSION\" | grep '^0\.2[[56]]\.'`" ; then
-+      n_1=`echo "$NEON_VERSION" | grep '^0\.2[[567]]\.'`
++      n_1=`echo "$NEON_VERSION" | grep '^0\.2[[5678]]\.'`
 +      if test -n "$n_1" ; then
          AC_DEFINE_UNQUOTED([SVN_NEON_0_25], [1],
                             [Define to 1 if you have Neon 0.25 or later.])
        fi
 -      if test -n "`echo \"$NEON_VERSION\" | grep '^0\.26\.'`" ; then
-+      n_2=`echo "$NEON_VERSION" | grep '^0\.2[67]\.'`
++      n_2=`echo "$NEON_VERSION" | grep '^0\.2[678]\.'`
 +      if test -n "$n_2" ; then
          AC_DEFINE_UNQUOTED([SVN_NEON_0_26], [1],
                             [Define to 1 if you have Neon 0.26 or later.])
@@ -23,7 +23,7 @@
  # Either a space-separated list of allowable Neon versions, or "any" to
  # mean allow anything.
 -NEON_ALLOWED_LIST="0.24.7 0.25.0 0.25.1 0.25.2 0.25.3 0.25.4 0.25.5 0.26.0 0.26.1 0.26.2 0.26.4"
-+NEON_ALLOWED_LIST="0.24.7 0.25.0 0.25.1 0.25.2 0.25.3 0.25.4 0.25.5 0.26.0 0.26.1 0.26.2 0.26.4 0.26.5 0.26.6 0.27.0"
++NEON_ALLOWED_LIST="0.24.7 0.25.0 0.25.1 0.25.2 0.25.3 0.25.4 0.25.5 0.26.0 0.26.1 0.26.2 0.26.4 0.26.5 0.26.6 0.27.0 0.28.0"
  NEON_LATEST_WORKING_VER=0.25.5
  NEON_URL="http://www.webdav.org/neon/neon-${NEON_LATEST_WORKING_VER}.tar.gz"
  dnl You can skip the neon version check only if you know what you are doing 
