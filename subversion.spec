@@ -7,21 +7,25 @@
 %bcond_without	python				# build without python bindings (broken)
 %bcond_without	perl				# build without perl bindings
 %bcond_without	apache				# build without apache support (webdav, etc)
+%bcond_without	tests
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 %define	apxs	/usr/sbin/apxs
 %define	pdir	SVN
 %define	pnam	_Core
+#
+%define	snap	rc4
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.4.6
-Release:	4
+Version:	1.5.0
+Release:	0.%{snap}.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
-# Source0-md5:	32786fe2f322982c0567346de18f6460
+# Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
+Source0:	http://orac.ece.utexas.edu/pub/svn/%{version}-%{snap}/leander-hackberry/%{name}-%{version}-%{snap}.tar.gz
+# Source0-md5:	905fc5030be179d4d387803b8397668a
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -29,9 +33,6 @@ Source4:	%{name}-svnserve.sysconfig
 Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
-Patch2:		%{name}-neon.patch
-Patch3:		%{name}-python_bindings.patch
-Patch4:		%{name}-swig.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -50,6 +51,7 @@ BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
+BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
@@ -269,13 +271,10 @@ Apache module: Subversion Server - path-based authorization.
 Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-%{snap}
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 rm subversion/bindings/swig/proxy/*.swg 
@@ -286,7 +285,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 # don't enable dso - currently it's broken
 %configure \
 	--with-editor=vi \
-	--with-zlib \
+	--with-zlib=%{_libdir} \
 	--with-python=%{_bindir}/python \
 	--with-perl5=%{_bindir}/perl \
 %if %{with net_client_only}
@@ -331,6 +330,10 @@ cd subversion/bindings/swig/perl/native
 %{__make}
 cd $odir
 %endif
+%endif
+
+%if %{with tests}
+%{__make} check
 %endif
 
 %install
