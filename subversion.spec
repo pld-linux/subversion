@@ -169,8 +169,18 @@ Summary:	Subversion svnserve
 Summary(pl.UTF-8):	Subversion svnserve
 Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
+Requires(postun):       /usr/sbin/groupdel
+Requires(postun):       /usr/sbin/userdel
+Requires(pre):  /bin/id
+Requires(pre):  /usr/bin/getgid
+Requires(pre):  /usr/lib/rpm/user_group.sh
+Requires(pre):  /usr/sbin/groupadd
+Requires(pre):  /usr/sbin/useradd
+Requires(pre):  /usr/sbin/usermod
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
+Provides:	group(svn)
+Provides:	user(svn)
 
 %description svnserve
 Subversion svnserve server.
@@ -391,6 +401,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/lib*swig*.la
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre svnserve
+%groupadd -g 86 svn
+%useradd -u 180 -d /home/services/subversion -c "Subversion svnserve" -g svn svn
+
 %post devel	-p	/sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
@@ -410,6 +424,12 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = "0" ]; then
 	%service svnserve stop
 	/sbin/chkconfig --del svnserve
+fi
+
+%postun svnserve
+if [ "$1" = "0" ]; then
+        %userremove svn
+        %groupremove svn
 fi
 
 %post -n apache-mod_dav_svn
@@ -463,8 +483,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
 %{_mandir}/man?/svnserve*
-%dir /home/services/subversion
-%dir /home/services/subversion/repos
+%dir %attr(750,svn,svn) /home/services/subversion
+%dir %attr(750,svn,svn) /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/svnserve
