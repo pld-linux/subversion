@@ -7,6 +7,7 @@
 %bcond_without	python				# build without python bindings (broken)
 %bcond_without	perl				# build without perl bindings
 %bcond_without	apache				# build without apache support (webdav, etc)
+%bcond_without	javahl				# build without javahl support (Java high-level bindings)
 %bcond_without	tests
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
@@ -46,6 +47,7 @@ BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
 %endif
+%{?with_javahl:BuildRequires:	jdk}
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
@@ -218,6 +220,18 @@ Bash completion for subversion.
 %description -n bash-completion-subversion -l pl.UTF-8
 Dopełnienia basha dla subversion.
 
+%package -n java-subversion
+Summary:	Subversion java bindings
+Group:		Development/Languages/Java
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description -n java-subversion
+This is a set of Java classes which provide the functionality of
+subversion-libs, the Subversion libraries. It is useful if you want
+to, for example, write a Java class that manipulates a Subversion
+repository or working copy. See the 'subversion' package for more
+information.
+
 %package -n python-subversion
 Summary:	Subversion python bindings
 Summary(pl.UTF-8):	Dowiązania do subversion dla pythona
@@ -316,7 +330,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if !%{with python} && !%{with perl}
 	--without-swig \
 %endif
+	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 %endif
+	--with-jdk="%{java_home}" \
 	--with-neon=%{_prefix} \
 	--disable-neon-version-check \
 	--with-apr=%{_bindir}/apr-1-config \
@@ -340,6 +356,10 @@ cd subversion/bindings/swig/perl/native
 %{__make}
 cd $odir
 %endif
+%if %{with javahl}
+%{__make} javahl \
+	javahl_javadir="%{_javadir}"
+%endif
 %endif
 
 %if %{with tests}
@@ -354,6 +374,10 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install -j1 \
+%if %{with javahl}
+	install-javahl \
+	javahl_javadir="%{_javadir}" \
+%endif
 %if !%{with net_client_only} && %{with python}
 	install-swig-py \
 %endif
@@ -463,6 +487,11 @@ fi
 %if %{with perl} || %{with python}
 %exclude %{_libdir}/lib*_swig_*.so.*
 %endif
+%if %{with javahl}
+%exclude %{_libdir}/libsvnjavahl*.so.*.*.*
+%exclude %{_libdir}/libsvnjavahl*.so.?
+%exclude %{_libdir}/libsvnjavahl*.so
+%endif
 
 %files devel
 %defattr(644,root,root,755)
@@ -471,6 +500,9 @@ fi
 %{_libdir}/lib*.la
 %if %{with perl} || %{with python}
 %exclude %{_libdir}/lib*_swig_*.so
+%endif
+%if %{with javahl}
+%exclude %{_libdir}/libsvnjavahl*.so
 %endif
 %{_examplesdir}/%{name}-%{version}
 
@@ -497,6 +529,15 @@ fi
 %files -n bash-completion-subversion
 %defattr(644,root,root,755)
 /etc/bash_completion.d/%{name}
+
+%if %{with javahl}
+%files -n java-subversion
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libsvnjavahl*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libsvnjavahl*.so.?
+%attr(755,root,root) %{_libdir}/libsvnjavahl*.so
+%{_javadir}/svn-javahl.jar
+%endif
 
 %if %{with python}
 %files -n python-subversion
