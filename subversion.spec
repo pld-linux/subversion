@@ -171,14 +171,14 @@ Summary:	Subversion svnserve
 Summary(pl.UTF-8):	Subversion svnserve
 Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
-Requires(postun):       /usr/sbin/groupdel
-Requires(postun):       /usr/sbin/userdel
-Requires(pre):  /bin/id
-Requires(pre):  /usr/bin/getgid
-Requires(pre):  /usr/lib/rpm/user_group.sh
-Requires(pre):  /usr/sbin/groupadd
-Requires(pre):  /usr/sbin/useradd
-Requires(pre):  /usr/sbin/usermod
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/lib/rpm/user_group.sh
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(pre):	/usr/sbin/usermod
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
 Provides:	group(svn)
@@ -301,7 +301,7 @@ rm -rf apr apr-util neon
 %patch1 -p1
 
 %build
-rm subversion/bindings/swig/proxy/*.swg 
+rm subversion/bindings/swig/proxy/*.swg
 cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
 cp -f /usr/share/automake/config.sub ac-helpers
 chmod +x ./autogen.sh && ./autogen.sh
@@ -310,8 +310,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 %configure \
 	--with-editor=vi \
 	--with-zlib=%{_libdir} \
-	--with-python=%{_bindir}/python \
-	--with-perl5=%{_bindir}/perl \
+	--with-python=%{__python} \
+	--with-perl5=%{__perl} \
 %if %{with net_client_only}
 	--without-apache \
 	--without-swig \
