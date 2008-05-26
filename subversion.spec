@@ -3,12 +3,12 @@
 #   without db => net_client_only - spec will be more simpler, I think)
 #
 # Conditional build:
-%bcond_with	net_client_only			# build only net client
-%bcond_without	python				# build without python bindings (broken)
-%bcond_without	perl				# build without perl bindings
-%bcond_without	apache				# build without apache support (webdav, etc)
-%bcond_without	javahl				# build without javahl support (Java high-level bindings)
-%bcond_without	tests
+%bcond_with	net_client_only		# build only net client
+%bcond_without	python			# build without python bindings (broken)
+%bcond_without	perl			# build without perl bindings
+%bcond_without	apache			# build without apache support (webdav, etc)
+%bcond_without	javahl			# build without javahl support (Java high-level bindings)
+%bcond_without	tests			# don't perform "make check"
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 %define	apxs	/usr/sbin/apxs
@@ -221,7 +221,8 @@ Bash completion for subversion.
 Dopełnienia basha dla subversion.
 
 %package -n java-subversion
-Summary:	Subversion java bindings
+Summary:	Subversion Java bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Javy
 Group:		Development/Languages/Java
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -232,40 +233,46 @@ to, for example, write a Java class that manipulates a Subversion
 repository or working copy. See the 'subversion' package for more
 information.
 
+%description -n java-subversion -l pl.UTF-8
+Ten pakiet zawiera zestaw klas Javy udostępniających funkcjonalność
+subversion-libs, czyli bibliotek Subversion. Jest przydatny przy
+pisaniu klas Javy np. modyfikujących repozytorium Subversion lub
+kopię roboczą. Więcej informacji w pakiecie subversion.
+
 %package -n python-subversion
-Summary:	Subversion python bindings
-Summary(pl.UTF-8):	Dowiązania do subversion dla pythona
-Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
+Summary:	Subversion Python bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona
+Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 %pyrequires_eq	python
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	subversion-python
 
 %description -n python-subversion
-Subversion python bindings.
+Subversion Python bindings.
 
 %description -n python-subversion -l pl.UTF-8
-Dowiązania do subversion dla pythona.
+Dowiązania do Subversion dla Pythona.
 
 %description -n python-subversion -l pt_BR.UTF-8
-Módulos python para acessar os recursos do Subversion.
+Módulos Python para acessar os recursos do Subversion.
 
 %package -n perl-subversion
-Summary:	Subversion perl bindings
-Summary(pl.UTF-8):	Dowiązania do subversion dla perla
-Summary(pt_BR.UTF-8):	Módulos perl para acessar os recursos do Subversion
+Summary:	Subversion Perl bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Perla
+Summary(pt_BR.UTF-8):	Módulos Perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	subversion-perl
 
 %description -n perl-subversion
-Subversion perl bindings.
+Subversion Perl bindings.
 
 %description -n perl-subversion -l pl.UTF-8
-Dowiązania do subversion dla perl.
+Dowiązania do Subversion dla Perla.
 
 %description -n perl-subversion -l pt_BR.UTF-8
-Módulos perl para acessar os recursos do Subversion.
+Módulos Perl para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
