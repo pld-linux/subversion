@@ -1,11 +1,13 @@
 # TODO:
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
+# - finish ruby
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
+%bcond_without	ruby
 %bcond_without	apache			# build without apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
@@ -15,7 +17,7 @@
 %define	pdir	SVN
 %define	pnam	_Core
 #
-%define	snap	rc5
+%define	snap	rc7
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
@@ -25,15 +27,15 @@ Release:	0.%{snap}.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	0e87b4f9fa8551a2a71b539564c3bf8f
+# Source0-md5:	3145186e3c1a60fbb4dc360da490b841
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
-Patch1:		%{name}-DESTDIR.patch
 URL:		http://subversion.tigris.org/
+Patch1:		%{name}-DESTDIR.patch
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
@@ -235,8 +237,8 @@ information.
 %description -n java-subversion -l pl.UTF-8
 Ten pakiet zawiera zestaw klas Javy udostępniających funkcjonalność
 subversion-libs, czyli bibliotek Subversion. Jest przydatny przy
-pisaniu klas Javy np. modyfikujących repozytorium Subversion lub
-kopię roboczą. Więcej informacji w pakiecie subversion.
+pisaniu klas Javy np. modyfikujących repozytorium Subversion lub kopię
+roboczą. Więcej informacji w pakiecie subversion.
 
 %package -n python-subversion
 Summary:	Subversion Python bindings
@@ -272,6 +274,23 @@ Dowiązania do Subversion dla Perla.
 
 %description -n perl-subversion -l pt_BR.UTF-8
 Módulos Perl para acessar os recursos do Subversion.
+
+%package -n ruby-subversion
+Summary:	Subversion Ruby bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Ruby
+Summary(pt_BR.UTF-8):	Módulos Ruby para acessar os recursos do Subversion
+Group:		Development/Languages
+Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	subversion-ruby
+
+%description -n ruby-subversion
+Subversion Ruby bindings.
+
+%description -n ruby-subversion -l pl.UTF-8
+Dowiązania do Subversion dla Ruby.
+
+%description -n ruby-subversion -l pt_BR.UTF-8
+Módulos Ruby para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
@@ -366,10 +385,23 @@ cd $odir
 %{__make} javahl \
 	javahl_javadir="%{_javadir}"
 %endif
+# ruby
+%if %{with ruby}
+%{__make} swig-rb
+%endif
 %endif
 
 %if %{with tests}
 %{__make} check
+%if %{with python}
+%{__make} check-swig-py
+%endif
+%if %{with perl}
+%{__make} check-swig-pl
+%endif
+%if %{with ruby}
+%{__make} check-swig-rb
+%endif
 %endif
 
 %install
@@ -384,8 +416,13 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
-%if !%{with net_client_only} && %{with python}
+%if !%{with net_client_only}
+%if %{with python}
 	install-swig-py \
+%endif
+%if %{with ruby}
+	install-swig-rb install-swig-rb-doc \
+%endif
 %endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -568,6 +605,18 @@ fi
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
 %attr(755,root,root) %{_libdir}/lib*_swig_perl*.so*
+%endif
+
+%if %{with ruby}
+%files -n ruby-subversion
+%defattr(644,root,root,755)
+%{_datadir}/ri/*.*/site/Svn
+%{_datadir}/ri/*.*/site/Time
+%{_datadir}/ri/*.*/site/Uconv
+%{_datadir}/ri/*.*/site/*.rid
+%{_datadir}/ri/*.*/site/Kernel/*
+%{_datadir}/ri/*.*/site/OptionParser/*
+%{_libdir}/ruby/site_ruby/svn
 %endif
 
 %if %{with apache}
