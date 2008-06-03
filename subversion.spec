@@ -34,8 +34,8 @@ Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
-URL:		http://subversion.tigris.org/
 Patch1:		%{name}-DESTDIR.patch
+URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
@@ -277,7 +277,7 @@ Módulos Perl para acessar os recursos do Subversion.
 
 %package -n ruby-subversion
 Summary:	Subversion Ruby bindings
-Summary(pl.UTF-8):	Dowiązania do Subversion dla Ruby
+Summary(pl.UTF-8):	Dowiązania do Subversion dla języka Ruby
 Summary(pt_BR.UTF-8):	Módulos Ruby para acessar os recursos do Subversion
 Group:		Development/Languages
 Requires:	%{name}-libs = %{version}-%{release}
@@ -287,7 +287,7 @@ Obsoletes:	subversion-ruby
 Subversion Ruby bindings.
 
 %description -n ruby-subversion -l pl.UTF-8
-Dowiązania do Subversion dla Ruby.
+Dowiązania do Subversion dla języka Ruby.
 
 %description -n ruby-subversion -l pt_BR.UTF-8
 Módulos Ruby para acessar os recursos do Subversion.
@@ -472,16 +472,20 @@ rm -rf $RPM_BUILD_ROOT
 %groupadd -g 86 svn
 %useradd -u 180 -d /home/services/subversion -c "Subversion svnserve" -g svn svn
 
-%post devel	-p	/sbin/postshell
--/usr/sbin/fix-info-dir -c %{_infodir}
-
-%postun devel	-p	/sbin/postshell
--/usr/sbin/fix-info-dir -c %{_infodir}
-
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
-%post   -n python-subversion -p /sbin/ldconfig
-%postun -n perl-subversion -p /sbin/ldconfig
+
+%post	devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%post	-n perl-subversion -p /sbin/ldconfig
+%postun	-n perl-subversion -p /sbin/ldconfig
+
+%post	-n python-subversion -p /sbin/ldconfig
+%postun	-n python-subversion -p /sbin/ldconfig
 
 %post svnserve
 /sbin/chkconfig --add svnserve
@@ -538,7 +542,6 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %if %{with perl} || %{with python}
@@ -547,6 +550,7 @@ fi
 %if %{with javahl}
 %exclude %{_libdir}/libsvnjavahl*.so
 %endif
+%{_includedir}/%{name}*
 %{_examplesdir}/%{name}-%{version}
 
 %files static
