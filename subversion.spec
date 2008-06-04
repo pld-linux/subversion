@@ -378,11 +378,11 @@ chmod +x ./autogen.sh && ./autogen.sh
 odir=$(pwd)
 cd subversion/bindings/swig/perl/native
 %{__perl} Makefile.PL INSTALLDIRS=vendor
-%{__make}
+%{__make} -j1
 cd $odir
 %endif
 %if %{with javahl}
-%{__make} javahl \
+%{__make} -j1 javahl \
 	javahl_javadir="%{_javadir}"
 %endif
 # ruby
@@ -432,13 +432,10 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if !%{with net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
-odir=$(pwd)
-cd subversion/bindings/swig/perl/native
-%{__make} install \
+%{__make} -C subversion/bindings/swig/perl/native install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
 	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
-cd $odir
 %endif
 
 %if %{with apache}
@@ -463,7 +460,8 @@ install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %find_lang %{name}
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/lib*swig*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libsvn{javahl,_swig}*.{la,a}
+rm -f $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/svn/ext/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -518,50 +516,106 @@ fi
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
 %doc tools/xslt/*
-%attr(755,root,root) %{_bindir}/svn*
-%exclude %{_bindir}/svnserve
-%if !%{with net_client_only}
-%exclude %{_bindir}/svn-hot-backup
-%endif
-%{_mandir}/man1/*
-%{_mandir}/man5/*
-%{_mandir}/man8/*
-%exclude %{_mandir}/man?/svnserve*
+%attr(755,root,root) %{_bindir}/svn
+%attr(755,root,root) %{_bindir}/svnadmin
+%attr(755,root,root) %{_bindir}/svndumpfilter
+%attr(755,root,root) %{_bindir}/svnlook
+%attr(755,root,root) %{_bindir}/svnsync
+%attr(755,root,root) %{_bindir}/svnversion
+%{_mandir}/man1/svn.1*
+%{_mandir}/man1/svnadmin.1*
+%{_mandir}/man1/svndumpfilter.1*
+%{_mandir}/man1/svnlook.1*
+%{_mandir}/man1/svnsync.1*
+%{_mandir}/man1/svnversion.1*
 
 %files libs -f %{name}.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*
-%if %{with perl} || %{with python}
-%exclude %{_libdir}/lib*_swig_*.so.*
-%endif
-%if %{with javahl}
-%exclude %{_libdir}/libsvnjavahl*.so.*.*.*
-%exclude %{_libdir}/libsvnjavahl*.so.?
-%exclude %{_libdir}/libsvnjavahl*.so
-%endif
+%attr(755,root,root) %{_libdir}/libsvn_client-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_client-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_delta-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_delta-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_diff-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_diff-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_fs-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_fs-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_fs_base-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_fs_base-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_fs_fs-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_fs_fs-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_fs_util-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_ra-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_ra-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_local-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_ra_neon-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_neon-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_ra_svn-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_svn-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_repos-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_repos-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_subr-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_subr-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_wc-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_wc-1.so.0
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so
-%{_libdir}/lib*.la
-%if %{with perl} || %{with python}
-%exclude %{_libdir}/lib*_swig_*.so
-%endif
-%if %{with javahl}
-%exclude %{_libdir}/libsvnjavahl*.so
-%endif
-%{_includedir}/%{name}*
+%attr(755,root,root) %{_libdir}/libsvn_client-1.so
+%attr(755,root,root) %{_libdir}/libsvn_delta-1.so
+%attr(755,root,root) %{_libdir}/libsvn_diff-1.so
+%attr(755,root,root) %{_libdir}/libsvn_fs-1.so
+%attr(755,root,root) %{_libdir}/libsvn_fs_base-1.so
+%attr(755,root,root) %{_libdir}/libsvn_fs_fs-1.so
+%attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so
+%attr(755,root,root) %{_libdir}/libsvn_ra-1.so
+%attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so
+%attr(755,root,root) %{_libdir}/libsvn_ra_neon-1.so
+%attr(755,root,root) %{_libdir}/libsvn_ra_svn-1.so
+%attr(755,root,root) %{_libdir}/libsvn_repos-1.so
+%attr(755,root,root) %{_libdir}/libsvn_subr-1.so
+%attr(755,root,root) %{_libdir}/libsvn_wc-1.so
+%{_libdir}/libsvn_client-1.la
+%{_libdir}/libsvn_delta-1.la
+%{_libdir}/libsvn_diff-1.la
+%{_libdir}/libsvn_fs-1.la
+%{_libdir}/libsvn_fs_base-1.la
+%{_libdir}/libsvn_fs_fs-1.la
+%{_libdir}/libsvn_fs_util-1.la
+%{_libdir}/libsvn_ra-1.la
+%{_libdir}/libsvn_ra_local-1.la
+%{_libdir}/libsvn_ra_neon-1.la
+%{_libdir}/libsvn_ra_svn-1.la
+%{_libdir}/libsvn_repos-1.la
+%{_libdir}/libsvn_subr-1.la
+%{_libdir}/libsvn_wc-1.la
+%{_includedir}/%{name}-1
 %{_examplesdir}/%{name}-%{version}
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libsvn_client-1.a
+%{_libdir}/libsvn_delta-1.a
+%{_libdir}/libsvn_diff-1.a
+%{_libdir}/libsvn_fs-1.a
+%{_libdir}/libsvn_fs_base-1.a
+%{_libdir}/libsvn_fs_fs-1.a
+%{_libdir}/libsvn_fs_util-1.a
+%{_libdir}/libsvn_ra-1.a
+%{_libdir}/libsvn_ra_local-1.a
+%{_libdir}/libsvn_ra_neon-1.a
+%{_libdir}/libsvn_ra_svn-1.a
+%{_libdir}/libsvn_repos-1.a
+%{_libdir}/libsvn_subr-1.a
+%{_libdir}/libsvn_wc-1.a
 
 %if !%{with net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
-%{_mandir}/man?/svnserve*
+%{_mandir}/man5/svnserve.conf.5*
+%{_mandir}/man8/svnserve.8*
 %dir %attr(750,svn,svn) /home/services/subversion
 %dir %attr(750,svn,svn) /home/services/subversion/repos
 %if %{with apache}
@@ -580,9 +634,9 @@ fi
 %if %{with javahl}
 %files -n java-subversion
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libsvnjavahl*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libsvnjavahl*.so.?
-%attr(755,root,root) %{_libdir}/libsvnjavahl*.so
+%attr(755,root,root) %{_libdir}/libsvnjavahl-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvnjavahl-1.so.0
+%attr(755,root,root) %{_libdir}/libsvnjavahl-1.so
 %{_javadir}/svn-javahl.jar
 %endif
 
@@ -590,37 +644,47 @@ fi
 %files -n python-subversion
 %defattr(644,root,root,755)
 %doc tools/backup/*.py tools/examples/*.py
-%dir %{py_sitedir}/svn
+%attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_swig_py-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so
 %dir %{py_sitedir}/libsvn
-%{py_sitedir}/svn/*.py[co]
 %{py_sitedir}/libsvn/*.py[co]
+%dir %{py_sitedir}/svn
+%{py_sitedir}/svn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
-%attr(755,root,root) %{_libdir}/lib*_swig_py*.so*
 %endif
 
 %if %{with perl}
 %files -n perl-subversion
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libsvn_swig_perl-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_swig_perl-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_swig_perl-1.so
 %{perl_vendorarch}/SVN
 %dir %{perl_vendorarch}/auto/SVN
 %dir %{perl_vendorarch}/auto/SVN/*
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
-%attr(755,root,root) %{_libdir}/lib*_swig_perl*.so*
 %endif
 
 %if %{with ruby}
 %files -n ruby-subversion
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_swig_ruby-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so
+%dir %{_libdir}/ruby/site_ruby/svn
+%{_libdir}/ruby/site_ruby/svn/*.rb
+%dir %{_libdir}/ruby/site_ruby/svn/ext
+%attr(755,root,root) %{_libdir}/ruby/site_ruby/svn/ext/*.so
 %{_datadir}/ri/*.*/site/Svn
 %{_datadir}/ri/*.*/site/Time
 %{_datadir}/ri/*.*/site/Uconv
 %{_datadir}/ri/*.*/site/*.rid
 %{_datadir}/ri/*.*/site/Kernel/*
 %{_datadir}/ri/*.*/site/OptionParser/*
-%{_libdir}/ruby/site_ruby/svn
 %endif
 
 %if %{with apache}
