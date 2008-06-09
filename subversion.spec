@@ -7,7 +7,7 @@
 %bcond_with	net_client_only		# build only net client
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
-%bcond_without	ruby
+%bcond_without	ruby			# build without ruby bindings
 %bcond_without	apache			# build without apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
@@ -66,6 +66,7 @@ BuildRequires:	python-devel >= 2.2
 BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
+%{?with_ruby:BuildRequires:	swig-ruby >= 1.3.24}
 BuildRequires:	texinfo
 BuildRequires:	which
 Requires:	%{name}-libs = %{version}-%{release}
@@ -352,7 +353,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
-%if !%{with python} && !%{with perl}
+%if !%{with python} && !%{with perl} && !%{with ruby}
 	--without-swig \
 %endif
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
