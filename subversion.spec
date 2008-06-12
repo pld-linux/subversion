@@ -17,7 +17,7 @@
 %define	pdir	SVN
 %define	pnam	_Core
 #
-%define	snap	rc7
+%define	snap	rc9
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
@@ -27,7 +27,7 @@ Release:	0.%{snap}.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	3145186e3c1a60fbb4dc360da490b841
+# Source0-md5:	9b16d352ffabfd070f2e3e9d8e5fcffd
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
