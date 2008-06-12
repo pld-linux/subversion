@@ -17,7 +17,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.4.6
-Release:	5
+Release:	6
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
@@ -282,6 +282,11 @@ rm subversion/bindings/swig/proxy/*.swg
 cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
 cp -f /usr/share/automake/config.sub ac-helpers
 chmod +x ./autogen.sh && ./autogen.sh
+if [ -f /usr/share/aclocal/ltversion.m4 ]; then
+	# additional macros needed + configure regeneration
+	cat /usr/share/aclocal/lt*.m4 >> build/libtool.m4
+	%{__autoconf}
+fi
 
 # don't enable dso - currently it's broken
 %configure \
