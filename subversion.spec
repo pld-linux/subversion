@@ -17,17 +17,16 @@
 %define	pdir	SVN
 %define	pnam	_Core
 #
-%define	snap	rc9
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.5.0
-Release:	0.%{snap}.1
+Release:	0.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	9b16d352ffabfd070f2e3e9d8e5fcffd
+Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
+# Source0-md5:	004b57643406dd10957ec87955702189
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -321,7 +320,7 @@ Apache module: Subversion Server - path-based authorization.
 Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 
 %prep
-%setup -q -n %{name}-%{version}-%{snap}
+%setup -q
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
