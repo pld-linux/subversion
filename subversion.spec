@@ -13,7 +13,7 @@
 %bcond_without	tests			# don't perform "make check"
 #
 %ifnarch i586 i686 pentium3 pentium4 athlon %{x8664}
-%define		with_javahl	0
+%undefine	with_javahl
 %endif
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
