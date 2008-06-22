@@ -26,7 +26,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.5.0
-Release:	0.1
+Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
