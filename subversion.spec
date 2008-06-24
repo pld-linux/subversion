@@ -1,5 +1,4 @@
-#
-# todo:
+# TODO:
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
 #
@@ -10,21 +9,25 @@
 %bcond_without	apache				# build without apache support (webdav, etc)
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
+%define	apxs	/usr/sbin/apxs
+%define	pdir	SVN
+%define	pnam	_Core
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.3.0
-Release:	2
+Version:	1.5.0
+Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
-# Source0-md5:	0d91a7fe152d0373044c47c54deb2c9a
+# Source0-md5:	c40c1ebc1f228d8ea17dd0e7997a60c1
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
+Patch1:		%{name}-DESTDIR.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -32,7 +35,7 @@ URL:		http://subversion.tigris.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	rpmbuild(macros) >= 1.120
+BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -40,27 +43,30 @@ BuildRequires:	swig-perl >= 1.3.24
 %endif
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
-BuildRequires:	apr-util-devel >= 1:1.0.0
+BuildRequires:	apr-util-devel >= 1:1.2.7-4
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
+BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
-BuildRequires:	neon-devel >= 0.24.7
+BuildRequires:	neon-devel >= 0.26.0
 %if %{with python}
+BuildRequires:	python >= 2.2
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	python-modules >= 2.2
-BuildRequires:	python >= 2.2
 BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
 BuildRequires:	texinfo
 BuildRequires:	which
+# update -neon patch before touchng this BC
+BuildConflicts:	neon-devel > 0.26.3
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_apachelibdir	/usr/%{_lib}/apache
-%define		_libexecdir	%{_libdir}/svn
+%define		_apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
+%define		_libexecdir		%{_libdir}/svn
 
 %description
 The goal of the Subversion project is to build a version control
@@ -108,8 +114,8 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl):	Biblioteka subversion oraz ³adowalne modu³y
 Group:		Libraries
-Obsoletes:	libsubversion0
 Requires:	neon >= 0.24.7
+Obsoletes:	libsubversion0
 
 %description libs
 Subversion libraries and modules.
@@ -161,6 +167,16 @@ Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
+Requires(postun):       /usr/sbin/groupdel
+Requires(postun):       /usr/sbin/userdel
+Requires(pre):  /bin/id
+Requires(pre):  /usr/bin/getgid
+Requires(pre):  /usr/lib/rpm/user_group.sh
+Requires(pre):  /usr/sbin/groupadd
+Requires(pre):  /usr/sbin/useradd
+Requires(pre):  /usr/sbin/usermod
+Provides:       group(svn)
+Provides:       user(svn)
 
 %description svnserve
 Subversion svnserve server.
@@ -188,8 +204,8 @@ Narzêdzia oraz skrypty dla subversion.
 Summary:	bash completion for subversion
 Summary(pl):	Dope³nienia basha dla subversion
 Group:		Applications/Shells
-Requires:	bash-completion
 Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion
 Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
 
 %description -n bash-completion-subversion
@@ -204,8 +220,8 @@ Summary(pl):	Dowi±zania do subversion dla pythona
 Summary(pt_BR):	Módulos python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 %pyrequires_eq	python
-Obsoletes:	subversion-python
 Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	subversion-python
 
 %description -n python-subversion
 Subversion python bindings.
@@ -221,8 +237,8 @@ Summary:	Subversion perl bindings
 Summary(pl):	Dowi±zania do subversion dla perla
 Summary(pt_BR):	Módulos perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
-Obsoletes:	subversion-perl
 Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	subversion-perl
 
 %description -n perl-subversion
 Subversion perl bindings.
@@ -238,9 +254,8 @@ Summary:	Apache module: Subversion Server
 Summary(pl):	Modu³ apache: Serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
-Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav
-Requires:	apache >= 2.0.47
 
 %description -n apache-mod_dav_svn
 Apache module: Subversion Server.
@@ -252,9 +267,8 @@ Modu³ apache: Serwer Subversion.
 Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl):	Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion
 Group:		Networking/Daemons
-Requires:	apache(modules-api) = %{apache_modules_api}
+Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav_svn = %{version}-%{release}
-Requires:	apache >= 2.0.47
 
 %description -n apache-mod_authz_svn
 Apache module: Subversion Server - path-based authorization.
@@ -266,15 +280,13 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 %setup -q
 rm -rf apr apr-util neon
 %patch0 -p0
+%patch1 -p1
 
 %build
-cp -f /usr/share/automake/config.sub ac-helpers
-chmod +x ./autogen.sh && ./autogen.sh
-
 # don't enable dso - currently it's broken
 %configure \
 	--with-editor=vi \
-	--with-zlib \
+	--with-zlib=%{_libdir} \
 	--with-python=%{_bindir}/python \
 	--with-perl5=%{_bindir}/perl \
 %if %{with net_client_only}
@@ -292,7 +304,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apxs \
 	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
-%if !%{with python} && !%{with perl}
+%if %{without python} && %{without perl}
 	--without-swig \
 %endif
 %endif
@@ -300,9 +312,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
-%{__make}
+%{__make} -j1
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 # python
 %if %{with python}
 %{__make} swig-py \
@@ -311,7 +323,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 # perl
 %if %{with perl}
-%{__make} swig-pl-lib
+%{__make} -j1 swig-pl-lib
 odir=$(pwd)
 cd subversion/bindings/swig/perl/native
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -320,8 +332,6 @@ cd $odir
 %endif
 %endif
 
-%{__sed} -i -e 's/@SVN_DB_INCLUDES@//g' -e 's/@SVN_DB_LIBS@//g' svn-config
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
@@ -329,8 +339,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
-%{__make} install \
-%if !%{with net_client_only} && %{with python}
+%{__make} install -j1 \
+%if %{without net_client_only} && %{with python}
 	install-swig-py \
 %endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
@@ -338,7 +348,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if !%{with net_client_only} && %{with perl}
+%if %{without net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 odir=$(pwd)
@@ -350,8 +360,6 @@ cd subversion/bindings/swig/perl/native
 cd $odir
 %endif
 
-install svn-config $RPM_BUILD_ROOT%{_bindir}
-
 %if %{with apache}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/65_mod_dav_svn.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/66_mod_authz_svn.conf
@@ -359,7 +367,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
 %endif
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -388,32 +396,32 @@ rm -rf $RPM_BUILD_ROOT
 %post   -n python-subversion -p /sbin/ldconfig
 %postun -n perl-subversion -p /sbin/ldconfig
 
+%pre svnserve
+%groupadd -g 86 svn
+%useradd -u 180 -r -d /home/services/subversion -s /bin/false -c "Subversion" -g svn svn
+
 %post svnserve
-if [ -f /var/lock/subsys/svnserve ]; then
-	/etc/rc.d/init.d/svnserve restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/svnserve start\" to start subversion svnserve daemon."
-fi
+/sbin/chkconfig --add svnserve
+%service svnserve restart "svnserve daemon"
+
 %preun svnserve
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/svnserve ]; then
-		/etc/rc.d/init.d/svnserve restart 1>&2
-	fi
+	%service svnserve stop
+	/sbin/chkconfig --del svnserve
 fi
 
+%postun svnserve
+if [ "$1" == "0" ]; then
+	%userremove svn
+	%groupremove svn
+fi
 
 %post -n apache-mod_dav_svn
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache HTTP daemon."
-fi
+%service -q httpd restart
 
 %preun -n apache-mod_dav_svn
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %files
@@ -425,8 +433,9 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn*
 %exclude %{_bindir}/svnserve
-%exclude %{_bindir}/svn-config
+%if %{without net_client_only}
 %exclude %{_bindir}/svn-hot-backup
+%endif
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
@@ -441,10 +450,13 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/svn-config
 %{_includedir}/%{name}*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
+%if %{with perl} || %{with python}
+%exclude %{_libdir}/lib*_swig_*.so
+%exclude %{_libdir}/lib*swig*.la
+%endif
 %{_examplesdir}/%{name}-%{version}
 
 %files static
@@ -456,8 +468,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
 %{_mandir}/man?/svnserve*
-%dir /home/services/subversion
-%dir /home/services/subversion/repos
+%dir %attr(770,root,svn) /home/services/subversion
+%dir %attr(770,root,svn) /home/services/subversion/repos
 %if %{with apache}
 %attr(754,root,root) /etc/rc.d/init.d/svnserve
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/svnserve
@@ -481,7 +493,8 @@ fi
 %{py_sitedir}/libsvn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
-%attr(755,root,root) %{_libdir}/lib*_swig_py*.so.*
+%attr(755,root,root) %{_libdir}/lib*_swig_py*.so*
+%{_libdir}/lib*_swig_py*.la
 %endif
 
 %if %{with perl}
@@ -493,7 +506,8 @@ fi
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
 %{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
-%attr(755,root,root) %{_libdir}/lib*_swig_perl*.so.*
+%attr(755,root,root) %{_libdir}/lib*_swig_perl*.so*
+%{_libdir}/lib*_swig_perl*.la
 %endif
 
 %if %{with apache}
