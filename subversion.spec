@@ -16,19 +16,18 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl):	System kontroli wersji podobny, ale lepszy, ni¿ CVS
 Summary(pt_BR):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.4.5
+Version:	1.5.0
 Release:	1
 License:	Apache/BSD Style
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.gz
-# Source0-md5:	3caf1d93e13ed09d76c42eff0f52dfaf
+# Source0-md5:	c40c1ebc1f228d8ea17dd0e7997a60c1
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
-Patch2:		%{name}-neon.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -47,6 +46,7 @@ BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.7-4
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
+BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
@@ -281,16 +281,12 @@ Modu³ apache: autoryzacja na podstawie ¶cie¿ki dla serwera Subversion.
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
-%patch2 -p1
 
 %build
-cp -f /usr/share/automake/config.sub ac-helpers
-chmod +x ./autogen.sh && ./autogen.sh
-
 # don't enable dso - currently it's broken
 %configure \
 	--with-editor=vi \
-	--with-zlib \
+	--with-zlib=%{_libdir} \
 	--with-python=%{_bindir}/python \
 	--with-perl5=%{_bindir}/perl \
 %if %{with net_client_only}
@@ -327,7 +323,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 # perl
 %if %{with perl}
-%{__make} swig-pl-lib
+%{__make} -j1 swig-pl-lib
 odir=$(pwd)
 cd subversion/bindings/swig/perl/native
 %{__perl} Makefile.PL INSTALLDIRS=vendor
