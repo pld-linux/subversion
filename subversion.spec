@@ -335,19 +335,16 @@ cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
 cp -f /usr/share/automake/config.sub ac-helpers
 chmod +x ./autogen.sh && ./autogen.sh
 
-# don't enable dso - currently it's broken
 %configure \
 	--with-editor=vi \
 	--with-zlib=%{_libdir} \
-	--with-python=%{__python} \
-	--with-perl5=%{__perl} \
 %if %{with net_client_only}
 	--without-apache \
 	--without-swig \
 	--without-apxs \
 	--without-berkeley-db \
 %else
-	--disable-dso \
+	--disable-runtime-module-search \
 	--disable-mod-activation \
 %if %{with apache}
 	--with-apxs=%{_sbindir}/apxs \
