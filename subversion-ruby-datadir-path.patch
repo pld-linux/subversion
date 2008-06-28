@@ -1,0 +1,11 @@
+--- Makefile.in.orig	2008-06-28 16:23:04.000000000 +0200
++++ Makefile.in	2008-06-28 16:26:10.158564154 +0200
+@@ -124,7 +124,7 @@
+ SWIG_RB_SITE_LIB_DIR = @SWIG_RB_SITE_LIB_DIR@
+ SWIG_RB_SITE_ARCH_DIR = @SWIG_RB_SITE_ARCH_DIR@
+ SWIG_RB_TEST_VERBOSE = @SWIG_RB_TEST_VERBOSE@
+-SWIG_RB_RI_DATADIR = $(DESTDIR)$(datadir)/ri/$(RUBY_MAJOR).$(RUBY_MINOR)/site
++SWIG_RB_RI_DATADIR = $(DESTDIR)$(datadir)/ri/$(RUBY_MAJOR).$(RUBY_MINOR)/system
+ 
+ JAVAHL_INCLUDES= @JNI_INCLUDES@ -I$(abs_builddir)/subversion/bindings/javahl/include
+ 
