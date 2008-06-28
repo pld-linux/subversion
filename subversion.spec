@@ -26,7 +26,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.5.0
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -38,6 +38,7 @@ Source4:	%{name}-svnserve.sysconfig
 Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
+Patch2:		%{name}-ruby-datadir-path.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -328,6 +329,7 @@ Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
+%patch2 -p0
 
 %build
 rm subversion/bindings/swig/proxy/*.swg
@@ -680,12 +682,12 @@ fi
 %{_libdir}/ruby/site_ruby/svn/*.rb
 %dir %{_libdir}/ruby/site_ruby/svn/ext
 %attr(755,root,root) %{_libdir}/ruby/site_ruby/svn/ext/*.so
-%{_datadir}/ri/*.*/site/Svn
-%{_datadir}/ri/*.*/site/Time
-%{_datadir}/ri/*.*/site/Uconv
-%{_datadir}/ri/*.*/site/*.rid
-%{_datadir}/ri/*.*/site/Kernel/*
-%{_datadir}/ri/*.*/site/OptionParser/*
+%{_datadir}/ri/*.*/system/Svn
+%{_datadir}/ri/*.*/system/Time
+%{_datadir}/ri/*.*/system/Uconv
+%{_datadir}/ri/*.*/system/*.rid
+%{_datadir}/ri/*.*/system/Kernel/*
+%{_datadir}/ri/*.*/system/OptionParser/*
 %endif
 
 %if %{with apache}
