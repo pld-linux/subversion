@@ -26,7 +26,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.5.0
-Release:	2
+Release:	3
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -682,12 +682,12 @@ fi
 %{_libdir}/ruby/site_ruby/svn/*.rb
 %dir %{_libdir}/ruby/site_ruby/svn/ext
 %attr(755,root,root) %{_libdir}/ruby/site_ruby/svn/ext/*.so
+%{_datadir}/ri/*.*/system/OptionParser
 %{_datadir}/ri/*.*/system/Svn
 %{_datadir}/ri/*.*/system/Time
 %{_datadir}/ri/*.*/system/Uconv
 %{_datadir}/ri/*.*/system/*.rid
 %{_datadir}/ri/*.*/system/Kernel/*
-%{_datadir}/ri/*.*/system/OptionParser/*
 %endif
 
 %if %{with apache}
