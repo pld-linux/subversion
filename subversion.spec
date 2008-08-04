@@ -70,6 +70,7 @@ BuildRequires:	python-devel >= 2.2
 BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
+%{?with_ruby:BuildRequires:	ruby-devel}
 %{?with_ruby:BuildRequires:	swig-ruby >= 1.3.24}
 BuildRequires:	texinfo
 BuildRequires:	which
