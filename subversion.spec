@@ -5,6 +5,7 @@
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
+%bcond_with	serf			# use serf instead of neon
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
 %bcond_without	ruby			# build without ruby bindings
@@ -62,7 +63,11 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
+%if %{with serf}
+BuildRequires:	serf-devel
+%else
 BuildRequires:	neon-devel >= 0.26.0
+%endif
 BuildRequires:	python >= 2.2
 BuildRequires:	python-modules >= 2.2
 %if %{with python}
@@ -127,7 +132,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-Requires:	neon >= 0.26.0
+%{!?with_serf:Requires:	neon >= 0.26.0}
 Obsoletes:	libsubversion0
 
 %description libs
@@ -143,7 +148,7 @@ Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
-Requires:	neon-devel >= 0.26.0
+%{!?with_serf:Requires:	neon-devel >= 0.26.0}
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -362,8 +367,14 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 %endif
 	--with-jdk="%{java_home}" \
+%if %{with serf}
+	--with-serf=%{_prefix} \
+	--without-neon \
+%else
+	--without-serf \
 	--with-neon=%{_prefix} \
 	--disable-neon-version-check \
+%endif
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
 
