@@ -5,7 +5,7 @@
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
-%bcond_without	serf			# use serf instead of neon
+%bcond_with	neon			# use neon instead of serf
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
 %bcond_without	ruby			# build without ruby bindings
@@ -22,10 +22,10 @@
 %define	pdir	SVN
 %define	pnam	_Core
 #
-%if %{with serf}
-%define	webdavlib	serf
-%else
+%if %{with neon}
 %define	webdavlib	neon
+%else
+%define	webdavlib	serf
 %endif
 #
 Summary:	A Concurrent Versioning system similar to but better than CVS
@@ -73,7 +73,7 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
-%if %{with serf}
+%if %{without neon}
 BuildRequires:	serf-devel
 %else
 BuildRequires:	neon-devel >= 0.26.0
@@ -142,7 +142,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-%{!?with_serf:Requires:	neon >= 0.26.0}
+%{?with_neon:Requires:	neon >= 0.26.0}
 Obsoletes:	libsubversion0
 
 %description libs
@@ -158,7 +158,7 @@ Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
-%{!?with_serf:Requires:	neon-devel >= 0.26.0}
+%{?with_neon:Requires:	neon-devel >= 0.26.0}
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -351,7 +351,7 @@ rm -rf apr apr-util neon
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
 # serf.m4 macro is broken and ignores --without serf
-%{!?with_serf:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
+%{?with_neon:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
 
 %build
 rm subversion/bindings/swig/proxy/*.swg
@@ -383,13 +383,13 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 %endif
 	--with-jdk="%{java_home}" \
-%if %{with serf}
-	--with-serf=%{_prefix} \
-	--without-neon \
-%else
+%if %{with neon}
 	--without-serf \
 	--with-neon=%{_prefix} \
 	--disable-neon-version-check \
+%else
+	--with-serf=%{_prefix} \
+	--without-neon \
 %endif
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config
