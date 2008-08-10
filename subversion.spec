@@ -351,7 +351,7 @@ rm -rf apr apr-util neon
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
 # serf.m4 macro is broken and ignores --without serf
-%{?with_neon:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
+%{!?with_serf:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
 
 %build
 rm subversion/bindings/swig/proxy/*.swg
