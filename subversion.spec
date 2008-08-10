@@ -5,7 +5,7 @@
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
-%bcond_with	serf			# use serf instead of neon
+%bcond_without	serf			# use serf instead of neon
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
 %bcond_without	ruby			# build without ruby bindings
@@ -22,12 +22,18 @@
 %define	pdir	SVN
 %define	pnam	_Core
 #
+%if %{with serf}
+%define	webdavlib	serf
+%else
+%define	webdavlib	neon
+%endif
+#
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.5.1
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -36,10 +42,14 @@ Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
+# current subversion tarball has correct *.swg files
+# but after regeneration these are broken again, so
+# we still need this script
 Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
+Patch3:		%{name}-tests.patch
 URL:		http://subversion.tigris.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
@@ -336,6 +346,12 @@ rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
 %patch2 -p0
+%patch3 -p0
+
+sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
+
+# serf.m4 macro is broken and ignores --without serf
+%{!?with_serf:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
 
 %build
 rm subversion/bindings/swig/proxy/*.swg
@@ -564,8 +580,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra_local-1.so.0
-%attr(755,root,root) %{_libdir}/libsvn_ra_neon-1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_neon-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_ra_%{webdavlib}-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_%{webdavlib}-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_ra_svn-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra_svn-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_repos-1.so.*.*.*
@@ -586,7 +602,7 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so
-%attr(755,root,root) %{_libdir}/libsvn_ra_neon-1.so
+%attr(755,root,root) %{_libdir}/libsvn_ra_%{webdavlib}-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra_svn-1.so
 %attr(755,root,root) %{_libdir}/libsvn_repos-1.so
 %attr(755,root,root) %{_libdir}/libsvn_subr-1.so
@@ -600,7 +616,7 @@ fi
 %{_libdir}/libsvn_fs_util-1.la
 %{_libdir}/libsvn_ra-1.la
 %{_libdir}/libsvn_ra_local-1.la
-%{_libdir}/libsvn_ra_neon-1.la
+%{_libdir}/libsvn_ra_%{webdavlib}-1.la
 %{_libdir}/libsvn_ra_svn-1.la
 %{_libdir}/libsvn_repos-1.la
 %{_libdir}/libsvn_subr-1.la
@@ -619,7 +635,7 @@ fi
 %{_libdir}/libsvn_fs_util-1.a
 %{_libdir}/libsvn_ra-1.a
 %{_libdir}/libsvn_ra_local-1.a
-%{_libdir}/libsvn_ra_neon-1.a
+%{_libdir}/libsvn_ra_%{webdavlib}-1.a
 %{_libdir}/libsvn_ra_svn-1.a
 %{_libdir}/libsvn_repos-1.a
 %{_libdir}/libsvn_subr-1.a
