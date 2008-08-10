@@ -1,0 +1,17 @@
+--- ./subversion/bindings/swig/perl/native/t/6ra.t.org	2008-08-10 11:16:08.571581580 +0200
++++ ./subversion/bindings/swig/perl/native/t/6ra.t	2008-08-10 11:18:55.423648224 +0200
+@@ -221,10 +221,12 @@
+ 
+ sub apply_textdelta {
+     my ($self, $baton, $base_checksum, $pool) = @_;
+-    my $data = $baton->{data} = \'';
++    my $mem1;
++    my $mem2;
++    my $data = $baton->{data} = \$mem1;
+     open my $out_fh, '>', $data
+         or die "error opening in-memory file to store Subversion update: $!";
+-    open my $in_fh, '<', \''
++    open my $in_fh, '<', \$mem2
+         or die "error opening in-memory file for delta source: $!";
+     return [ SVN::TxDelta::apply($in_fh, $out_fh, undef, "$baton", $pool) ];
+ }
