@@ -73,22 +73,24 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
-%if %{without neon}
-BuildRequires:	serf-devel
-%else
+BuildRequires:	sed >= 4.0
+BuildRequires:	texinfo
+BuildRequires:	which
+%if %{with neon}
 BuildRequires:	neon-devel >= 0.26.0
+%else
+BuildRequires:	serf-devel
 %endif
 BuildRequires:	python >= 2.2
 BuildRequires:	python-modules >= 2.2
 %if %{with python}
 BuildRequires:	python-devel >= 2.2
-BuildRequires:	sed >= 4.0
 BuildRequires:	swig-python >= 1.3.24
 %endif
-%{?with_ruby:BuildRequires:	ruby-devel}
-%{?with_ruby:BuildRequires:	swig-ruby >= 1.3.24}
-BuildRequires:	texinfo
-BuildRequires:	which
+%if %{with ruby}
+BuildRequires:	ruby-devel
+BuildRequires:	swig-ruby >= 1.3.24
+%endif
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
