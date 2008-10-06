@@ -5,7 +5,7 @@
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
-%bcond_with	neon			# use neon instead of serf
+%bcond_without	neon			# use neon instead of serf
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
 %bcond_without	ruby			# build without ruby bindings
