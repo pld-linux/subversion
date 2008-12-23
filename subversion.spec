@@ -32,12 +32,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.5.4
+Version:	1.5.5
 Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
-# Source0-md5:	037d1ed7a313631d50defdc3cf727415
+# Source0-md5:	6f3701a0f2acf3fe53093491ba3d77ee
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
