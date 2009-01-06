@@ -405,7 +405,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 # perl
 %if %{with perl}
-%{__make} swig-pl-lib
+%{__make} -j1 swig-pl-lib
 odir=$(pwd)
 cd subversion/bindings/swig/perl/native
 %{__perl} Makefile.PL INSTALLDIRS=vendor
