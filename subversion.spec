@@ -37,7 +37,7 @@ Release:	0.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}-rc3.tar.bz2
-# Source0-md5:	3d1dabbbcacf262e3e0baa3de79220d7
+# Source0-md5:	58473cb07611fd7567b6ce99461009e1
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
