@@ -32,11 +32,11 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.5.6
-Release:	1
+Version:	1.6.0
+Release:	0.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
+Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}-rc3.tar.bz2
 # Source0-md5:	3d1dabbbcacf262e3e0baa3de79220d7
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
@@ -71,6 +71,8 @@ BuildRequires:	bison
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
+BuildRequires:	gnome-keyring-devel
+BuildRequires:	kde4-kdelibs-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	sed >= 4.0
 BuildRequires:	texinfo
@@ -341,8 +343,30 @@ Apache module: Subversion Server - path-based authorization.
 %description -n apache-mod_authz_svn -l pl.UTF-8
 Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 
+%package -n gnome-keyring-subversion
+Summary:	Subversion module for Gnome Keyring
+Summary(pl.UTF-8):	Moduł subversion dla zarządcy kluczy Gnome
+Group:		X11/Applications
+
+%description -n gnome-keyring-subversion
+Subversion module for Gnome Keyring.
+
+%description -n gnome-keyring-subversion -l pl.UTF-8
+Moduł subversion dla zarządcy kluczy Gnome.
+
+%package -n kde4-kwallet-subversion
+Summary:	Subversion module for KDE Wallet
+Summary(pl.UTF-8):	Moduł subversion dla Portfela KDE
+Group:		X11/Applications
+
+%description -n kde4-kwallet-subversion
+Subversion module for KDE Wallet.
+
+%description -n kde4-kwallet-subversion -l pl.UTF-8
+Moduł subversion dla Portfela KDE.
+
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-rc3
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
@@ -392,7 +416,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-neon \
 %endif
 	--with-apr=%{_bindir}/apr-1-config \
-	--with-apr-util=%{_bindir}/apu-1-config
+	--with-apr-util=%{_bindir}/apu-1-config \
+	--with-kwallet \
+	--with-gnome-keyring
 
 %{__make} -j1
 
@@ -491,8 +517,8 @@ install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %find_lang %{name}
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/libsvn{javahl,_swig}*.{la,a}
-rm -f $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/svn/ext/*.la
+rm $RPM_BUILD_ROOT%{_libdir}/libsvn{javahl,_swig}*.{la,a}
+rm $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -641,6 +667,16 @@ fi
 %{_libdir}/libsvn_subr-1.a
 %{_libdir}/libsvn_wc-1.a
 
+%files -n gnome-keyring-subversion
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libsvn_auth_gnome_keyring-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_auth_gnome_keyring-1.so.0
+
+%files -n kde4-kwallet-subversion
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libsvn_auth_kwallet-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_auth_kwallet-1.so.0
+
 %if !%{with net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
@@ -706,10 +742,12 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_swig_ruby-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so
-%dir %{_libdir}/ruby/site_ruby/svn
-%{_libdir}/ruby/site_ruby/svn/*.rb
-%dir %{_libdir}/ruby/site_ruby/svn/ext
-%attr(755,root,root) %{_libdir}/ruby/site_ruby/svn/ext/*.so
+%dir %{_libdir}/ruby/site_ruby/[0-9].[0-9]
+%dir %{_libdir}/ruby/site_ruby/*/svn
+%{_libdir}/ruby/site_ruby/*/svn/*.rb
+%dir %{_libdir}/ruby/site_ruby/*/*-*
+%dir %{_libdir}/ruby/site_ruby/*/*-*/svn/ext
+%attr(755,root,root) %{_libdir}/ruby/site_ruby/*/*-*/svn/ext/*.so
 %{_datadir}/ri/*.*/system/OptionParser
 %{_datadir}/ri/*.*/system/Svn
 %{_datadir}/ri/*.*/system/Time
