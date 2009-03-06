@@ -1,4 +1,5 @@
 # TODO:
+# - fix java build with java-gcj-compat and s/java-sun/jdk/
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
 # - finish ruby
@@ -62,7 +63,7 @@ BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
 %endif
-%{?with_javahl:BuildRequires:	jdk}
+%{?with_javahl:BuildRequires:	java-sun}
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
