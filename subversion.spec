@@ -86,6 +86,7 @@ BuildRequires:	serf-devel
 BuildRequires:	python >= 2.2
 BuildRequires:	python-modules >= 2.2
 %if %{with python}
+BuildRequires:	python-ctypesgen
 BuildRequires:	python-devel >= 2.2
 BuildRequires:	swig-python >= 1.3.24
 %endif
@@ -283,6 +284,23 @@ Dowiązania do Subversion dla Pythona.
 %description -n python-subversion -l pt_BR.UTF-8
 Módulos Python para acessar os recursos do Subversion.
 
+%package -n python-csvn
+Summary:	CTypes Subversion Python bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona
+Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
+Group:		Development/Languages/Python
+%pyrequires_eq	python
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description -n python-csvn
+Subversion CTypes Python bindings.
+
+%description -n python-csvn -l pl.UTF-8
+Dowiązania do Subversion dla Pythona używające CTypes.
+
+%description -n python-csvn -l pt_BR.UTF-8
+Módulos Python para acessar os recursos do Subversion.
+
 %package -n perl-subversion
 Summary:	Subversion Perl bindings
 Summary(pl.UTF-8):	Dowiązania do Subversion dla Perla
@@ -405,6 +423,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if !%{with python} && !%{with perl} && !%{with ruby}
 	--without-swig \
 %endif
+	%{?with_python:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 %endif
 	--with-jdk="%{java_home}" \
@@ -426,6 +445,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if !%{with net_client_only}
 # python
 %if %{with python}
+# ctypes bindings
+%{__make} ctypes-python
+# swig bindings
 %{__make} swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
@@ -452,6 +474,7 @@ cd $odir
 %if %{with tests}
 %{__make} check
 %if %{with python}
+%{__make} check-ctypes-python
 %{__make} check-swig-py
 %endif
 %if %{with perl}
@@ -477,6 +500,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if !%{with net_client_only}
 %if %{with python}
 	install-swig-py \
+	install-ctypes-python \
 %endif
 %if %{with ruby}
 	install-swig-rb install-swig-rb-doc \
@@ -721,6 +745,18 @@ fi
 %{py_sitedir}/svn/*.py[co]
 %attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
+
+%files -n python-csvn
+%defattr(644,root,root,755)
+%doc subversion/bindings/ctypes-python/{README,TODO}
+%doc subversion/bindings/ctypes-python/examples/*.py
+%dir %{py_sitescriptdir}/csvn
+%{py_sitescriptdir}/csvn/*.py[co]
+%dir %{py_sitescriptdir}/csvn/core
+%{py_sitescriptdir}/csvn/core/*.py[co]
+%dir %{py_sitescriptdir}/csvn/ext
+%{py_sitescriptdir}/csvn/ext/*.py[co]
+%{py_sitescriptdir}/*.egg-info
 %endif
 
 %if %{with perl}
