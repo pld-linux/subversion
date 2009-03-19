@@ -63,13 +63,22 @@ BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
 %endif
+%if %{with python}
+BuildRequires:	python-ctypesgen
+BuildRequires:	python-devel >= 2.2
+BuildRequires:	swig-python >= 1.3.24
+%endif
+%if %{with ruby}
+BuildRequires:	ruby-devel
+BuildRequires:	swig-ruby >= 1.3.24
+%endif
 %{?with_javahl:BuildRequires:	java-sun}
+BuildRequires:	cyrus-sasl-devel
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
-BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-keyring-devel
@@ -86,15 +95,6 @@ BuildRequires:	serf-devel
 %endif
 BuildRequires:	python >= 2.2
 BuildRequires:	python-modules >= 2.2
-%if %{with python}
-BuildRequires:	python-ctypesgen
-BuildRequires:	python-devel >= 2.2
-BuildRequires:	swig-python >= 1.3.24
-%endif
-%if %{with ruby}
-BuildRequires:	ruby-devel
-BuildRequires:	swig-ruby >= 1.3.24
-%endif
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
