@@ -34,11 +34,11 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.0
-Release:	0.1
+Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}-rc3.tar.bz2
-# Source0-md5:	58473cb07611fd7567b6ce99461009e1
+Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
+# Source0-md5:	db9f19671c1f5286be3a930c0a7d18f3
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -386,7 +386,7 @@ Subversion module for KDE Wallet.
 Moduł subversion dla Portfela KDE.
 
 %prep
-%setup -q -n %{name}-%{version}-rc3
+%setup -q
 rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
