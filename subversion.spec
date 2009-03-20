@@ -544,7 +544,7 @@ install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %find_lang %{name}
 
 rm $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}
-%{?with_java:rm $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}}
+%{?with_javahl:rm $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}}
 rm $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
 
 %clean
