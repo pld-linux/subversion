@@ -34,7 +34,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.0
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -543,7 +543,7 @@ install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %find_lang %{name}
 
-rm $RPM_BUILD_ROOT%{_libdir}/libsvn{javahl,_swig}*.{la,a}
+rm $RPM_BUILD_ROOT%{_libdir}/libsvn{%{?with_javahl:javahl,}_swig}*.{la,a}
 rm $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
 
 %clean
