@@ -225,7 +225,6 @@ Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 %pyrequires_eq	python
 Requires:	%{name} = %{version}-%{release}
-Requires:	python-viewvc-rcsparse >= 0.1-0.20031026.0
 Requires:	python-subversion = %{version}
 
 %description tools
