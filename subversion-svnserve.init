@@ -28,45 +28,68 @@ else
 	exit 0
 fi
 
+start() {
+	# Start daemons.
+	if [ -f /var/lock/subsys/svnserve ]; then
+		msg_already_running svnserve
+		return
+	fi
+
+	msg_starting svnserve
+	daemon --user svn svnserve ${SVNSERVE_OPTIONS} -r ${SVNSERVE_PATH}
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/svnserve
+}
+
+stop() {
+	# Stop daemons.
+	if [ ! -f /var/lock/subsys/svnserve ]; then
+		msg_not_running svnserve
+		return
+	fi
+
+	msg_stopping svnserve
+	killproc svnserve
+	rm -f /var/lock/subsys/svnserve >/dev/null 2>&1
+}
+
+
+condrestart() {
+	if [ ! -f /var/lock/subsys/svnserve ]; then
+		msg_not_running svnserve
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
 RETVAL=0
 # See how we were called.
 case "$1" in
   start)
-	# Start daemons.
-	if [ ! -f /var/lock/subsys/svnserve ]; then
-		msg_starting svnserve
-		daemon --user svn svnserve ${SVNSERVE_OPTIONS} -r ${SVNSERVE_PATH}
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/svnserve
-	else
-		msg_already_running svnserve
-	fi
+  	start
 	;;
   stop)
-	# Stop daemons.
-	if [ -f /var/lock/subsys/svnserve ]; then
-		msg_stopping svnserve
-		killproc svnserve
-		rm -f /var/lock/subsys/svnserve >/dev/null 2>&1
-	else
-		msg_not_running svnserve
-	fi
+  	stop
 	;;
-  restart|force-reload)
-	$0 stop
-	$0 start
-	exit $?
+  restart)
+	stop
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+  force-reload)
+	condrestart 7
 	;;
   status)
 	status svnserve
 	exit $?
 	;;
-#  reload)
-#	msg_reloading svnserve
-#	killproc svnserve -HUP
-#	;;
   *)
-	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|status}"
 	exit 3
 esac
 
