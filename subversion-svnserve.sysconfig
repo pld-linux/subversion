@@ -1,5 +1,5 @@
 #
 # default options for the svnserve process
 #
-SVNSERVE_PATH="/home/services/subversion/repos";
+SVNSERVE_PATH="/home/services/subversion/repos"
 SVNSERVE_OPTIONS="-d"
