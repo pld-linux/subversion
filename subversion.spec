@@ -784,6 +784,7 @@ fi
 %dir %{_libdir}/ruby/site_ruby/*/svn
 %{_libdir}/ruby/site_ruby/*/svn/*.rb
 %dir %{_libdir}/ruby/site_ruby/*/*-*
+%dir %{_libdir}/ruby/site_ruby/*/*-*/svn
 %dir %{_libdir}/ruby/site_ruby/*/*-*/svn/ext
 %attr(755,root,root) %{_libdir}/ruby/site_ruby/*/*-*/svn/ext/*.so
 %{_datadir}/ri/*.*/system/OptionParser
