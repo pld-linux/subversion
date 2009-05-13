@@ -33,12 +33,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.6.1
+Version:	1.6.2
 Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
-# Source0-md5:	95708b96b920faeffca017f43ec96777
+# Source0-md5:	ebb1cecd313533ca0876f9bfc86bd5d9
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -543,8 +543,8 @@ install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %find_lang %{name}
 
 %{?with_javahl:rm $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
-rm $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
-rm $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
+rm -f $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
