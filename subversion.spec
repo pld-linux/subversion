@@ -13,6 +13,7 @@
 %bcond_without	apache			# build without apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
+%bcond_without	kwallet			# build without kde4 wallet support
 #
 %ifnarch i586 i686 pentium3 pentium4 athlon %{x8664}
 %undefine	with_javahl
@@ -82,7 +83,7 @@ BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-keyring-devel
-BuildRequires:	kde4-kdelibs-devel
+%{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.6.11
@@ -437,7 +438,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 %endif
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config \
+%if %{with kwallet}
 	--with-kwallet \
+%endif
 	--with-gnome-keyring
 
 %{__make} -j1
@@ -698,10 +701,12 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_auth_gnome_keyring-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_gnome_keyring-1.so.0
 
+%if %{with kwallet}
 %files -n kde4-kwallet-subversion
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsvn_auth_kwallet-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_kwallet-1.so.0
+%endif
 
 %if !%{with net_client_only}
 %files svnserve
