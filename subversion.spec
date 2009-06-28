@@ -35,7 +35,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.3
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -73,7 +73,10 @@ BuildRequires:	swig-python >= 1.3.24
 BuildRequires:	ruby-devel
 BuildRequires:	swig-ruby >= 1.3.24
 %endif
-%{?with_javahl:BuildRequires:	java-sun}
+%if %{with javahl}
+BuildRequires:	java-sun
+BuildRequires:	java-sun-tools
+%endif
 BuildRequires:	cyrus-sasl-devel
 %endif
 BuildRequires:	apr-devel >= 1:1.0.0
