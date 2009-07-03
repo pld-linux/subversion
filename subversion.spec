@@ -35,7 +35,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.3
-Release:	3
+Release:	4
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -417,12 +417,12 @@ chmod +x ./autogen.sh && ./autogen.sh
 %else
 	--disable-runtime-module-search \
 	--disable-mod-activation \
+	--with-berkeley-db="db.h:%{_includedir}:%{_libdir}:db" \
 %if %{with apache}
 	--with-apxs=%{_sbindir}/apxs \
 %else
 	--without-apache \
 	--without-apxs \
-	--with-berkeley-db=%{_includedir}/db4:%{_libdir} \
 %endif
 %if !%{with python} && !%{with perl} && !%{with ruby}
 	--without-swig \
