@@ -14,6 +14,7 @@
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
+%bcond_without	gnome			# build without gnome keyring support
 #
 %ifnarch i586 i686 pentium3 pentium4 athlon %{x8664}
 %undefine	with_javahl
@@ -85,7 +86,7 @@ BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
-BuildRequires:	gnome-keyring-devel
+%{?with_gnome:BuildRequires:	gnome-keyring-devel}
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	sed >= 4.0
@@ -444,7 +445,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{with kwallet}
 	--with-kwallet \
 %endif
+%if %{with gnome}
 	--with-gnome-keyring
+%endif
 
 %{__make} -j1
 
@@ -699,10 +702,12 @@ fi
 %{_libdir}/libsvn_subr-1.a
 %{_libdir}/libsvn_wc-1.a
 
+%if %{with gnome}
 %files -n gnome-keyring-subversion
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsvn_auth_gnome_keyring-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_gnome_keyring-1.so.0
+%endif
 
 %if %{with kwallet}
 %files -n kde4-kwallet-subversion
