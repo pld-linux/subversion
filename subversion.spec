@@ -89,6 +89,7 @@ BuildRequires:	gettext-devel
 %{?with_gnome:BuildRequires:	gnome-keyring-devel}
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 BuildRequires:	libtool >= 1.4-9
+BuildRequires:	pkgconfig
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.6.11
 BuildRequires:	texinfo
