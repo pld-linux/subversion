@@ -36,7 +36,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.9
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -794,19 +794,12 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_swig_ruby-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so
-%dir %{_libdir}/ruby/site_ruby/[0-9].[0-9]
-%dir %{_libdir}/ruby/site_ruby/*/svn
-%{_libdir}/ruby/site_ruby/*/svn/*.rb
-%dir %{_libdir}/ruby/site_ruby/*/*-*
-%dir %{_libdir}/ruby/site_ruby/*/*-*/svn
-%dir %{_libdir}/ruby/site_ruby/*/*-*/svn/ext
-%attr(755,root,root) %{_libdir}/ruby/site_ruby/*/*-*/svn/ext/*.so
-%{_datadir}/ri/*.*/system/OptionParser
-%{_datadir}/ri/*.*/system/Svn
-%{_datadir}/ri/*.*/system/Time
-%{_datadir}/ri/*.*/system/Uconv
-%{_datadir}/ri/*.*/system/*.rid
-%{_datadir}/ri/*.*/system/Kernel/*
+%dir %{ruby_sitelibdir}/svn
+%{ruby_sitelibdir}/svn/*.rb
+%dir %{ruby_sitearchdir}/svn
+%dir %{ruby_sitearchdir}/svn/ext
+%attr(755,root,root) %{ruby_sitearchdir}/*.so
+%{ruby_ridir}/Svn
 %endif
 
 %if %{with apache}
