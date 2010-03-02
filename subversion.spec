@@ -798,7 +798,7 @@ fi
 %{ruby_sitelibdir}/svn/*.rb
 %dir %{ruby_sitearchdir}/svn
 %dir %{ruby_sitearchdir}/svn/ext
-%attr(755,root,root) %{ruby_sitearchdir}/*.so
+%attr(755,root,root) %{ruby_sitearchdir}/svn/ext/*.so
 %{ruby_ridir}/Svn
 %endif
 
