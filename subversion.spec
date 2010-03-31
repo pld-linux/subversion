@@ -37,7 +37,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.9
-Release:	4
+Release:	5
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -598,7 +598,7 @@ fi
 %post -n apache-mod_dav_svn
 %service -q httpd restart
 
-%preun -n apache-mod_dav_svn
+%postun -n apache-mod_dav_svn
 if [ "$1" = "0" ]; then
 	%service -q httpd restart
 fi
@@ -606,7 +606,7 @@ fi
 %post -n apache-mod_authz_svn
 %service -q httpd restart
 
-%preun -n apache-mod_authz_svn
+%postun -n apache-mod_authz_svn
 if [ "$1" = "0" ]; then
 	%service -q httpd restart
 fi
