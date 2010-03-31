@@ -3,6 +3,7 @@
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
 # - finish ruby
+# - http://subversion.tigris.org/issues/show_bug.cgi?id=2753
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
@@ -36,7 +37,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.9
-Release:	3
+Release:	4
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -598,6 +599,14 @@ fi
 %service -q httpd restart
 
 %preun -n apache-mod_dav_svn
+if [ "$1" = "0" ]; then
+	%service -q httpd restart
+fi
+
+%post -n apache-mod_authz_svn
+%service -q httpd restart
+
+%preun -n apache-mod_authz_svn
 if [ "$1" = "0" ]; then
 	%service -q httpd restart
 fi
