@@ -1,5 +1,4 @@
 # TODO:
-# - fix java build with java-gcj-compat and s/java-sun/jdk/
 # - remove net_client_only and add db bcond (then without apache and
 #   without db => net_client_only - spec will be more simpler, I think)
 # - finish ruby
@@ -16,10 +15,6 @@
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
 %bcond_without	gnome			# build without gnome keyring support
-#
-%ifnarch i586 i686 pentium3 pentium4 athlon %{x8664}
-%undefine	with_javahl
-%endif
 #
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 %define	apxs	/usr/sbin/apxs
@@ -76,8 +71,7 @@ BuildRequires:	ruby-devel
 BuildRequires:	swig-ruby >= 1.3.24
 %endif
 %if %{with javahl}
-BuildRequires:	java-sun
-BuildRequires:	java-sun-tools
+BuildRequires:	jdk
 %endif
 BuildRequires:	cyrus-sasl-devel
 %endif
