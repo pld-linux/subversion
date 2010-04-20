@@ -32,7 +32,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.11
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -428,6 +428,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 %endif
 	--with-jdk="%{java_home}" \
+	--without-jikes \
 %if %{with neon}
 	--without-serf \
 	--with-neon=%{_prefix} \
