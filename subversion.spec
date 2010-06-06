@@ -32,7 +32,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.11
-Release:	6
+Release:	7
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -81,7 +81,7 @@ BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
-%{?with_gnome:BuildRequires:	gnome-keyring-devel}
+%{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	pkgconfig
