@@ -32,7 +32,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.13
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
@@ -55,7 +55,7 @@ URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	rpmbuild(macros) >= 1.559
+BuildRequires:	rpmbuild(macros) >= 1.583
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -103,6 +103,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libexecdir		%{_libdir}/svn
 %define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
 %define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
+
+%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.*
 
 %description
 The goal of the Subversion project is to build a version control
