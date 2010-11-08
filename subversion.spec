@@ -15,18 +15,17 @@
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
 %bcond_without	gnome			# build without gnome keyring support
-#
+
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
 %define	apxs	/usr/sbin/apxs
 %define	pdir	SVN
 %define	pnam	_Core
-#
+
 %if %{with neon}
 %define	webdavlib	neon
 %else
 %define	webdavlib	serf
 %endif
-#
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
@@ -571,11 +570,23 @@ rm -rf $RPM_BUILD_ROOT
 %postun	devel -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	-n java-subversion -p /sbin/ldconfig
+%postun	-n java-subversion -p /sbin/ldconfig
+
 %post	-n perl-subversion -p /sbin/ldconfig
 %postun	-n perl-subversion -p /sbin/ldconfig
 
 %post	-n python-subversion -p /sbin/ldconfig
 %postun	-n python-subversion -p /sbin/ldconfig
+
+%post	-n ruby-subversion -p /sbin/ldconfig
+%postun	-n ruby-subversion -p /sbin/ldconfig
+
+%post	-n gnome-keyring-subversion -p /sbin/ldconfig
+%postun	-n gnome-keyring-subversion -p /sbin/ldconfig
+
+%post	-n kde4-kwallet-subversion -p /sbin/ldconfig
+%postun	-n kde4-kwallet-subversion -p /sbin/ldconfig
 
 %post svnserve
 /sbin/chkconfig --add svnserve
@@ -589,8 +600,8 @@ fi
 
 %postun svnserve
 if [ "$1" = "0" ]; then
-        %userremove svn
-        %groupremove svn
+	%userremove svn
+	%groupremove svn
 fi
 
 %post -n apache-mod_dav_svn
@@ -724,7 +735,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_kwallet-1.so.0
 %endif
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 %files svnserve
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/svnserve
