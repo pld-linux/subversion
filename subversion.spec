@@ -47,13 +47,16 @@ Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
+Patch3:		%{name}-tests.patch
 URL:		http://subversion.apache.org/
 %if %{with net_client_only}
 %global apache_modules_api 0
 %else
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
+BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
+BuildRequires:	libtool
 BuildRequires:	rpmbuild(macros) >= 1.583
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
@@ -393,6 +396,7 @@ rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
 %patch2 -p0
+%patch3 -p1
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
@@ -400,11 +404,11 @@ sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 %{?with_neon:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
 
 %build
-rm subversion/bindings/swig/proxy/*.swg
-cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
-cp -f /usr/share/automake/config.sub ac-helpers
+# disabled regeneration - subversion 1.6.13 is not ready for swig 2.0.x
+#%{__rm} subversion/bindings/swig/proxy/*.swg
+#cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
 chmod +x ./autogen.sh && ./autogen.sh
-
+%{__libtoolize}
 %configure \
 	--with-editor=vi \
 	--with-zlib=%{_libdir} \

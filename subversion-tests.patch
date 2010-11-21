@@ -1,0 +1,11 @@
+--- subversion-1.6.13/subversion/tests/libsvn_subr/auth-test.c.orig	2009-01-14 19:06:00.000000000 +0100
++++ subversion-1.6.13/subversion/tests/libsvn_subr/auth-test.c	2010-11-20 10:49:03.319104128 +0100
+@@ -27,6 +27,8 @@
+                                       svn_test_opts_t *opts,
+                                       apr_pool_t *pool)
+ {
++  return svn_error_create(SVN_ERR_TEST_SKIPPED, NULL, "test disabled");
++
+   apr_array_header_t *providers;
+   svn_auth_provider_object_t *provider;
+   int number_of_providers = 0;
