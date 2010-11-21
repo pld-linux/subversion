@@ -369,30 +369,33 @@ Apache module: Subversion Server - path-based authorization.
 Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 
 %package -n gnome-keyring-subversion
-Summary:	Subversion module for Gnome Keyring
-Summary(pl.UTF-8):	Moduł subversion dla zarządcy kluczy Gnome
+Summary:	GNOME Keyring authentication provider for Subversion
+Summary(pl.UTF-8):	Moduł uwierzytelniający GNOME Keyring dla Subversion
 Group:		X11/Applications
 
 %description -n gnome-keyring-subversion
-Subversion module for Gnome Keyring.
+Authentication provider module for Subversion which allows SVN client
+to authenticate using GNOME Keyring.
 
 %description -n gnome-keyring-subversion -l pl.UTF-8
-Moduł subversion dla zarządcy kluczy Gnome.
+Moduł uwierzytelniający dla Subversion pozwalający klientom SVN
+uwierzytelniać się przy użyciu mechanizmu GNOME Keyring.
 
 %package -n kde4-kwallet-subversion
-Summary:	Subversion module for KDE Wallet
-Summary(pl.UTF-8):	Moduł subversion dla Portfela KDE
+Summary:	KDE Wallet authentication provider for Subversion
+Summary(pl.UTF-8):	Moduł uwierzytelniający dla Subversion wykorzystujący Portfel KDE
 Group:		X11/Applications
 
 %description -n kde4-kwallet-subversion
-Subversion module for KDE Wallet.
+Authentication provider module for Subversion which allows SVN client
+to authenticate using KDE Wallet.
 
 %description -n kde4-kwallet-subversion -l pl.UTF-8
-Moduł subversion dla Portfela KDE.
+Moduł uwierzytelniający dla Subversion pozwalający klientom SVN
+uwierzytelniać się przy użyciu Portfela KDE.
 
 %prep
 %setup -q
-rm -rf apr apr-util neon
 %patch0 -p0
 %patch1 -p1
 %patch2 -p0
@@ -552,11 +555,15 @@ install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{vers
 install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
 install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%find_lang %{name}
+%{?with_javahl:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
+%if %{with gnome} || %{with kwallet}
+# dlopened by soname (libsvn_auth_*-1.so.0)
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_auth_*-1.{so,la,a}
+%endif
 
-%{?with_javahl:rm $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
-rm -f $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
-rm -f $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
+%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
