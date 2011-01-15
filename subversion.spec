@@ -69,7 +69,7 @@ BuildRequires:	swig-perl >= 1.3.24
 %endif
 %if %{with python}
 BuildRequires:	python-ctypesgen
-BuildRequires:	python-devel >= 2.2
+BuildRequires:	python-devel >= 1:2.5
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
@@ -91,6 +91,7 @@ BuildRequires:	gettext-devel
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.6.11
 BuildRequires:	texinfo
@@ -100,8 +101,6 @@ BuildRequires:	neon-devel >= 0.26.0
 %else
 BuildRequires:	serf-devel
 %endif
-BuildRequires:	python >= 2.2
-BuildRequires:	python-modules >= 2.2
 Requires:	%{name}-libs = %{version}-%{release}
 %requires_ge	sqlite3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
