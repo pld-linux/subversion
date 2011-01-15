@@ -14,6 +14,7 @@
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
+%bcond_without	kde			# build without kde4 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
 
 %{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
@@ -21,6 +22,9 @@
 %define	pdir	SVN
 %define	pnam	_Core
 
+%if !%{with kde}
+%undefine	with_kwallet
+%endif
 %if %{with neon}
 %define	webdavlib	neon
 %else
@@ -547,7 +551,8 @@ install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
-find $RPM_BUILD_ROOT%{py_sitedir} -name "*.py" -o -name "*.a" -o -name "*.la" | xargs rm -f
+%py_postclean
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.la
 install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
 %endif
 %endif
@@ -784,10 +789,10 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_swig_py-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so
 %dir %{py_sitedir}/libsvn
+%attr(755,root,root) %{py_sitedir}/libsvn/_*.so
 %{py_sitedir}/libsvn/*.py[co]
 %dir %{py_sitedir}/svn
 %{py_sitedir}/svn/*.py[co]
-%attr(755,root,root) %{py_sitedir}/libsvn/*.so
 %{_examplesdir}/python-%{name}-%{version}
 
 %files -n python-csvn
@@ -800,7 +805,7 @@ fi
 %{py_sitescriptdir}/csvn/core/*.py[co]
 %dir %{py_sitescriptdir}/csvn/ext
 %{py_sitescriptdir}/csvn/ext/*.py[co]
-%{py_sitescriptdir}/*.egg-info
+%{py_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
 %endif
 
 %if %{with perl}
