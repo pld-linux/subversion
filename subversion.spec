@@ -74,6 +74,7 @@ BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
 BuildRequires:	ruby-devel
+BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 1.3.24
 %endif
 %if %{with javahl}
@@ -87,8 +88,8 @@ BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
-%{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
+%{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
@@ -560,8 +561,10 @@ install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/
 install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{?with_javahl:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
+%if %{without net_client_only}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
+%endif
 %if %{with gnome} || %{with kwallet}
 # dlopened by soname (libsvn_auth_*-1.so.0)
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_auth_*-1.{so,la,a}
@@ -665,8 +668,10 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_diff-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_fs-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs-1.so.0
+%if %{without net_client_only}
 %attr(755,root,root) %{_libdir}/libsvn_fs_base-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs_base-1.so.0
+%endif
 %attr(755,root,root) %{_libdir}/libsvn_fs_fs-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs_fs-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so.*.*.*
@@ -692,7 +697,9 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_delta-1.so
 %attr(755,root,root) %{_libdir}/libsvn_diff-1.so
 %attr(755,root,root) %{_libdir}/libsvn_fs-1.so
+%if %{without net_client_only}
 %attr(755,root,root) %{_libdir}/libsvn_fs_base-1.so
+%endif
 %attr(755,root,root) %{_libdir}/libsvn_fs_fs-1.so
 %attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra-1.so
@@ -706,7 +713,9 @@ fi
 %{_libdir}/libsvn_delta-1.la
 %{_libdir}/libsvn_diff-1.la
 %{_libdir}/libsvn_fs-1.la
+%if %{without net_client_only}
 %{_libdir}/libsvn_fs_base-1.la
+%endif
 %{_libdir}/libsvn_fs_fs-1.la
 %{_libdir}/libsvn_fs_util-1.la
 %{_libdir}/libsvn_ra-1.la
@@ -725,7 +734,9 @@ fi
 %{_libdir}/libsvn_delta-1.a
 %{_libdir}/libsvn_diff-1.a
 %{_libdir}/libsvn_fs-1.a
+%if %{without net_client_only}
 %{_libdir}/libsvn_fs_base-1.a
+%endif
 %{_libdir}/libsvn_fs_fs-1.a
 %{_libdir}/libsvn_fs_util-1.a
 %{_libdir}/libsvn_ra-1.a
