@@ -1,35 +1,53 @@
 # TODO:
-# - remove net_client_only and add db bcond (then without apache and
-#   without db => net_client_only - spec will be more simpler, I think)
 # - finish ruby
 # - http://subversion.tigris.org/issues/show_bug.cgi?id=2753
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
 %bcond_without	neon			# use serf instead of neon
+%bcond_without	swig			# disable bindings generation with Swig
 %bcond_without	python			# build without python bindings (broken)
 %bcond_without	perl			# build without perl bindings
 %bcond_without	ruby			# build without ruby bindings
-%bcond_without	apache			# build without apache support (webdav, etc)
+%bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
 %bcond_without	kde			# build without kde4 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
+%bcond_without	db				# disable Subversion Berkeley DB based filesystem library
 
-%{!?with_net_client_only:%include	/usr/lib/rpm/macros.perl}
-%define	apxs	/usr/sbin/apxs
-%define	pdir	SVN
-%define	pnam	_Core
+%if %{with net_client_only}
+%undefine	with_apache
+%undefine	with_db
+%undefine	with_swig
+%undefine	with_javahl
+%endif
+
+%if %{without swig}
+%undefine	with_perl
+%undefine	with_python
+%undefine	with_ruby
+%endif
 
 %if %{without kde}
 %undefine	with_kwallet
 %endif
+
+%if %{without python} && %{without perl} && %{without ruby}
+%define		without_swig	1
+%endif
+
+%define	apxs	/usr/sbin/apxs
+%define	pdir	SVN
+%define	pnam	_Core
+
 %if %{with neon}
 %define	webdavlib	neon
 %else
 %define	webdavlib	serf
 %endif
+%{!?with_perl:%include	/usr/lib/rpm/macros.perl}
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
@@ -53,9 +71,6 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 URL:		http://subversion.apache.org/
-%if %{with net_client_only}
-%global apache_modules_api 0
-%else
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -81,7 +96,6 @@ BuildRequires:	swig-ruby >= 1.3.24
 BuildRequires:	jdk
 %endif
 BuildRequires:	cyrus-sasl-devel
-%endif
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
 BuildRequires:	autoconf >= 2.59
@@ -419,27 +433,24 @@ chmod +x ./autogen.sh && ./autogen.sh
 %configure \
 	--with-editor=vi \
 	--with-zlib=%{_libdir} \
-%if %{with net_client_only}
-	--without-apache \
-	--without-swig \
-	--without-apxs \
-	--without-berkeley-db \
-%else
 	--disable-runtime-module-search \
 	--disable-mod-activation \
+%if %{with db}
 	--with-berkeley-db="db.h:%{_includedir}:%{_libdir}:db" \
+%else
+	--without-berkeley-db \
+%endif
 %if %{with apache}
 	--with-apxs=%{_sbindir}/apxs \
 %else
 	--without-apache \
 	--without-apxs \
 %endif
-%if %{without python} && %{without perl} && %{without ruby}
+%if %{without swig}
 	--without-swig \
 %endif
 	%{?with_python:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
-%endif
 	--with-jdk="%{java_home}" \
 	--without-jikes \
 %if %{with neon}
@@ -461,7 +472,6 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make} -j1
 
-%if %{without net_client_only}
 # python
 %if %{with python}
 # ctypes bindings
@@ -487,7 +497,6 @@ cd $odir
 # ruby
 %if %{with ruby}
 %{__make} swig-rb
-%endif
 %endif
 
 %if %{with tests}
@@ -518,7 +527,6 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
-%if %{without net_client_only}
 %if %{with python}
 	install-swig-py \
 	install-ctypes-python \
@@ -526,13 +534,12 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if %{with ruby}
 	install-swig-rb install-swig-rb-doc \
 %endif
-%endif
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
 	DESTDIR=$RPM_BUILD_ROOT \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if %{without net_client_only} && %{with perl}
+%if %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 %{__make} -C subversion/bindings/swig/perl/native install \
@@ -550,6 +557,7 @@ install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 
 %if %{without net_client_only}
 install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
+%endif
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
@@ -557,13 +565,12 @@ install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.la
 install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
 %endif
-%endif
 
 cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
 cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{?with_javahl:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
-%if %{without net_client_only}
+%if %{with swig}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
 %endif
