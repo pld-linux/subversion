@@ -574,10 +574,12 @@ install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 %if %{without net_client_only}
 install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %endif
-%if %{with python}
+%if %{with python} || %{with csvn}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
+%endif
+%if %{with python}
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.la
 # .a created on ac only
 %{__rm} -f $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.a
