@@ -449,6 +449,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{without swig}
 	--without-swig \
 %endif
+%if %{without ruby}
+	ac_cv_path_RUBY=none \
+%endif
 	%{?with_python:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 	--with-jdk="%{java_home}" \
@@ -572,7 +575,9 @@ cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %{?with_javahl:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
 %if %{with swig}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
+%if %{with ruby}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
+%endif
 %endif
 %if %{with gnome} || %{with kwallet}
 # dlopened by soname (libsvn_auth_*-1.so.0)
