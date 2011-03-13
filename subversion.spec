@@ -500,7 +500,8 @@ cd $odir
 %{__make} check-swig-pl
 %endif
 %if %{with ruby}
-%{__make} check-swig-rb
+# disabled, see https://bugs.launchpad.net/pld-linux/+bug/734340
+#%{__make} check-swig-rb
 %endif
 %endif
 
