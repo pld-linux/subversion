@@ -22,7 +22,7 @@
 %define	pdir	SVN
 %define	pnam	_Core
 
-%if !%{with kde}
+%if %{without kde}
 %undefine	with_kwallet
 %endif
 %if %{with neon}
@@ -434,7 +434,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-apache \
 	--without-apxs \
 %endif
-%if !%{with python} && !%{with perl} && !%{with ruby}
+%if %{without python} && %{without perl} && %{without ruby}
 	--without-swig \
 %endif
 	%{?with_python:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
@@ -461,7 +461,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make} -j1
 
-%if !%{with net_client_only}
+%if %{without net_client_only}
 # python
 %if %{with python}
 # ctypes bindings
@@ -509,6 +509,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT{%{apacheconfdir},%{apachelibdir},%{_infodir}} \
 	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
+	$RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install -j1 \
@@ -516,7 +517,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
-%if !%{with net_client_only}
+%if %{without net_client_only}
 %if %{with python}
 	install-swig-py \
 	install-ctypes-python \
@@ -530,7 +531,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 
-%if !%{with net_client_only} && %{with perl}
+%if %{without net_client_only} && %{with perl}
 %{__make} install-swig-pl-lib \
 	DESTDIR=$RPM_BUILD_ROOT
 %{__make} -C subversion/bindings/swig/perl/native install \
@@ -540,14 +541,14 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %endif
 
 %if %{with apache}
-install %{SOURCE1} $RPM_BUILD_ROOT%{apacheconfdir}/65_mod_dav_svn.conf
-install %{SOURCE2} $RPM_BUILD_ROOT%{apacheconfdir}/66_mod_authz_svn.conf
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{apacheconfdir}/65_mod_dav_svn.conf
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{apacheconfdir}/66_mod_authz_svn.conf
+cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/svnserve
+install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 %endif
 
-%if !%{with net_client_only}
-install tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
+%if %{without net_client_only}
+install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %if %{with python}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
@@ -557,8 +558,8 @@ install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{vers
 %endif
 %endif
 
-install tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
-install tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
+cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{?with_javahl:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
 %if %{without net_client_only}
@@ -660,6 +661,7 @@ fi
 
 %files libs -f %{name}.lang
 %defattr(644,root,root,755)
+%dir %{_sysconfdir}/%{name}
 %attr(755,root,root) %{_libdir}/libsvn_client-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_client-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_delta-1.so.*.*.*
