@@ -6,14 +6,15 @@
 %bcond_with	net_client_only		# build only net client
 %bcond_without	neon			# use serf instead of neon
 %bcond_without	swig			# disable bindings generation with Swig
-%bcond_without	python			# build without python bindings (broken)
-%bcond_without	perl			# build without perl bindings
-%bcond_without	ruby			# build without ruby bindings
+%bcond_without	python			# build without Python bindings (broken)
+%bcond_without	csvn			# build Python csvn bindings
+%bcond_without	perl			# build without Perl bindings
+%bcond_without	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
-%bcond_without	kde			# build without kde4 support (alias for kwallet)
+%bcond_without	kde				# build without kde4 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
 %bcond_without	db				# disable Subversion Berkeley DB based filesystem library
 
@@ -82,9 +83,11 @@ BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
 %endif
-%if %{with python}
+%if %{with csvn}
 BuildRequires:	python-ctypesgen
-BuildRequires:	python-devel >= 1:2.5
+%endif
+%if %{with python}
+BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
@@ -452,7 +455,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{without ruby}
 	ac_cv_path_RUBY=none \
 %endif
-	%{?with_python:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
+	%{?with_csvn:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
 	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
 	--with-jdk="%{java_home}" \
 	--without-jikes \
@@ -477,8 +480,10 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 # python
 %if %{with python}
+%if %{with csvn}
 # ctypes bindings
 %{__make} ctypes-python
+%endif
 # swig bindings
 %{__make} swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
@@ -505,7 +510,9 @@ cd $odir
 %if %{with tests}
 %{__make} check
 %if %{with python}
+%if %{with csvn}
 %{__make} check-ctypes-python
+%endif
 %{__make} check-swig-py
 %endif
 %if %{with perl}
@@ -532,7 +539,9 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %endif
 %if %{with python}
 	install-swig-py \
+%if %{with csvn}
 	install-ctypes-python \
+%endif
 %endif
 %if %{with ruby}
 	install-swig-rb install-swig-rb-doc \
@@ -820,6 +829,7 @@ fi
 %{py_sitedir}/svn/*.py[co]
 %{_examplesdir}/python-%{name}-%{version}
 
+%if %{with csvn}
 %files -n python-csvn
 %defattr(644,root,root,755)
 %doc subversion/bindings/ctypes-python/{README,TODO}
@@ -831,6 +841,7 @@ fi
 %dir %{py_sitescriptdir}/csvn/ext
 %{py_sitescriptdir}/csvn/ext/*.py[co]
 %{py_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
+%endif
 %endif
 
 %if %{with perl}
