@@ -447,7 +447,6 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{with apache}
 	--with-apxs=%{_sbindir}/apxs \
 %else
-	--without-apache \
 	--without-apxs \
 %endif
 %if %{without swig}
@@ -576,7 +575,9 @@ install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.la
-install tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
+# .a created on ac only
+%{__rm} -f $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.a
+cp -p tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
 %endif
 
 cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
@@ -807,6 +808,8 @@ fi
 %defattr(644,root,root,755)
 /etc/bash_completion.d/%{name}
 
+%endif # net_client_only
+
 %if %{with javahl}
 %files -n java-subversion
 %defattr(644,root,root,755)
@@ -885,5 +888,3 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{apacheconfdir}/*_mod_authz_svn.conf
 %attr(755,root,root) %{apachelibdir}/mod_authz_svn.so
 %endif
-
-%endif # net_client_only
