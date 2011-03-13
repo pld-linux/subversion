@@ -455,10 +455,16 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{without ruby}
 	ac_cv_path_RUBY=none \
 %endif
-	%{?with_csvn:--with-ctypesgen=%{_bindir}/ctypesgen.py} \
-	--%{?with_javahl:en}%{!?with_javahl:dis}able-javahl \
+%if %{with csvn}
+	--with-ctypesgen=%{_bindir}/ctypesgen.py \
+%endif
+%if %{with javahl}
+	--enable-javahl \
 	--with-jdk="%{java_home}" \
 	--without-jikes \
+%else
+	--disable-javahl \
+%endif
 %if %{with neon}
 	--without-serf \
 	--with-neon=%{_prefix} \
@@ -478,25 +484,23 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make} -j1
 
-# python
-%if %{with python}
 %if %{with csvn}
-# ctypes bindings
+# Python ctypes bindings
 %{__make} ctypes-python
 %endif
-# swig bindings
+%if %{with python}
+# Python swig bindings
 %{__make} swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 %endif
-# perl
 %if %{with perl}
+# Perl swig bindings
 %{__make} -j1 swig-pl-lib
-odir=$(pwd)
 cd subversion/bindings/swig/perl/native
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 %{__make} -j1
-cd $odir
+cd -
 %endif
 %if %{with javahl}
 %{__make} -j1 javahl \
@@ -509,10 +513,10 @@ cd $odir
 
 %if %{with tests}
 %{__make} check
-%if %{with python}
 %if %{with csvn}
 %{__make} check-ctypes-python
 %endif
+%if %{with python}
 %{__make} check-swig-py
 %endif
 %if %{with perl}
@@ -533,23 +537,23 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install -j1 \
+	DESTDIR=$RPM_BUILD_ROOT \
+	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
 %if %{with javahl}
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
 %if %{with python}
 	install-swig-py \
+	swig_pydir=%{py_sitedir}/libsvn \
+	swig_pydir_extra=%{py_sitedir}/svn
+%endif
 %if %{with csvn}
 	install-ctypes-python \
-%endif
 %endif
 %if %{with ruby}
 	install-swig-rb install-swig-rb-doc \
 %endif
-	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
-	DESTDIR=$RPM_BUILD_ROOT \
-	swig_pydir=%{py_sitedir}/libsvn \
-	swig_pydir_extra=%{py_sitedir}/svn
 
 %if %{with perl}
 %{__make} install-swig-pl-lib \
@@ -583,7 +587,9 @@ cp -p tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{versio
 cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
 cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%{?with_javahl:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}}
+%if %{with javahl}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}
+%endif
 %if %{with swig}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
 %if %{with ruby}
@@ -832,6 +838,7 @@ fi
 %dir %{py_sitedir}/svn
 %{py_sitedir}/svn/*.py[co]
 %{_examplesdir}/python-%{name}-%{version}
+%endif
 
 %if %{with csvn}
 %files -n python-csvn
@@ -845,7 +852,6 @@ fi
 %dir %{py_sitescriptdir}/csvn/ext
 %{py_sitescriptdir}/csvn/ext/*.py[co]
 %{py_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
-%endif
 %endif
 
 %if %{with perl}
