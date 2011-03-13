@@ -97,12 +97,13 @@ BuildRequires:	swig-ruby >= 1.3.24
 %endif
 %if %{with javahl}
 BuildRequires:	jdk
+BuildRequires:	libstdc++-devel
 %endif
-BuildRequires:	cyrus-sasl-devel
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	bison
+BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
