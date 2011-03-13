@@ -819,7 +819,7 @@ fi
 %if %{with python}
 %files -n python-subversion
 %defattr(644,root,root,755)
-%doc tools/backup/*.py tools/examples/*.py
+%doc tools/backup/*.py
 %attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_swig_py-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so
