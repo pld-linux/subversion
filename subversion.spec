@@ -1,5 +1,4 @@
 # TODO:
-# - finish ruby
 # - http://subversion.tigris.org/issues/show_bug.cgi?id=2753
 #
 # Conditional build:
@@ -551,8 +550,19 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if %{with csvn}
 	install-ctypes-python \
 %endif
+
 %if %{with ruby}
+%{__make} install -j1 \
+	DESTDIR=$RPM_BUILD_ROOT \
 	install-swig-rb install-swig-rb-doc \
+
+# not our package
+%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Kernel
+%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/OptionParser
+%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Time
+%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Uconv
+%{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/cache.ri
+%{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/created.rid
 %endif
 
 %if %{with perl}
