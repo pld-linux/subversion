@@ -545,7 +545,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if %{with python}
 	install-swig-py \
 	swig_pydir=%{py_sitedir}/libsvn \
-	swig_pydir_extra=%{py_sitedir}/svn
+	swig_pydir_extra=%{py_sitedir}/svn \
 %endif
 %if %{with csvn}
 	install-ctypes-python \
