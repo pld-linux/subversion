@@ -1,5 +1,3 @@
-# TODO:
-# - http://subversion.tigris.org/issues/show_bug.cgi?id=2753
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
@@ -8,7 +6,7 @@
 %bcond_without	python			# build without Python bindings (broken)
 %bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
-%bcond_without	ruby			# build without Ruby bindings
+%bcond_with	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
@@ -52,12 +50,13 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.6.17
-Release:	2
+Version:	1.7.0
+Release:	0.1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
-# Source0-md5:	81e5dc5beee4b3fc025ac70c0b6caa14
+#Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
+Source0:	http://www.idg.pl/mirrors/apache/subversion/subversion-1.7.0-rc3.tar.bz2
+# Source0-md5:	c27b70bd8a73fef0ec54c62312c528b9
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -90,7 +89,8 @@ BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
-BuildRequires:	ruby-devel
+BuildRequires:	ruby-devel >= 1:1.8
+BuildRequires:	ruby-devel < 1:1.9
 BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 1.3.24
 %endif
@@ -416,7 +416,7 @@ Moduł uwierzytelniający dla Subversion pozwalający klientom SVN
 uwierzytelniać się przy użyciu Portfela KDE.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-rc3
 %patch0 -p0
 %patch1 -p1
 %patch2 -p0
@@ -683,7 +683,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc BUGS CHANGES COPYING INSTALL README
+%doc BUGS CHANGES INSTALL README
 %doc doc/*/*.html
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
@@ -691,12 +691,14 @@ fi
 %attr(755,root,root) %{_bindir}/svn
 %attr(755,root,root) %{_bindir}/svnadmin
 %attr(755,root,root) %{_bindir}/svndumpfilter
+%attr(755,root,root) %{_bindir}/svnrdump
 %attr(755,root,root) %{_bindir}/svnlook
 %attr(755,root,root) %{_bindir}/svnsync
 %attr(755,root,root) %{_bindir}/svnversion
 %{_mandir}/man1/svn.1*
 %{_mandir}/man1/svnadmin.1*
 %{_mandir}/man1/svndumpfilter.1*
+%{_mandir}/man1/svnrdump.1*
 %{_mandir}/man1/svnlook.1*
 %{_mandir}/man1/svnsync.1*
 %{_mandir}/man1/svnversion.1*

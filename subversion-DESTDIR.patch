@@ -18,14 +18,15 @@
  INSTALL_DATA = $(INSTALL) -m 644
  INSTALL_LOCALE = $(INSTALL_DATA)
  
---- subversion-1.3.0/build/generator/gen_make.py.orig	2005-11-17 01:43:35.000000000 +0100
-+++ subversion-1.3.0/build/generator/gen_make.py	2006-01-13 21:40:05.377108000 +0100
-@@ -407,7 +407,7 @@
-           base, ext = os.path.splitext(fname)
-           name = string.replace(base, 'mod_', '')
-           self.ofile.write('\tcd %s ; '
--                           '$(MKDIR) "$(APACHE_LIBEXECDIR)" ; '
-+                           '$(MKDIR) "$(DESTDIR)$(APACHE_LIBEXECDIR)" ; '
-                            '$(INSTALL_MOD_SHARED) -n %s %s\n'
-                            % (dirname, name, fname))
-           if ext == '.la':
+--- subversion-1.7.0-rc3/build/generator/templates/makefile.ezt~	2011-04-27 23:54:33.000000000 +0200
++++ subversion-1.7.0-rc3/build/generator/templates/makefile.ezt	2011-09-16 08:46:27.559338812 +0200
+@@ -125,7 +125,7 @@
+ ########################################
+ [for areas]
+ [is areas.type "apache-mod"]install-mods-shared:[for areas.files] [areas.files.fullname][end][for areas.files]
+-	cd [areas.files.dirname] ; $(MKDIR) "$(APACHE_LIBEXECDIR)" ; $(INSTALL_MOD_SHARED) -n [areas.files.name] [areas.files.filename][end]
++	cd [areas.files.dirname] ; $(MKDIR) "$(DESTDIR)$(APACHE_LIBEXECDIR)" ; $(INSTALL_MOD_SHARED) -n [areas.files.name] [areas.files.filename][end]
+ [else]install-[areas.type]: [for areas.files][if-index areas.files first][else] [end][areas.files.fullname][end]
+ 	$(MKDIR) $(DESTDIR)$([areas.varname]dir)[for areas.files][is areas.type "locale"]
+ 	$(MKDIR) [areas.files.installdir]
+
