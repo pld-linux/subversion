@@ -110,6 +110,7 @@ BuildRequires:	gettext-devel
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.559
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.6.11
 BuildRequires:	texinfo
