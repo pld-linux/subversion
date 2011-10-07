@@ -127,7 +127,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
 %define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
-%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.*
+%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.* libsvn_fs-1.so.0.0.0
+# libsvn_fs-1.so.0.0.0  - "apr_uuid_parse" symbol
 
 %description
 The goal of the Subversion project is to build a version control
