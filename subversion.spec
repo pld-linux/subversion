@@ -33,7 +33,7 @@
 %endif
 
 %if %{without python} && %{without perl} && %{without ruby}
-%define		without_swig	1
+%undefine	with_swig
 %endif
 
 %define	apxs	/usr/sbin/apxs
