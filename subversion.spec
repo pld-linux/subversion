@@ -6,16 +6,25 @@
 %bcond_without	neon			# use serf instead of neon
 %bcond_without	swig			# disable bindings generation with Swig
 %bcond_without	python			# build without Python bindings (broken)
-%bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
-%bcond_without	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
-%bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
-%bcond_without	kde				# build without kde4 support (alias for kwallet)
-%bcond_without	gnome			# build without gnome keyring support
 %bcond_without	db				# disable Subversion Berkeley DB based filesystem library
+
+%if "%{pld_release}" == "ac"
+%bcond_with	csvn			# build Python csvn bindings
+%bcond_with	gnome			# build without gnome keyring support
+%bcond_with	javahl			# build without javahl support (Java high-level bindings)
+%bcond_with	kde				# build without kde4 support (alias for kwallet)
+%bcond_with	ruby			# build without Ruby bindings
+%else
+%bcond_without	csvn			# build Python csvn bindings
+%bcond_without	gnome			# build without gnome keyring support
+%bcond_without	javahl			# build without javahl support (Java high-level bindings)
+%bcond_without	kde				# build without kde4 support (alias for kwallet)
+%bcond_without	ruby			# build without Ruby bindings
+%endif
 
 %if %{with net_client_only}
 %undefine	with_apache
@@ -76,6 +85,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	libtool
+BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	rpmbuild(macros) >= 1.583
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
