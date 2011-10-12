@@ -512,15 +512,15 @@ cd -
 %endif
 
 %if %{with tests}
-%{__make} check
+%{__make} -j1 check
 %if %{with csvn}
-%{__make} check-ctypes-python
+%{__make} -j1 check-ctypes-python
 %endif
 %if %{with python}
-%{__make} check-swig-py
+%{__make} -j1 check-swig-py
 %endif
 %if %{with perl}
-%{__make} check-swig-pl
+%{__make} -j1 check-swig-pl
 %endif
 %if %{with ruby}
 # disabled, see https://bugs.launchpad.net/pld-linux/+bug/734340
