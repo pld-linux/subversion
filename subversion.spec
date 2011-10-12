@@ -51,12 +51,11 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.7.0
-Release:	0.1
+Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-#Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
-Source0:	http://www.idg.pl/mirrors/apache/subversion/subversion-1.7.0-rc4.tar.bz2
-# Source0-md5:	f892a9835a474840314cfedc4c6fa709
+Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
+# Source0-md5:	930e6644a1b6094efd268fde6a318f04
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -106,6 +105,7 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	expat-devel
 BuildRequires:	gettext-devel
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
+BuildRequires:	libmagic-devel
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 BuildRequires:	libtool >= 1.4-9
 BuildRequires:	pkgconfig
@@ -417,7 +417,7 @@ Moduł uwierzytelniający dla Subversion pozwalający klientom SVN
 uwierzytelniać się przy użyciu Portfela KDE.
 
 %prep
-%setup -q -n %{name}-%{version}-rc4
+%setup -q
 %patch0 -p0
 %patch1 -p1
 %patch2 -p0
