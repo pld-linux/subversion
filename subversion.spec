@@ -11,9 +11,9 @@
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
-%bcond_without	kde				# build without kde4 support (alias for kwallet)
+%bcond_without	kde			# build without kde4 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
-%bcond_without	db				# disable Subversion Berkeley DB based filesystem library
+%bcond_without	db			# disable Subversion Berkeley DB based filesystem library
 
 %if %{with net_client_only}
 %undefine	with_apache
@@ -70,55 +70,53 @@ Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
-BuildRequires:	autoconf
+BuildRequires:	apr-devel >= 1:1.0.0
+BuildRequires:	apr-util-devel >= 1:1.2.8-3
+BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
+BuildRequires:	bison
+BuildRequires:	cyrus-sasl-devel
+%if %{with kwallet} || %{with gnome}
+BuildRequires:	dbus-devel
+%endif
 BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	libtool
+BuildRequires:	expat-devel
+BuildRequires:	gettext-devel
+%{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
+%{?with_gnome:BuildRequires:	libgnome-keyring-devel}
+BuildRequires:	libmagic-devel
+BuildRequires:	libtool >= 1.4-9
+BuildRequires:	pkgconfig
+%{?with_csvn:BuildRequires:	python-ctypesgen}
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.583
+BuildRequires:	sed >= 4.0
+BuildRequires:	sqlite3-devel >= 3.6.18
+BuildRequires:	texinfo
+BuildRequires:	which
+%if %{with neon}
+BuildRequires:	neon-devel >= 0.26.0
+%else
+BuildRequires:	serf-devel >= 0.7.1
+%endif
+%if %{with javahl}
+BuildRequires:	jdk >= 1.5
+BuildRequires:	libstdc++-devel
+%endif
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
-%endif
-%if %{with csvn}
-BuildRequires:	python-ctypesgen
 %endif
 %if %{with python}
 BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
-BuildRequires:	ruby-devel >= 1:1.8
+BuildRequires:	ruby-devel >= 1:1.8.2
 BuildRequires:	ruby-devel < 1:1.9
 BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 1.3.24
-%endif
-%if %{with javahl}
-BuildRequires:	jdk
-BuildRequires:	libstdc++-devel
-%endif
-BuildRequires:	apr-devel >= 1:1.0.0
-BuildRequires:	apr-util-devel >= 1:1.2.8-3
-BuildRequires:	autoconf >= 2.59
-BuildRequires:	bison
-BuildRequires:	cyrus-sasl-devel
-BuildRequires:	expat-devel
-BuildRequires:	gettext-devel
-%{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
-BuildRequires:	libmagic-devel
-%{?with_gnome:BuildRequires:	libgnome-keyring-devel}
-BuildRequires:	libtool >= 1.4-9
-BuildRequires:	pkgconfig
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.559
-BuildRequires:	sed >= 4.0
-BuildRequires:	sqlite3-devel >= 3.6.11
-BuildRequires:	texinfo
-BuildRequires:	which
-%if %{with neon}
-BuildRequires:	neon-devel >= 0.26.0
-%else
-BuildRequires:	serf-devel
 %endif
 Requires:	%{name}-libs = %{version}-%{release}
 %requires_ge	sqlite3
@@ -176,7 +174,11 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-%{?with_neon:Requires:	neon >= 0.26.0}
+%if %{with neon}
+Requires:	neon >= 0.26.0
+%else
+Requires:	serf >= 0.7.1
+%endif
 Obsoletes:	libsubversion0
 
 %description libs
