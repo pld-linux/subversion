@@ -6,7 +6,7 @@
 %bcond_without	python			# build without Python bindings (broken)
 %bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
-%bcond_with	ruby			# build without Ruby bindings
+%bcond_with	ruby			# build with Ruby bindings (only 1.8.x is supported)
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
