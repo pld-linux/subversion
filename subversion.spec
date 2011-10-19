@@ -68,6 +68,7 @@ Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
+# running this hook for every post breaks mod_rails
 Patch4:		%{name}-mod_dav_svn-fix-hook.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
