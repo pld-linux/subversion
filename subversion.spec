@@ -51,7 +51,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.7.1
-Release:	1
+Release:	2
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -115,8 +115,8 @@ BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
-BuildRequires:	ruby-devel >= 1:1.8.2
 BuildRequires:	ruby-devel < 1:1.9
+BuildRequires:	ruby-devel >= 1:1.8.2
 BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 1.3.24
 %endif
@@ -385,6 +385,7 @@ Moduł apache: Serwer Subversion.
 Summary:	Apache module: Subversion Server - path-based authorization
 Summary(pl.UTF-8):	Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion
 Group:		Networking/Daemons
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
 Requires:	apache-mod_dav_svn = %{version}-%{release}
 
@@ -398,6 +399,7 @@ Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 Summary:	GNOME Keyring authentication provider for Subversion
 Summary(pl.UTF-8):	Moduł uwierzytelniający GNOME Keyring dla Subversion
 Group:		X11/Applications
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n gnome-keyring-subversion
 Authentication provider module for Subversion which allows SVN client
@@ -411,6 +413,7 @@ uwierzytelniać się przy użyciu mechanizmu GNOME Keyring.
 Summary:	KDE Wallet authentication provider for Subversion
 Summary(pl.UTF-8):	Moduł uwierzytelniający dla Subversion wykorzystujący Portfel KDE
 Group:		X11/Applications
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n kde4-kwallet-subversion
 Authentication provider module for Subversion which allows SVN client
