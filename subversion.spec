@@ -1,3 +1,5 @@
+# TODO:
+# - serf as default: https://subversion.apache.org/docs/release-notes/1.7.html#serf
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
@@ -52,7 +54,7 @@ Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.7.1
 Release:	2
-License:	Apache/BSD-like
+License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
 # Source0-md5:	8a4fa74385df85a9702141b6b68b8307
