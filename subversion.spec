@@ -1,5 +1,7 @@
 # TODO:
 # - http://subversion.tigris.org/issues/show_bug.cgi?id=2753
+# - libmagic support: https://subversion.apache.org/docs/release-notes/1.7.html#libmagic-support
+# - serf as default: https://subversion.apache.org/docs/release-notes/1.7.html#serf
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
@@ -63,7 +65,7 @@ Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.6.17
 Release:	3
-License:	Apache/BSD-like
+License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
 # Source0-md5:	81e5dc5beee4b3fc025ac70c0b6caa14
