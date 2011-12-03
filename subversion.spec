@@ -53,7 +53,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.7.1
-Release:	2
+Release:	3
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -494,6 +494,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make} -j1
 
+%{__make} tools
+
 %if %{with csvn}
 # Python ctypes bindings
 %{__make} ctypes-python
@@ -547,6 +549,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
 %{__make} install -j1 \
+	toolsdir=%{_bindir} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
 %if %{with javahl}
@@ -561,6 +564,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if %{with csvn}
 	install-ctypes-python \
 %endif
+	install-tools
 
 %if %{with ruby}
 %{__make} install -j1 \
@@ -595,6 +599,12 @@ install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 %if %{without net_client_only}
 install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %endif
+
+# rename not to conflict with standard packages. (are these needed at all?)
+mv $RPM_BUILD_ROOT%{_bindir}/{,svn}diff
+mv $RPM_BUILD_ROOT%{_bindir}/{,svn}diff3
+mv $RPM_BUILD_ROOT%{_bindir}/{,svn}diff4
+
 %if %{with python} || %{with csvn}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
@@ -833,7 +843,23 @@ fi
 
 %files tools
 %defattr(644,root,root,755)
+# tools/backup/hot-backup.py
 %attr(755,root,root) %{_bindir}/svn-hot-backup
+
+# tools/diff
+%attr(755,root,root) %{_bindir}/svndiff
+%attr(755,root,root) %{_bindir}/svndiff3
+%attr(755,root,root) %{_bindir}/svndiff4
+
+# tools/server-side
+%attr(755,root,root) %{_bindir}/svn-populate-node-origins-index
+%attr(755,root,root) %{_bindir}/svn-rep-sharing-stats
+%attr(755,root,root) %{_bindir}/svnauthz-validate
+
+# tools/client-side/svnmucc
+%attr(755,root,root) %{_bindir}/svnmucc
+# tools/dev/svnraisetreeconflict
+%attr(755,root,root) %{_bindir}/svnraisetreeconflict
 
 %files -n bash-completion-subversion
 %defattr(644,root,root,755)
