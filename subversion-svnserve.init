@@ -6,8 +6,6 @@
 # description:	svnserve is a subversion server
 #
 # processname:	svnserve
-# config:
-# pidfile:
 
 # Source function library.
 . /etc/rc.d/init.d/functions
