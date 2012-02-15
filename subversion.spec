@@ -52,12 +52,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.7.2
-Release:	2
+Version:	1.7.3
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	1e5dfffd27be080672e5a042564368a8
+# Source0-md5:	867fb0a5db00710cf8dce0bdfa094b3b
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -395,6 +395,20 @@ Apache module: Subversion Server - path-based authorization.
 %description -n apache-mod_authz_svn -l pl.UTF-8
 Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
 
+%package -n apache-mod_dontdothat_svn
+Summary:	Apache module: Allows you to block specific svn requests
+Summary(pl.UTF-8):	Moduł apache: Pozwala na blokowanie pewnych zapytań svn
+Group:		Networking/Daemons
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	apache(modules-api) = %apache_modules_api
+Requires:	apache-mod_dav_svn = %{version}-%{release}
+
+%description -n apache-mod_dontdothat_svn
+Apache module: Allows you to block specific svn requests.
+
+%description -n apache-mod_dontdothat_svn -l pl.UTF-8
+Moduł apache: Pozwala na blokowanie pewnych zapytań svn.
+
 %package -n gnome-keyring-subversion
 Summary:	GNOME Keyring authentication provider for Subversion
 Summary(pl.UTF-8):	Moduł uwierzytelniający GNOME Keyring dla Subversion
@@ -699,6 +713,14 @@ if [ "$1" = "0" ]; then
 	%service -q httpd restart
 fi
 
+%post -n apache-mod_dontdothat_svn
+%service -q httpd restart
+
+%postun -n apache-mod_dontdothat_svn
+if [ "$1" = "0" ]; then
+	%service -q httpd restart
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc BUGS CHANGES INSTALL README
@@ -941,4 +963,9 @@ fi
 %doc subversion/mod_authz_svn/INSTALL
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{apacheconfdir}/*_mod_authz_svn.conf
 %attr(755,root,root) %{apachelibdir}/mod_authz_svn.so
+
+%files -n apache-mod_dontdothat_svn
+%defattr(644,root,root,755)
+%doc tools/server-side/mod_dontdothat/README
+%attr(755,root,root) %{apachelibdir}/mod_dontdothat.so
 %endif
