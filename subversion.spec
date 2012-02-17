@@ -369,7 +369,7 @@ Módulos Ruby para acessar os recursos do Subversion.
 
 %package -n apache-mod_dav_svn
 Summary:	Apache module: Subversion Server
-Summary(pl.UTF-8):	Moduł apache: Serwer Subversion
+Summary(pl.UTF-8):	Moduł Apache'a: serwer Subversion
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
@@ -379,11 +379,11 @@ Requires:	apache-mod_dav
 Apache module: Subversion Server.
 
 %description -n apache-mod_dav_svn -l pl.UTF-8
-Moduł apache: Serwer Subversion.
+Moduł Apache'a: serwer Subversion.
 
 %package -n apache-mod_authz_svn
 Summary:	Apache module: Subversion Server - path-based authorization
-Summary(pl.UTF-8):	Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion
+Summary(pl.UTF-8):	Moduł Apache'a: autoryzacja na podstawie ścieżki dla serwera Subversion
 Group:		Networking/Daemons
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
@@ -393,11 +393,12 @@ Requires:	apache-mod_dav_svn = %{version}-%{release}
 Apache module: Subversion Server - path-based authorization.
 
 %description -n apache-mod_authz_svn -l pl.UTF-8
-Moduł apache: autoryzacja na podstawie ścieżki dla serwera Subversion.
+Moduł Apache'a: autoryzacja na podstawie ścieżki dla serwera
+Subversion.
 
 %package -n apache-mod_dontdothat_svn
 Summary:	Apache module: Allows you to block specific svn requests
-Summary(pl.UTF-8):	Moduł apache: Pozwala na blokowanie pewnych zapytań svn
+Summary(pl.UTF-8):	Moduł Apache'a pozwalający na blokowanie pewnych zapytań svn
 Group:		Networking/Daemons
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apache(modules-api) = %apache_modules_api
@@ -407,7 +408,7 @@ Requires:	apache-mod_dav_svn = %{version}-%{release}
 Apache module: Allows you to block specific svn requests.
 
 %description -n apache-mod_dontdothat_svn -l pl.UTF-8
-Moduł apache: Pozwala na blokowanie pewnych zapytań svn.
+Moduł Apache'a pozwalający na blokowanie pewnych zapytań svn.
 
 %package -n gnome-keyring-subversion
 Summary:	GNOME Keyring authentication provider for Subversion
