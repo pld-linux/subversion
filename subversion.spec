@@ -52,12 +52,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.7.5
+Version:	1.7.6
 Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.idg.pl/mirrors/apache/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	f6353b9b581081cdf97299300c9eada3
+# Source0-md5:	4baa434db7709bb059b05d02a2547663
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -70,6 +70,7 @@ Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
+Patch4:		subversion-1.7.5-kwallet-gcc47.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	apr-devel >= 1:1.0.0
@@ -444,6 +445,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch1 -p1
 %patch2 -p0
 %patch3 -p1
+%patch4 -p2
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
