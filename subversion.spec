@@ -17,6 +17,8 @@
 %bcond_without	gnome			# build without gnome keyring support
 %bcond_without	db			# disable Subversion Berkeley DB based filesystem library
 
+# for AC: --without csvn,gnome,javahl,kde,ruby
+
 %if %{with net_client_only}
 %undefine	with_apache
 %undefine	with_db
