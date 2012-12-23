@@ -61,12 +61,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.6.18
+Version:	1.6.19
 Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
 Source0:	http://archive.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	c5c662a5d19d047256fa333bd890a925
+# Source0-md5:	47b3734ee456fa81df5775c3aeef3f82
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -139,6 +139,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.* libsvn_fs-1.so.0.0.0
 # libsvn_fs-1.so.0.0.0  - "apr_uuid_parse" symbol
+
+%define		filterout_ld	-Werror=format-security
 
 %description
 The goal of the Subversion project is to build a version control
