@@ -263,8 +263,8 @@ Summary:	Subversion tools and scripts
 Summary(pl.UTF-8):	Narzędzia oraz skrypty dla subversion
 Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
-%pyrequires_eq	python
 Requires:	%{name} = %{version}-%{release}
+Requires:	python
 Requires:	python-subversion = %{version}
 
 %description tools
@@ -311,8 +311,8 @@ Summary:	Subversion Python bindings
 Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona
 Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
-%pyrequires_eq	python
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	python
 Obsoletes:	subversion-python
 
 %description -n python-subversion
@@ -329,8 +329,8 @@ Summary:	CTypes Subversion Python bindings
 Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona
 Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
-%pyrequires_eq	python
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	python
 
 %description -n python-csvn
 Subversion CTypes Python bindings.
