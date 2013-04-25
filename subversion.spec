@@ -86,7 +86,7 @@ BuildRequires:	automake
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	libtool
 BuildRequires:	rpm >= 4.4.9-56
-BuildRequires:	rpmbuild(macros) >= 1.583
+BuildRequires:	rpmbuild(macros) >= 1.656
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -464,7 +464,11 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{without swig}
 	--without-swig \
 %endif
-%if %{without ruby}
+%if %{with ruby}
+	svn_cv_ruby_sitedir_libsuffix="" \
+	svn_cv_ruby_sitedir_archsuffix="" \
+	--with-ruby-sitedir=%{ruby_vendorarchdir} \
+%else
 	ac_cv_path_RUBY=none \
 %endif
 %if %{with csvn}
@@ -618,7 +622,7 @@ cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %if %{with swig}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
 %if %{with ruby}
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/ruby/site_ruby/*/*/svn/ext/*.la
+%{__rm} $RPM_BUILD_ROOT%{ruby_vendorarchdir}/svn/ext/*.la
 %endif
 %endif
 %if %{with gnome} || %{with kwallet}
@@ -899,11 +903,10 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_swig_ruby-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_swig_ruby-1.so
-%dir %{ruby_sitelibdir}/svn
-%{ruby_sitelibdir}/svn/*.rb
-%dir %{ruby_sitearchdir}/svn
-%dir %{ruby_sitearchdir}/svn/ext
-%attr(755,root,root) %{ruby_sitearchdir}/svn/ext/*.so
+%dir %{ruby_vendorarchdir}/svn
+%{ruby_vendorarchdir}/svn/*.rb
+%dir %{ruby_vendorarchdir}/svn/ext
+%attr(755,root,root) %{ruby_vendorarchdir}/svn/ext/*.so
 %{ruby_ridir}/Svn
 %endif
 
