@@ -8,7 +8,7 @@
 %bcond_without	python			# build without Python bindings (broken)
 %bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
-%bcond_with	ruby			# build with Ruby bindings (only 1.8.x is supported)
+%bcond_without	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	javahl			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
@@ -72,6 +72,7 @@ Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
+Patch4:		subversion-1.7.2-ruby19.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	apr-devel >= 1:1.0.0
@@ -117,7 +118,6 @@ BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
-BuildRequires:	ruby-devel < 1:1.9
 BuildRequires:	ruby-devel >= 1:1.8.2
 BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 1.3.24
@@ -446,6 +446,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch1 -p1
 %patch2 -p0
 %patch3 -p1
+%patch4 -p1
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
@@ -586,10 +587,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-swig-rb install-swig-rb-doc \
 
 # not our package
-%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Kernel
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/OptionParser
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Time
-%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Uconv
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/cache.ri
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/created.rid
 %endif
