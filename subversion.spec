@@ -79,6 +79,7 @@ Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
+Patch4:		%{name}-1.6.19-alt-g++4.7-fix.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel < 2.4}
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
@@ -435,6 +436,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch1 -p1
 %patch2 -p0
 %patch3 -p1
+%patch4 -p1
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
