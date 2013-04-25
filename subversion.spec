@@ -80,6 +80,7 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 URL:		http://subversion.apache.org/
+%{?with_apache:BuildRequires:	apache-devel < 2.4}
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	autoconf
 BuildRequires:	automake
