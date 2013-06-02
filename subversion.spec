@@ -54,12 +54,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.7.9
-Release:	3
+Version:	1.7.10
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.idg.pl/mirrors/apache/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	8d532025771a67c06c23f299699f056f
+# Source0-md5:	4088a77e14232876c9b4ff1541e6e200
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -118,6 +118,7 @@ BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig-python >= 1.3.24
 %endif
 %if %{with ruby}
+BuildRequires:	rpm-rubyprov
 BuildRequires:	ruby-devel >= 1:1.8.2
 BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 1.3.24
