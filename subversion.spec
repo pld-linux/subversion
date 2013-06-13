@@ -708,10 +708,9 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn
 %attr(755,root,root) %{_bindir}/svnadmin
-%attr(755,root,root) %{_bindir}/svnauthz
-%attr(755,root,root) %{_bindir}/svn-bench
 %attr(755,root,root) %{_bindir}/svndumpfilter
 %attr(755,root,root) %{_bindir}/svnlook
+%attr(755,root,root) %{_bindir}/svnmucc
 %attr(755,root,root) %{_bindir}/svnrdump
 %attr(755,root,root) %{_bindir}/svnsync
 %attr(755,root,root) %{_bindir}/svnversion
@@ -720,6 +719,7 @@ fi
 %{_mandir}/man1/svndumpfilter.1*
 %{_mandir}/man1/svnrdump.1*
 %{_mandir}/man1/svnlook.1*
+%{_mandir}/man1/svnmucc.1*
 %{_mandir}/man1/svnsync.1*
 %{_mandir}/man1/svnversion.1*
 
@@ -854,11 +854,11 @@ fi
 %attr(755,root,root) %{_bindir}/fsfs-stats
 %attr(755,root,root) %{_bindir}/svn-populate-node-origins-index
 %attr(755,root,root) %{_bindir}/svn-rep-sharing-stats
+%attr(755,root,root) %{_bindir}/svnauthz
 %attr(755,root,root) %{_bindir}/svnauthz-validate
 
-# tools/client-side/svnmucc
-%attr(755,root,root) %{_bindir}/svnmucc
-%{_mandir}/man1/svnmucc.1*
+# tools/client-side
+%attr(755,root,root) %{_bindir}/svn-bench
 
 # tools/dev/svnraisetreeconflict
 %attr(755,root,root) %{_bindir}/svnraisetreeconflict
