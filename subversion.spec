@@ -1,9 +1,5 @@
-# TODO:
-# - serf as default: https://subversion.apache.org/docs/release-notes/1.7.html#serf
-#
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
-%bcond_without	neon			# use serf instead of neon
 %bcond_without	swig			# disable bindings generation with Swig
 %bcond_without	python			# build without Python bindings (broken)
 %bcond_without	csvn			# build Python csvn bindings
@@ -44,22 +40,17 @@
 %define	pdir	SVN
 %define	pnam	_Core
 
-%if %{with neon}
-%define	webdavlib	neon
-%else
-%define	webdavlib	serf
-%endif
 %{?with_perl:%include	/usr/lib/rpm/macros.perl}
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.7.10
-Release:	2
+Version:	1.8.0
+Release:	0.1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.idg.pl/mirrors/apache/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	4088a77e14232876c9b4ff1541e6e200
+# Source0-md5:	f053a9948dfe5c70eff5c00509723214
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -72,7 +63,6 @@ Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
-Patch4:		subversion-1.7.2-ruby19.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
 BuildRequires:	apr-devel >= 1:1.0.0
@@ -99,11 +89,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.6.18
 BuildRequires:	texinfo
 BuildRequires:	which
-%if %{with neon}
-BuildRequires:	neon-devel >= 0.26.0
-%else
-BuildRequires:	serf-devel >= 0.7.1
-%endif
+BuildRequires:	serf-devel >= 1.2.1
 %if %{with javahl}
 BuildRequires:	jdk >= 1.5
 BuildRequires:	libstdc++-devel
@@ -179,11 +165,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-%if %{with neon}
-Requires:	neon >= 0.26.0
-%else
-Requires:	serf >= 0.7.1
-%endif
+Requires:	serf >= 1.2.1
 Obsoletes:	libsubversion0
 
 %description libs
@@ -199,7 +181,6 @@ Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
-%{?with_neon:Requires:	neon-devel >= 0.26.0}
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -447,12 +428,8 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch1 -p1
 %patch2 -p0
 %patch3 -p1
-%patch4 -p1
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
-
-# serf.m4 macro is broken and ignores --without serf
-%{?with_neon:sed -i -e 's#serf_found="yes"#serf_found="no"#g' build/ac-macros/serf.m4}
 
 %build
 # disabled regeneration - subversion 1.6.13 is not ready for swig 2.0.x
@@ -471,6 +448,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--without-berkeley-db \
 %endif
 %if %{with apache}
+	--with-apache-libexecdir="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
 	--with-apxs=%{_sbindir}/apxs \
 %else
 	--without-apxs \
@@ -495,14 +473,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %else
 	--disable-javahl \
 %endif
-%if %{with neon}
-	--without-serf \
-	--with-neon=%{_prefix} \
-	--disable-neon-version-check \
-%else
 	--with-serf=%{_prefix} \
-	--without-neon \
-%endif
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config \
 %if %{with kwallet}
@@ -737,9 +708,11 @@ fi
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/svn
 %attr(755,root,root) %{_bindir}/svnadmin
+%attr(755,root,root) %{_bindir}/svnauthz
+%attr(755,root,root) %{_bindir}/svn-bench
 %attr(755,root,root) %{_bindir}/svndumpfilter
-%attr(755,root,root) %{_bindir}/svnrdump
 %attr(755,root,root) %{_bindir}/svnlook
+%attr(755,root,root) %{_bindir}/svnrdump
 %attr(755,root,root) %{_bindir}/svnsync
 %attr(755,root,root) %{_bindir}/svnversion
 %{_mandir}/man1/svn.1*
@@ -773,8 +746,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra_local-1.so.0
-%attr(755,root,root) %{_libdir}/libsvn_ra_%{webdavlib}-1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_%{webdavlib}-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_ra_serf-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_ra_serf-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_ra_svn-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra_svn-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_repos-1.so.*.*.*
@@ -797,7 +770,7 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so
-%attr(755,root,root) %{_libdir}/libsvn_ra_%{webdavlib}-1.so
+%attr(755,root,root) %{_libdir}/libsvn_ra_serf-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra_svn-1.so
 %attr(755,root,root) %{_libdir}/libsvn_repos-1.so
 %attr(755,root,root) %{_libdir}/libsvn_subr-1.so
@@ -813,7 +786,7 @@ fi
 %{_libdir}/libsvn_fs_util-1.la
 %{_libdir}/libsvn_ra-1.la
 %{_libdir}/libsvn_ra_local-1.la
-%{_libdir}/libsvn_ra_%{webdavlib}-1.la
+%{_libdir}/libsvn_ra_serf-1.la
 %{_libdir}/libsvn_ra_svn-1.la
 %{_libdir}/libsvn_repos-1.la
 %{_libdir}/libsvn_subr-1.la
@@ -834,7 +807,7 @@ fi
 %{_libdir}/libsvn_fs_util-1.a
 %{_libdir}/libsvn_ra-1.a
 %{_libdir}/libsvn_ra_local-1.a
-%{_libdir}/libsvn_ra_%{webdavlib}-1.a
+%{_libdir}/libsvn_ra_serf-1.a
 %{_libdir}/libsvn_ra_svn-1.a
 %{_libdir}/libsvn_repos-1.a
 %{_libdir}/libsvn_subr-1.a
@@ -878,14 +851,21 @@ fi
 %attr(755,root,root) %{_bindir}/svndiff4
 
 # tools/server-side
+%attr(755,root,root) %{_bindir}/fsfs-stats
 %attr(755,root,root) %{_bindir}/svn-populate-node-origins-index
 %attr(755,root,root) %{_bindir}/svn-rep-sharing-stats
 %attr(755,root,root) %{_bindir}/svnauthz-validate
 
 # tools/client-side/svnmucc
 %attr(755,root,root) %{_bindir}/svnmucc
+%{_mandir}/man1/svnmucc.1*
+
 # tools/dev/svnraisetreeconflict
 %attr(755,root,root) %{_bindir}/svnraisetreeconflict
+
+# tools/dev/
+%attr(755,root,root) %{_bindir}/fsfs-access-map
+%attr(755,root,root) %{_bindir}/fsfs-reorg
 
 %files -n bash-completion-subversion
 %defattr(644,root,root,755)
