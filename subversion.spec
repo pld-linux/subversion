@@ -54,12 +54,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.7.10
-Release:	2
+Version:	1.7.11
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.idg.pl/mirrors/apache/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	4088a77e14232876c9b4ff1541e6e200
+# Source0-md5:	05768703a35a52cdc7b3a2dda9340b51
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
