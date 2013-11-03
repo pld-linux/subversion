@@ -12,6 +12,7 @@
 %bcond_without	kde			# build without kde4 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
 %bcond_without	db			# disable Subversion Berkeley DB based filesystem library
+%bcond_with	db6			# allow BDB6 (not tested by upstream, released on AGPL)
 
 # for AC: --without csvn,gnome,javahl,kde,ruby
 
@@ -445,6 +446,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--disable-mod-activation \
 %if %{with db}
 	--with-berkeley-db="db.h:%{_includedir}:%{_libdir}:db" \
+	%{?with_db6:--enable-bdb6} \
 %else
 	--without-berkeley-db \
 %endif
