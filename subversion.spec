@@ -87,10 +87,10 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.656
 BuildRequires:	sed >= 4.0
+BuildRequires:	serf-devel >= 1.2.1
 BuildRequires:	sqlite3-devel >= 3.6.18
 BuildRequires:	texinfo
 BuildRequires:	which
-BuildRequires:	serf-devel >= 1.2.1
 %if %{with javahl}
 BuildRequires:	jdk >= 1.5
 BuildRequires:	libstdc++-devel
@@ -183,6 +183,7 @@ Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.0.0
+Requires:	serf-devel >= 1.2.1
 Obsoletes:	libsubversion0-devel
 
 %description devel
