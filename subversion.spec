@@ -21,6 +21,9 @@
 %undefine	with_db
 %undefine	with_swig
 %undefine	with_javahl
+%undefine	with_csvn
+%undefine	with_gnome
+%undefine	with_kde
 %endif
 
 %if %{without swig}
