@@ -6,7 +6,7 @@
 %bcond_without	perl			# build without Perl bindings
 %bcond_without	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
-%bcond_without	javahl			# build without javahl support (Java high-level bindings)
+%bcond_without	java			# build without javahl support (Java high-level bindings)
 %bcond_without	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
 %bcond_without	kde			# build without kde4 support (alias for kwallet)
@@ -14,13 +14,13 @@
 %bcond_without	db			# disable Subversion Berkeley DB based filesystem library
 %bcond_with	db6			# allow BDB6 (not tested by upstream, released on AGPL)
 
-# for AC: --without csvn,gnome,javahl,kde,ruby
+# for AC: --without csvn,gnome,java,kde,ruby
 
 %if %{with net_client_only}
 %undefine	with_apache
 %undefine	with_db
 %undefine	with_swig
-%undefine	with_javahl
+%undefine	with_java
 %undefine	with_csvn
 %undefine	with_gnome
 %undefine	with_kde
@@ -94,7 +94,7 @@ BuildRequires:	serf-devel >= 1.2.1
 BuildRequires:	sqlite3-devel >= 3.6.18
 BuildRequires:	texinfo
 BuildRequires:	which
-%if %{with javahl}
+%if %{with java}
 BuildRequires:	jdk >= 1.5
 BuildRequires:	libstdc++-devel
 %endif
