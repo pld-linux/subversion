@@ -50,7 +50,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.8.9
-Release:	2
+Release:	3
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -476,7 +476,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{with csvn}
 	--with-ctypesgen=%{_bindir}/ctypesgen.py \
 %endif
-%if %{with javahl}
+%if %{with java}
 	--enable-javahl \
 	--with-jdk="%{java_home}" \
 	--without-jikes \
@@ -515,7 +515,7 @@ cd subversion/bindings/swig/perl/native
 %{__make} -j1
 cd -
 %endif
-%if %{with javahl}
+%if %{with java}
 %{__make} -j1 javahl \
 	javahl_javadir="%{_javadir}"
 %endif
@@ -553,7 +553,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	toolsdir=%{_bindir} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
-%if %{with javahl}
+%if %{with java}
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
@@ -621,7 +621,7 @@ cp -p tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{versio
 cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
 cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%if %{with javahl}
+%if %{with java}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}
 %endif
 %if %{with swig}
@@ -885,7 +885,7 @@ fi
 
 %endif # net_client_only
 
-%if %{with javahl}
+%if %{with java}
 %files -n java-subversion
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsvnjavahl-1.so.*.*.*
