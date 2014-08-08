@@ -50,7 +50,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.8.9
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -569,12 +569,14 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 
 %if %{with ruby}
 %{__make} install -j1 \
+	SWIG_RB_RI_DATADIR=$RPM_BUILD_ROOT%{ruby_ridir} \
 	DESTDIR=$RPM_BUILD_ROOT \
-	install-swig-rb install-swig-rb-doc \
+	install-swig-rb install-swig-rb-doc
 
 # not our package
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/OptionParser
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Time
+%{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/File
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/cache.ri
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/created.rid
 %endif
