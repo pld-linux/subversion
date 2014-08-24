@@ -576,7 +576,9 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 # not our package
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/OptionParser
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Time
+%if "%{ruby_version}" >= "2.0"
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/File
+%endif
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/cache.ri
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/created.rid
 %endif
