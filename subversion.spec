@@ -935,7 +935,6 @@ fi
 %dir %{perl_vendorarch}/auto/SVN
 %dir %{perl_vendorarch}/auto/SVN/*
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
-%{perl_vendorarch}/auto/SVN/*/*.bs
 %{_mandir}/man3/*.3pm*
 %endif
 
