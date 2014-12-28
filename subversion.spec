@@ -81,7 +81,7 @@ BuildRequires:	dbus-devel
 BuildRequires:	db-devel >= 4.1.25
 %{!?with_db6:BuildRequires:	db-devel < 6}
 BuildRequires:	expat-devel
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 BuildRequires:	libmagic-devel
