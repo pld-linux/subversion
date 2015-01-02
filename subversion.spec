@@ -16,10 +16,6 @@
 
 # for AC: --without csvn,gnome,java,kde,ruby
 
-%ifarch x32
-%undefine	with_ruby
-%endif
-
 %if %{with net_client_only}
 %undefine	with_apache
 %undefine	with_db
