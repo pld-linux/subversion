@@ -7,7 +7,7 @@
 %bcond_without	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	java			# build without javahl support (Java high-level bindings)
-%bcond_without	tests			# don't perform "make check"
+%bcond_with	tests			# don't perform "make check"
 %bcond_without	kwallet			# build without kde4 wallet support
 %bcond_without	kde			# build without kde4 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
