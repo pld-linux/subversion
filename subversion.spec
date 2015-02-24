@@ -50,7 +50,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.8.11
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
