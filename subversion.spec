@@ -49,12 +49,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.8.13
+Version:	1.9.0
 Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	4413417b529d7bdf82f74e50df02e88b
+# Source0-md5:	20ae7b0d4ef07eeaf73eb4e23317b495
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -68,7 +68,7 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 URL:		http://subversion.apache.org/
-%{?with_apache:BuildRequires:	apache-devel >= 2.2.0-8}
+%{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	apr-util-devel >= 1:1.2.8-3
 BuildRequires:	autoconf >= 2.59
@@ -123,7 +123,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
 %define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
-%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.*
+%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.* libsvn_fs_x-1.so.*
 
 %description
 The goal of the Subversion project is to build a version control
@@ -757,6 +757,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs_fs-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs_util-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_fs_x-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_fs_x-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_ra-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_ra-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so.*.*.*
@@ -783,6 +785,7 @@ fi
 %endif
 %attr(755,root,root) %{_libdir}/libsvn_fs_fs-1.so
 %attr(755,root,root) %{_libdir}/libsvn_fs_util-1.so
+%attr(755,root,root) %{_libdir}/libsvn_fs_x-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra_local-1.so
 %attr(755,root,root) %{_libdir}/libsvn_ra_serf-1.so
@@ -799,6 +802,7 @@ fi
 %endif
 %{_libdir}/libsvn_fs_fs-1.la
 %{_libdir}/libsvn_fs_util-1.la
+%{_libdir}/libsvn_fs_x-1.la
 %{_libdir}/libsvn_ra-1.la
 %{_libdir}/libsvn_ra_local-1.la
 %{_libdir}/libsvn_ra_serf-1.la
@@ -806,6 +810,23 @@ fi
 %{_libdir}/libsvn_repos-1.la
 %{_libdir}/libsvn_subr-1.la
 %{_libdir}/libsvn_wc-1.la
+%{_npkgconfigdir}/libsvn_client.pc
+%{_npkgconfigdir}/libsvn_delta.pc
+%{_npkgconfigdir}/libsvn_diff.pc
+%{_npkgconfigdir}/libsvn_fs.pc
+%if %{without net_client_only}
+%{_npkgconfigdir}/libsvn_fs_base.pc
+%endif
+%{_npkgconfigdir}/libsvn_fs_fs.pc
+%{_npkgconfigdir}/libsvn_fs_util.pc
+%{_npkgconfigdir}/libsvn_fs_x.pc
+%{_npkgconfigdir}/libsvn_ra.pc
+%{_npkgconfigdir}/libsvn_ra_local.pc
+%{_npkgconfigdir}/libsvn_ra_serf.pc
+%{_npkgconfigdir}/libsvn_ra_svn.pc
+%{_npkgconfigdir}/libsvn_repos.pc
+%{_npkgconfigdir}/libsvn_subr.pc
+%{_npkgconfigdir}/libsvn_wc.pc
 %{_includedir}/%{name}-1
 %{_examplesdir}/%{name}-%{version}
 
@@ -820,6 +841,7 @@ fi
 %endif
 %{_libdir}/libsvn_fs_fs-1.a
 %{_libdir}/libsvn_fs_util-1.a
+%{_libdir}/libsvn_fs_x-1.a
 %{_libdir}/libsvn_ra-1.a
 %{_libdir}/libsvn_ra_local-1.a
 %{_libdir}/libsvn_ra_serf-1.a
@@ -866,21 +888,20 @@ fi
 %attr(755,root,root) %{_bindir}/svndiff4
 
 # tools/server-side
-%attr(755,root,root) %{_bindir}/fsfs-stats
+%attr(755,root,root) %{_bindir}/svnfsfs
 %attr(755,root,root) %{_bindir}/svn-populate-node-origins-index
-%attr(755,root,root) %{_bindir}/svn-rep-sharing-stats
 %attr(755,root,root) %{_bindir}/svnauthz
 %attr(755,root,root) %{_bindir}/svnauthz-validate
 
 # tools/client-side
-%attr(755,root,root) %{_bindir}/svn-bench
+%attr(755,root,root) %{_bindir}/svnbench
 
 # tools/dev/svnraisetreeconflict
 %attr(755,root,root) %{_bindir}/svnraisetreeconflict
 
 # tools/dev/
 %attr(755,root,root) %{_bindir}/fsfs-access-map
-%attr(755,root,root) %{_bindir}/fsfs-reorg
+%attr(755,root,root) %{_bindir}/x509-parser
 
 %files -n bash-completion-subversion
 %defattr(644,root,root,755)
