@@ -1,3 +1,4 @@
+#
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
 %bcond_without	swig			# disable bindings generation with Swig
@@ -69,8 +70,8 @@ Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
-BuildRequires:	apr-devel >= 1:1.0.0
-BuildRequires:	apr-util-devel >= 1:1.2.8-3
+BuildRequires:	apr-devel >= 1:1.3
+BuildRequires:	apr-util-devel >= 1:1.3
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
 BuildRequires:	bison
@@ -82,6 +83,7 @@ BuildRequires:	db-devel >= 4.1.25
 %{!?with_db6:BuildRequires:	db-devel < 6}
 BuildRequires:	expat-devel
 BuildRequires:	gettext-tools
+%{?with_gnome:BuildRequires:	glib2-devel >= 2.0}
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 BuildRequires:	libmagic-devel
@@ -91,8 +93,8 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.656
 BuildRequires:	sed >= 4.0
-BuildRequires:	serf-devel >= 1.2.1
-BuildRequires:	sqlite3-devel >= 3.6.18
+BuildRequires:	serf-devel >= 1.3.4
+BuildRequires:	sqlite3-devel >= 3.7.12
 BuildRequires:	texinfo
 BuildRequires:	which
 %if %{with java}
@@ -171,7 +173,9 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-Requires:	serf >= 1.2.1
+Requires:	apr >= 1:1.3
+Requires:	apr-util >= 1:1.3
+Requires:	serf >= 1.3.4
 Obsoletes:	libsubversion0
 
 %description libs
@@ -186,8 +190,8 @@ Summary(pl.UTF-8):	Pliki nagłówkowe i dokumetacja do subversion
 Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	apr-util-devel >= 1:1.0.0
-Requires:	serf-devel >= 1.2.1
+Requires:	apr-util-devel >= 1:1.3
+Requires:	serf-devel >= 1.3.4
 Obsoletes:	libsubversion0-devel
 
 %description devel
@@ -855,6 +859,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsvn_auth_gnome_keyring-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_gnome_keyring-1.so.0
+# does anything use it? requires libsvn_auth_gnome_keyring.so
+#%{_pkgconfigdir}/libsvn_auth_gnome_keyring.pc
 %endif
 
 %if %{with kwallet}
@@ -862,6 +868,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsvn_auth_kwallet-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_kwallet-1.so.0
+# does anything use it? requires libsvn_auth_kwallet.so
+#%{_pkgconfigdir}/libsvn_auth_kwallet.pc
 %endif
 
 %if %{without net_client_only}
