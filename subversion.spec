@@ -68,7 +68,7 @@ Version:	1.6.23
 Release:	1
 License:	Apache/BSD-like
 Group:		Development/Version Control
-Source0:	http://subversion.tigris.org/downloads/%{name}-%{version}.tar.bz2
+Source0:	http://archive.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
 # Source0-md5:	5d621281ce9d3448e1437cb006331f57
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
