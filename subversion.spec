@@ -50,12 +50,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.9.1
-Release:	2
+Version:	1.9.2
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	8e879b61fffe3ac0cf16aeae1e8eda32
+# Source0-md5:	0a7e55bb58fe77072f19e108a56b468b
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -816,6 +816,12 @@ fi
 %{_libdir}/libsvn_repos-1.la
 %{_libdir}/libsvn_subr-1.la
 %{_libdir}/libsvn_wc-1.la
+%if %{with gnome}
+%{_npkgconfigdir}/libsvn_auth_gnome_keyring.pc
+%endif
+%if %{with kwallet}
+%{_npkgconfigdir}/libsvn_auth_kwallet.pc
+%endif
 %{_npkgconfigdir}/libsvn_client.pc
 %{_npkgconfigdir}/libsvn_delta.pc
 %{_npkgconfigdir}/libsvn_diff.pc
