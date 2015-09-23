@@ -80,8 +80,8 @@ BuildRequires:	cyrus-sasl-devel
 %if %{with kwallet} || %{with gnome}
 BuildRequires:	dbus-devel
 %endif
-BuildRequires:	db-devel >= 4.1.25
 %{!?with_db6:BuildRequires:	db-devel < 6}
+BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	expat-devel
 BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	glib2-devel >= 2.0}
@@ -583,7 +583,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 # not our package
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/OptionParser
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/Time
-%if "%{ruby_version}" >= "2.0"
+%if "%{ruby_abi}" >= "2.0"
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/File
 %endif
 %{__rm} $RPM_BUILD_ROOT%{ruby_ridir}/cache.ri
