@@ -51,7 +51,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.9.2
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -556,7 +556,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
 	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
 
-%{__make} install -j1 \
+%{__make} -j1 install \
+	pkgconfig_dir=%{_pkgconfigdir} \
 	toolsdir=%{_bindir} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	APACHE_LIBEXECDIR="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
@@ -575,10 +576,9 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-tools
 
 %if %{with ruby}
-%{__make} install -j1 \
+%{__make} -j1 install-swig-rb install-swig-rb-doc \
 	SWIG_RB_RI_DATADIR=$RPM_BUILD_ROOT%{ruby_ridir} \
-	DESTDIR=$RPM_BUILD_ROOT \
-	install-swig-rb install-swig-rb-doc
+	DESTDIR=$RPM_BUILD_ROOT
 
 # not our package
 %{__rm} -r $RPM_BUILD_ROOT%{ruby_ridir}/OptionParser
@@ -611,9 +611,9 @@ install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %endif
 
 # rename not to conflict with standard packages. (are these needed at all?)
-mv $RPM_BUILD_ROOT%{_bindir}/{,svn}diff
-mv $RPM_BUILD_ROOT%{_bindir}/{,svn}diff3
-mv $RPM_BUILD_ROOT%{_bindir}/{,svn}diff4
+%{__mv} $RPM_BUILD_ROOT%{_bindir}/{,svn}diff
+%{__mv} $RPM_BUILD_ROOT%{_bindir}/{,svn}diff3
+%{__mv} $RPM_BUILD_ROOT%{_bindir}/{,svn}diff4
 
 %if %{with python} || %{with csvn}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -817,28 +817,30 @@ fi
 %{_libdir}/libsvn_subr-1.la
 %{_libdir}/libsvn_wc-1.la
 %if %{with gnome}
-%{_npkgconfigdir}/libsvn_auth_gnome_keyring.pc
+# only for feature check, linking will fail (no libsvn_auth_gnome_keyring.so)
+%{_pkgconfigdir}/libsvn_auth_gnome_keyring.pc
 %endif
 %if %{with kwallet}
-%{_npkgconfigdir}/libsvn_auth_kwallet.pc
+# only for feature check, linking will fail (no libsvn_auth_kwallet.so)
+%{_pkgconfigdir}/libsvn_auth_kwallet.pc
 %endif
-%{_npkgconfigdir}/libsvn_client.pc
-%{_npkgconfigdir}/libsvn_delta.pc
-%{_npkgconfigdir}/libsvn_diff.pc
-%{_npkgconfigdir}/libsvn_fs.pc
+%{_pkgconfigdir}/libsvn_client.pc
+%{_pkgconfigdir}/libsvn_delta.pc
+%{_pkgconfigdir}/libsvn_diff.pc
+%{_pkgconfigdir}/libsvn_fs.pc
 %if %{without net_client_only}
-%{_npkgconfigdir}/libsvn_fs_base.pc
+%{_pkgconfigdir}/libsvn_fs_base.pc
 %endif
-%{_npkgconfigdir}/libsvn_fs_fs.pc
-%{_npkgconfigdir}/libsvn_fs_util.pc
-%{_npkgconfigdir}/libsvn_fs_x.pc
-%{_npkgconfigdir}/libsvn_ra.pc
-%{_npkgconfigdir}/libsvn_ra_local.pc
-%{_npkgconfigdir}/libsvn_ra_serf.pc
-%{_npkgconfigdir}/libsvn_ra_svn.pc
-%{_npkgconfigdir}/libsvn_repos.pc
-%{_npkgconfigdir}/libsvn_subr.pc
-%{_npkgconfigdir}/libsvn_wc.pc
+%{_pkgconfigdir}/libsvn_fs_fs.pc
+%{_pkgconfigdir}/libsvn_fs_util.pc
+%{_pkgconfigdir}/libsvn_fs_x.pc
+%{_pkgconfigdir}/libsvn_ra.pc
+%{_pkgconfigdir}/libsvn_ra_local.pc
+%{_pkgconfigdir}/libsvn_ra_serf.pc
+%{_pkgconfigdir}/libsvn_ra_svn.pc
+%{_pkgconfigdir}/libsvn_repos.pc
+%{_pkgconfigdir}/libsvn_subr.pc
+%{_pkgconfigdir}/libsvn_wc.pc
 %{_includedir}/%{name}-1
 %{_examplesdir}/%{name}-%{version}
 
