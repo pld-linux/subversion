@@ -50,12 +50,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.9.2
-Release:	5
+Version:	1.9.3
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	0a7e55bb58fe77072f19e108a56b468b
+# Source0-md5:	243036eb28b50ce517fc228eb3250add
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -69,6 +69,7 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 Patch4:		x32-libdir.patch
+Patch5:		%{name}-swig_py.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.3
@@ -444,6 +445,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch2 -p0
 %patch3 -p1
 %patch4 -p1
+%patch5 -p0
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
@@ -570,10 +572,14 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn \
 %endif
-%if %{with csvn}
-	install-ctypes-python \
-%endif
 	install-tools
+
+%if %{with csvn}
+# manually execute install-ctypes-python target
+cd subversion/bindings/ctypes-python
+%py_install
+cd ../../..
+%endif
 
 %if %{with ruby}
 %{__make} -j1 install-swig-rb install-swig-rb-doc \
