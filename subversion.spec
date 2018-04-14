@@ -90,15 +90,17 @@ BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 BuildRequires:	libmagic-devel
 BuildRequires:	libtool >= 1.4-9
+BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
 %{?with_csvn:BuildRequires:	python-ctypesgen}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.656
 BuildRequires:	sed >= 4.0
 BuildRequires:	serf-devel >= 1.3.4
-BuildRequires:	sqlite3-devel >= 3.7.12
+BuildRequires:	sqlite3-devel >= 3.8.11.1
 BuildRequires:	texinfo
 BuildRequires:	which
+BuildRequires:	zlib-devel >= 1.2
 %if %{with java}
 BuildRequires:	jdk >= 1.5
 BuildRequires:	libstdc++-devel
@@ -178,6 +180,7 @@ Group:		Libraries
 Requires:	apr >= 1:1.3
 Requires:	apr-util >= 1:1.3
 Requires:	serf >= 1.3.4
+Requires:	zlib >= 1.2
 Obsoletes:	libsubversion0
 
 %description libs
