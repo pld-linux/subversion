@@ -1,0 +1,12 @@
+diff -urN subversion-1.10.0.orig/configure.ac subversion-1.10.0/configure.ac
+--- subversion-1.10.0.orig/configure.ac	2018-04-14 17:34:49.273616506 +0200
++++ subversion-1.10.0/configure.ac	2018-04-14 17:34:58.360223966 +0200
+@@ -1323,7 +1323,7 @@
+     if test -n "$RDOC"; then
+       AC_PATH_PROG(RDOC, "$RDOC", none)
+     else
+-      AC_PATH_PROGS(RUBY, rdoc rdoc1 rdoc1.8 rdoc18 rdoc1.9 rdoc19 rdoc1.9.3 rdoc193 rdoc2 rdoc2.0 rdoc20 rdoc2.1 rdoc21 rdoc2.2 rdoc22 rdoc2.3 rdoc23 rdoc2.4 rdoc24, none)
++      AC_PATH_PROGS(RDOC, rdoc rdoc1 rdoc1.8 rdoc18 rdoc1.9 rdoc19 rdoc1.9.3 rdoc193 rdoc2 rdoc2.0 rdoc20 rdoc2.1 rdoc21 rdoc2.2 rdoc22 rdoc2.3 rdoc23 rdoc2.4 rdoc24, none)
+     fi
+     AC_CACHE_CHECK([for Ruby major version], [svn_cv_ruby_major],[
+     svn_cv_ruby_major="`$RUBY -rrbconfig -e 'print RbConfig::CONFIG.fetch(%q(MAJOR))'`"

@@ -50,12 +50,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.9.7
-Release:	3
+Version:	1.10.0
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	05b0c677681073920f938c1f322e0be2
+# Source0-md5:	0126847f9e8cb8ed0b90a6a18b203309
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -69,6 +69,7 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 Patch4:		x32-libdir.patch
+Patch5:		%{name}-rdoc.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.3
@@ -444,6 +445,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch2 -p0
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
@@ -455,6 +457,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %{__libtoolize}
 %configure \
 	--with-editor=vi \
+	--with-utf8proc=internal \
 	--with-zlib=%{_libdir} \
 	--disable-runtime-module-search \
 	--disable-mod-activation \
@@ -645,7 +648,7 @@ cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %endif
 %if %{with gnome} || %{with kwallet}
 # dlopened by soname (libsvn_auth_*-1.so.0)
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_auth_*-1.{so,la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_auth_*-1.{so,la}
 %endif
 
 %find_lang %{name}
@@ -731,10 +734,14 @@ fi
 %doc tools/hook-scripts/*.{pl,py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
 %doc tools/xslt/*
+%attr(755,root,root) %{_bindir}/fsfs-stats
 %attr(755,root,root) %{_bindir}/svn
+%attr(755,root,root) %{_bindir}/svn-mergeinfo-normalizer
 %attr(755,root,root) %{_bindir}/svnadmin
+%attr(755,root,root) %{_bindir}/svnconflict
 %attr(755,root,root) %{_bindir}/svndumpfilter
 %attr(755,root,root) %{_bindir}/svnlook
+%attr(755,root,root) %{_bindir}/svnmover
 %attr(755,root,root) %{_bindir}/svnmucc
 %attr(755,root,root) %{_bindir}/svnrdump
 %attr(755,root,root) %{_bindir}/svnsync
