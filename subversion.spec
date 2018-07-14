@@ -92,6 +92,7 @@ BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	libsecret-devel}
 BuildRequires:	libmagic-devel
 BuildRequires:	libtool >= 1.4-9
+BuildRequires:	libutf8proc-devel >= 1.3.1-4
 BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
 %{?with_csvn:BuildRequires:	python-ctypesgen}
@@ -463,7 +464,6 @@ chmod +x ./autogen.sh && ./autogen.sh
 %{__libtoolize}
 %configure \
 	--with-editor=vi \
-	--with-utf8proc=internal \
 	--with-zlib=%{_libdir} \
 	--disable-runtime-module-search \
 	--disable-mod-activation \
