@@ -51,7 +51,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.10.0
-Release:	4
+Release:	5
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -691,8 +691,8 @@ rm -rf $RPM_BUILD_ROOT
 %post	-n gnome-keyring-subversion -p /sbin/ldconfig
 %postun	-n gnome-keyring-subversion -p /sbin/ldconfig
 
-%post	-n kde4-kwallet-subversion -p /sbin/ldconfig
-%postun	-n kde4-kwallet-subversion -p /sbin/ldconfig
+%post	-n kde5-kwallet-subversion -p /sbin/ldconfig
+%postun	-n kde5-kwallet-subversion -p /sbin/ldconfig
 
 %post svnserve
 /sbin/chkconfig --add svnserve
@@ -892,7 +892,7 @@ fi
 %endif
 
 %if %{with kwallet}
-%files -n kde4-kwallet-subversion
+%files -n kde5-kwallet-subversion
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsvn_auth_kwallet-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_auth_kwallet-1.so.0
