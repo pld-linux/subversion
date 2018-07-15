@@ -9,8 +9,8 @@
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	java			# build without javahl support (Java high-level bindings)
 %bcond_with	tests			# don't perform "make check"
-%bcond_without	kwallet			# build without kde4 wallet support
-%bcond_without	kde			# build without kde4 support (alias for kwallet)
+%bcond_without	kwallet			# build without kde5 wallet support
+%bcond_without	kde			# build without kde5 support (alias for kwallet)
 %bcond_without	gnome			# build without gnome keyring support
 %bcond_without	db			# disable Subversion Berkeley DB based filesystem library
 %bcond_with	db6			# allow BDB6 (not tested by upstream, released on AGPL)
@@ -88,7 +88,7 @@ BuildRequires:	expat-devel
 BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	glib2-devel >= 2.0}
 %{?with_kde:BuildRequires:	kf5-kdelibs4support-devel}
-%{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
+%{?with_kwallet:BuildRequires:	kf5-kwallet-devel}
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 %{?with_gnome:BuildRequires:	libsecret-devel}
 BuildRequires:	libmagic-devel
@@ -431,17 +431,17 @@ to authenticate using GNOME Keyring.
 Moduł uwierzytelniający dla Subversion pozwalający klientom SVN
 uwierzytelniać się przy użyciu mechanizmu GNOME Keyring.
 
-%package -n kde4-kwallet-subversion
+%package -n kde5-kwallet-subversion
 Summary:	KDE Wallet authentication provider for Subversion
 Summary(pl.UTF-8):	Moduł uwierzytelniający dla Subversion wykorzystujący Portfel KDE
 Group:		X11/Applications
 Requires:	%{name}-libs = %{version}-%{release}
 
-%description -n kde4-kwallet-subversion
+%description -n kde5-kwallet-subversion
 Authentication provider module for Subversion which allows SVN client
 to authenticate using KDE Wallet.
 
-%description -n kde4-kwallet-subversion -l pl.UTF-8
+%description -n kde5-kwallet-subversion -l pl.UTF-8
 Moduł uwierzytelniający dla Subversion pozwalający klientom SVN
 uwierzytelniać się przy użyciu Portfela KDE.
 
