@@ -87,7 +87,7 @@ BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	expat-devel
 BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	glib2-devel >= 2.0}
-%{?with_kde:BuildRequires:	kf5-kdelibs4supporti-devel}
+%{?with_kde:BuildRequires:	kf5-kdelibs4support-devel}
 %{?with_kwallet:BuildRequires:	kde4-kdelibs-devel}
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 %{?with_gnome:BuildRequires:	libsecret-devel}
