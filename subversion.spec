@@ -91,7 +91,7 @@ BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	libgnome-keyring-devel}
 %{?with_gnome:BuildRequires:	libsecret-devel}
 BuildRequires:	libmagic-devel
-BuildRequires:	libtool >= 1.4-9
+BuildRequires:	libtool >= 2:2
 BuildRequires:	libutf8proc-devel >= 1.3.1-4
 BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
@@ -106,7 +106,7 @@ BuildRequires:	which
 BuildRequires:	zlib-devel >= 1.2
 %if %{with java}
 BuildRequires:	jdk >= 1.8
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:4.7
 %endif
 %if %{with perl}
 BuildRequires:	perl-devel >= 1:5.8.0
@@ -990,7 +990,7 @@ fi
 %dir %{perl_vendorarch}/auto/SVN
 %dir %{perl_vendorarch}/auto/SVN/*
 %attr(755,root,root) %{perl_vendorarch}/auto/SVN/*/*.so
-%{_mandir}/man3/*.3pm*
+%{_mandir}/man3/SVN::*.3pm*
 %endif
 
 %if %{with ruby}
