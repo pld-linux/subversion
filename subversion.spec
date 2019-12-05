@@ -5,7 +5,7 @@
 %bcond_with	python			# build without Python bindings (broken)
 %bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
-%bcond_without	ruby			# build without Ruby bindings
+%bcond_with	ruby			# build without Ruby bindings
 %bcond_without	apache			# build without Apache support (webdav, etc)
 %bcond_without	java			# build without javahl support (Java high-level bindings)
 %bcond_with	tests			# don't perform "make check"
@@ -51,7 +51,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.13.0
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
