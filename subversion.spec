@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
 %bcond_without	swig			# disable bindings generation with Swig
-%bcond_without	python			# build without Python bindings (broken)
+%bcond_with	python			# build without Python bindings (broken)
 %bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
 %bcond_without	ruby			# build without Ruby bindings
