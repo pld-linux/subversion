@@ -51,7 +51,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.13.0
-Release:	2
+Release:	3
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -260,7 +260,7 @@ Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 Requires:	%{name} = %{version}-%{release}
 Requires:	python
-Requires:	python-subversion = %{version}
+%{?with_python:Requires:	python-subversion = %{version}}
 
 %description tools
 Subversion tools and scripts.
