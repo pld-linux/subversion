@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
 %bcond_without	swig			# disable bindings generation with Swig
-%bcond_with	python			# build without Python bindings (broken)
+%bcond_without	python			# build without Python bindings
 %bcond_without	csvn			# build Python csvn bindings
 %bcond_without	perl			# build without Perl bindings
 %bcond_with	ruby			# build without Ruby bindings
@@ -50,7 +50,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.13.0
-Release:	3
+Release:	4
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -114,7 +114,8 @@ BuildRequires:	swig-perl >= 1.3.24
 %endif
 %if %{with python}
 BuildRequires:	python-devel >= 1:2.4
-BuildRequires:	swig-python >= 1.3.24
+BuildRequires:	swig3-python >= 3.0.12
+BuildRequires:	swig3-python < 4.0.0
 %endif
 %if %{with ruby}
 BuildRequires:	rpm-rubyprov
@@ -453,6 +454,20 @@ uwierzytelniać się przy użyciu Portfela KDE.
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
+sed -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
+      tools/backup/hot-backup.py \
+      tools/examples/blame.py \
+      tools/examples/check-modified.py \
+      tools/examples/dumpprops.py \
+      tools/examples/get-location-segments.py \
+      tools/examples/getfile.py \
+      tools/examples/geturl.py \
+      tools/examples/putfile.py \
+      tools/examples/revplist.py \
+      tools/examples/svnlook.py \
+      tools/examples/svnshell.py \
+      tools/examples/walk-config-auth.py
+
 %build
 # disabled regeneration - subversion 1.6.13 is not ready for swig 2.0.x
 #%{__rm} subversion/bindings/swig/proxy/*.swg
@@ -517,6 +532,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{with python}
 # Python swig bindings
 %{__make} swig-py \
+	SWIG="swig-3" \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 %endif
