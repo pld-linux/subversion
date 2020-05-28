@@ -49,12 +49,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.13.0
-Release:	6
+Version:	1.14.0
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	3004b4dae18bf45a0b6ea4ef8820064d
+# Source0-md5:	8f6c50632355ae08445c2ed63ba9689e
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -113,6 +113,7 @@ BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
 %endif
 %if %{with python}
+BuildRequires:	py3c
 BuildRequires:	python-devel >= 1:2.4
 BuildRequires:	swig3-python >= 3.0.12
 BuildRequires:	swig3-python < 4.0.0
@@ -495,6 +496,9 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{without swig}
 	--without-swig \
 %endif
+%if %{with python}
+	--with-swig=/usr/bin/swig-3 \
+%endif
 %if %{with ruby}
 	svn_cv_ruby_sitedir_libsuffix="" \
 	svn_cv_ruby_sitedir_archsuffix="" \
@@ -533,7 +537,6 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{with python}
 # Python swig bindings
 %{__make} swig-py \
-	SWIG="swig-3" \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
 %endif
