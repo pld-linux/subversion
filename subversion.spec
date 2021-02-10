@@ -49,12 +49,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.14.0
+Version:	1.14.1
 Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	8f6c50632355ae08445c2ed63ba9689e
+# Source0-md5:	2eccc2c7451397e01a13682600af9563
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -70,7 +70,7 @@ Patch3:		%{name}-tests.patch
 Patch4:		x32-libdir.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
-BuildRequires:	apr-devel >= 1:1.3
+BuildRequires:	apr-devel >= 1:1.4
 BuildRequires:	apr-util-devel >= 1:1.3
 BuildRequires:	apr-util-crypto-openssl
 BuildRequires:	autoconf >= 2.59
@@ -181,7 +181,7 @@ System) na comunidade opensource, fornecendo grandes melhorias.
 Summary:	Subversion libraries and modules
 Summary(pl.UTF-8):	Biblioteka subversion oraz ładowalne moduły
 Group:		Libraries
-Requires:	apr >= 1:1.3
+Requires:	apr >= 1:1.4
 Requires:	apr-util >= 1:1.3
 Requires:	serf >= 1.3.4
 Requires:	zlib >= 1.2
