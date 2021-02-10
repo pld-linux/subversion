@@ -96,7 +96,7 @@ BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
 %{?with_csvn:BuildRequires:	python-ctypesgen}
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.656
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sed >= 4.0
 BuildRequires:	serf-devel >= 1.3.4
 BuildRequires:	sqlite3-devel >= 3.8.11.1
@@ -277,9 +277,7 @@ Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion
 Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description -n bash-completion-subversion
 Bash completion for subversion.
