@@ -277,7 +277,7 @@ Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion
 Conflicts:	%{name}-tools <= 1.1.0-0.rc6.1
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description -n bash-completion-subversion
 Bash completion for subversion.
