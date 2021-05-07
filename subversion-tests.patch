@@ -1,8 +1,9 @@
---- subversion-1.6.13/subversion/tests/libsvn_subr/auth-test.c.orig	2009-01-14 19:06:00.000000000 +0100
-+++ subversion-1.6.13/subversion/tests/libsvn_subr/auth-test.c	2010-11-20 10:49:03.319104128 +0100
-@@ -27,6 +27,8 @@
-                                       svn_test_opts_t *opts,
-                                       apr_pool_t *pool)
+diff -urNp -x '*.orig' subversion-1.14.1.org/subversion/tests/libsvn_subr/auth-test.c subversion-1.14.1/subversion/tests/libsvn_subr/auth-test.c
+--- subversion-1.14.1.org/subversion/tests/libsvn_subr/auth-test.c	2017-06-08 00:31:02.000000000 +0200
++++ subversion-1.14.1/subversion/tests/libsvn_subr/auth-test.c	2021-05-07 23:45:09.610839628 +0200
+@@ -31,6 +31,8 @@
+ static svn_error_t *
+ test_platform_specific_auth_providers(apr_pool_t *pool)
  {
 +  return svn_error_create(SVN_ERR_TEST_SKIPPED, NULL, "test disabled");
 +

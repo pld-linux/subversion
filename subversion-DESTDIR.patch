@@ -1,15 +1,16 @@
---- subversion-1.3.0/Makefile.in.orig	2005-11-16 01:56:15.000000000 +0100
-+++ subversion-1.3.0/Makefile.in	2006-01-13 21:40:47.795759000 +0100
-@@ -116,7 +116,7 @@
-            @SVN_SQLITE_INCLUDES@ @SVN_ZLIB_INCLUDES@
+diff -urNp -x '*.orig' subversion-1.14.1.org/Makefile.in subversion-1.14.1/Makefile.in
+--- subversion-1.14.1.org/Makefile.in	2019-12-05 02:43:14.000000000 +0100
++++ subversion-1.14.1/Makefile.in	2021-05-07 23:45:01.980649971 +0200
+@@ -141,7 +141,7 @@ INCLUDES = -I$(top_srcdir)/subversion/in
+            @SVN_UTF8PROC_INCLUDES@
  
  APACHE_INCLUDES = @APACHE_INCLUDES@
 -APACHE_LIBEXECDIR = $(DESTDIR)@APACHE_LIBEXECDIR@
 +APACHE_LIBEXECDIR = @APACHE_LIBEXECDIR@
  APACHE_LDFLAGS = @APACHE_LDFLAGS@
  
- SWIG = @SWIG@
-@@ -214,7 +214,7 @@
+ BOOST_TEST_CPPFLAGS = @BOOST_CPPFLAGS@ -DBOOST_TEST_DYN_LINK -DBOOST_TEST_NO_MAIN
+@@ -325,7 +325,7 @@ INSTALL_BIN = $(LIBTOOL) --mode=install
  INSTALL_CONTRIB = $(LIBTOOL) --mode=install $(INSTALL)
  INSTALL_TOOLS = $(LIBTOOL) --mode=install $(INSTALL)
  INSTALL_INCLUDE = $(INSTALL) -m 644
@@ -17,10 +18,11 @@
 +INSTALL_MOD_SHARED = @APXS@ -i -S LIBEXECDIR="$(APACHE_LIBEXECDIR)" -S DESTDIR="$(DESTDIR)" @MOD_ACTIVATION@
  INSTALL_DATA = $(INSTALL) -m 644
  INSTALL_LOCALE = $(INSTALL_DATA)
- 
---- subversion-1.7.0-rc3/build/generator/templates/build-outputs.mk.ezt~	2011-04-27 23:54:33.000000000 +0200
-+++ subversion-1.7.0-rc3/build/generator/templates/build-outputs.mk.ezt	2011-09-16 08:46:27.559338812 +0200
-@@ -131,7 +131,7 @@ $([target.varname]_OBJECTS): $([target.v
+ INSTALL_APACHE_MODS = @INSTALL_APACHE_MODS@
+diff -urNp -x '*.orig' subversion-1.14.1.org/build/generator/templates/build-outputs.mk.ezt subversion-1.14.1/build/generator/templates/build-outputs.mk.ezt
+--- subversion-1.14.1.org/build/generator/templates/build-outputs.mk.ezt	2019-11-04 06:59:36.000000000 +0100
++++ subversion-1.14.1/build/generator/templates/build-outputs.mk.ezt	2021-05-07 23:45:01.980649971 +0200
+@@ -137,7 +137,7 @@ $([target.varname]_HEADERS) $([target.va
  ########################################
  [for areas]
  install-[areas.type]: [for areas.files][if-index areas.files first][else] [end][areas.files.fullname][end]
