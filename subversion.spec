@@ -266,7 +266,6 @@ Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
 Group:		Applications
 Requires:	%{name} = %{version}-%{release}
 Requires:	python
-%{?with_python:Requires:	python-subversion = %{version}}
 
 %description tools
 Subversion tools and scripts.
