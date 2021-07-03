@@ -1,0 +1,16 @@
+--- subversion-1.14.1/build/ac-macros/swig.m4.orig	2020-06-27 06:00:12.000000000 +0200
++++ subversion-1.14.1/build/ac-macros/swig.m4	2021-07-03 19:46:27.049456656 +0200
+@@ -83,11 +83,11 @@ AC_DEFUN(SVN_FIND_SWIG,
+     # the minor is zero padded to two places,
+     # and the patch level is zero padded to three places.
+     # e.g. 1.3.24 becomes 103024
+-    SWIG_VERSION="`echo \"$SWIG_VERSION_RAW\" | \
++    SWIG_VERSION="$(echo "$SWIG_VERSION_RAW" | \
+                   $SED -e 's/[[^0-9\.]].*$//' \
+                       -e 's/\.\([[0-9]]\)$/.0\1/' \
+                       -e 's/\.\([[0-9]][[0-9]]\)$/.0\1/' \
+-                      -e 's/\.\([[0-9]]\)\./0\1/; s/\.//g;'`"
++                      -e 's/\.\([[0-9]]\)\./0\1/; s/\.//g;')"
+     AC_MSG_RESULT([$SWIG_VERSION_RAW])
+     # If you change the required swig version number, don't forget to update:
+     #   subversion/bindings/swig/INSTALL

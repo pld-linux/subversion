@@ -1,3 +1,4 @@
+# TODO: python3 module (using swig >= 4.0.0) instead of python2
 #
 # Conditional build:
 %bcond_with	net_client_only		# build only net client
@@ -68,6 +69,7 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 Patch4:		x32-libdir.patch
+Patch5:		%{name}-sh.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.4
@@ -94,7 +96,9 @@ BuildRequires:	libtool >= 2:2
 BuildRequires:	libutf8proc-devel >= 1.3.1-4
 BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
-%{?with_csvn:BuildRequires:	python-ctypesgen}
+BuildRequires:	python >= 1:2.7
+%{?with_csvn:BuildRequires:	python-ctypesgen >= 1.0.2}
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sed >= 4.0
@@ -123,7 +127,7 @@ BuildRequires:	rpm-rubyprov
 BuildRequires:	ruby-devel >= 1:1.8.2
 BuildRequires:	ruby-irb
 BuildRequires:	ruby-rubygems
-BuildRequires:	swig-ruby >= 1.3.24
+BuildRequires:	swig-ruby >= 3.0.9
 %endif
 Requires:	%{name}-libs = %{version}-%{release}
 %requires_ge	sqlite3
@@ -451,45 +455,58 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch2 -p0
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
-      tools/backup/hot-backup.py.in \
-      tools/examples/blame.py \
-      tools/examples/check-modified.py \
-      tools/examples/dumpprops.py \
-      tools/examples/get-location-segments.py \
-      tools/examples/getfile.py \
-      tools/examples/geturl.py \
-      tools/examples/putfile.py \
-      tools/examples/revplist.py \
-      tools/examples/svnlook.py \
-      tools/examples/svnshell.py \
-      tools/examples/walk-config-auth.py
+	tools/backup/hot-backup.py.in \
+	tools/examples/blame.py \
+	tools/examples/check-modified.py \
+	tools/examples/dumpprops.py \
+	tools/examples/get-location-segments.py \
+	tools/examples/getfile.py \
+	tools/examples/geturl.py \
+	tools/examples/putfile.py \
+	tools/examples/revplist.py \
+	tools/examples/svnlook.py \
+	tools/examples/svnshell.py \
+	tools/examples/walk-config-auth.py
 
 %build
 # disabled regeneration - subversion 1.6.13 is not ready for swig 2.0.x
 #%{__rm} subversion/bindings/swig/proxy/*.swg
 #cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
 chmod +x ./autogen.sh && ./autogen.sh
-%{__libtoolize}
+#{__libtoolize}
 %configure \
-	--with-editor=vi \
-	--with-zlib=%{_libdir} \
-	--disable-runtime-module-search \
 	--disable-mod-activation \
+	--disable-runtime-module-search \
+	--with-apr=%{_bindir}/apr-1-config \
+	--with-apr-util=%{_bindir}/apu-1-config \
+	--with-editor=vi \
+	--with-serf=%{_prefix} \
+	--with-zlib=%{_libdir} \
+%if %{with apache}
+	--with-apache-libexecdir="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
+	--with-apxs=%{_sbindir}/apxs \
+%else
+	--without-apxs \
+%endif
 %if %{with db}
 	--with-berkeley-db="db.h:%{_includedir}:%{_libdir}:db" \
 	%{?with_db6:--enable-bdb6} \
 %else
 	--without-berkeley-db \
 %endif
-%if %{with apache}
-	--with-apache-libexecdir="$(%{_sbindir}/apxs -q LIBEXECDIR)" \
-	--with-apxs=%{_sbindir}/apxs \
-%else
-	--without-apxs \
+%if %{with csvn}
+	--with-ctypesgen=%{_bindir}/ctypesgen-2 \
+%endif
+%if %{with gnome}
+	--with-gnome-keyring \
+%endif
+%if %{with kwallet}
+	--with-kwallet \
 %endif
 %if %{without swig}
 	--without-swig \
@@ -504,24 +521,12 @@ chmod +x ./autogen.sh && ./autogen.sh
 %else
 	ac_cv_path_RUBY=none \
 %endif
-%if %{with csvn}
-	--with-ctypesgen=%{_bindir}/ctypesgen.py \
-%endif
 %if %{with java}
 	--enable-javahl \
 	--with-jdk="%{java_home}" \
 	--without-jikes \
 %else
 	--disable-javahl \
-%endif
-	--with-serf=%{_prefix} \
-	--with-apr=%{_bindir}/apr-1-config \
-	--with-apr-util=%{_bindir}/apu-1-config \
-%if %{with kwallet}
-	--with-kwallet \
-%endif
-%if %{with gnome}
-	--with-gnome-keyring
 %endif
 
 %{__make} -j1
