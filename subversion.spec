@@ -54,7 +54,7 @@ Version:	1.14.2
 Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
-Source0:	http://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
+Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
 # Source0-md5:	9927b167d1c67d663ca63125907f6f69
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
