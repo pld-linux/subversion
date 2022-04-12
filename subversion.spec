@@ -46,6 +46,8 @@
 %define	pdir	SVN
 %define	pnam	_Core
 
+%define		use_jdk		openjdk8
+
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
@@ -108,7 +110,7 @@ BuildRequires:	texinfo
 BuildRequires:	which
 BuildRequires:	zlib-devel >= 1.2
 %if %{with java}
-BuildRequires:	jdk >= 1.8
+BuildRequires:	openjdk8-jdk-base
 BuildRequires:	libstdc++-devel >= 6:4.7
 %endif
 %if %{with perl}
