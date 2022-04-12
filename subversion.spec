@@ -530,7 +530,7 @@ chmod +x ./autogen.sh && ./autogen.sh
 	--disable-javahl \
 %endif
 
-%{__make} -j1
+%{__make}
 
 %{__make} tools
 
