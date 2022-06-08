@@ -191,7 +191,7 @@ Requires:	apr >= 1:1.4
 Requires:	apr-util >= 1:1.3
 Requires:	serf >= 1.3.4
 Requires:	zlib >= 1.2
-Obsoletes:	libsubversion0
+Obsoletes:	libsubversion0 < 1
 
 %description libs
 Subversion libraries and modules.
@@ -208,7 +208,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.3
 Requires:	libutf8proc-devel >= 1.3.1-4
 Requires:	serf-devel >= 1.3.4
-Obsoletes:	libsubversion0-devel
+Obsoletes:	libsubversion0-devel < 1
 
 %description devel
 Header files and develpment documentation for subversion.
@@ -226,7 +226,7 @@ Summary(pl.UTF-8):	Biblioteka statyczna subversion
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}
-Obsoletes:	libsubversion0-static-devel
+Obsoletes:	libsubversion0-static-devel < 1
 
 %description static
 Static subversion library.
@@ -316,7 +316,7 @@ Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	python
-Obsoletes:	subversion-python
+Obsoletes:	subversion-python < 0.14.1
 
 %description -n python-subversion
 Subversion Python bindings.
@@ -350,7 +350,7 @@ Summary(pl.UTF-8):	Dowiązania do Subversion dla Perla
 Summary(pt_BR.UTF-8):	Módulos Perl para acessar os recursos do Subversion
 Group:		Development/Languages/Perl
 Requires:	%{name}-libs = %{version}-%{release}
-Obsoletes:	subversion-perl
+Obsoletes:	subversion-perl < 0.33.1-2
 
 %description -n perl-subversion
 Subversion Perl bindings.
@@ -367,7 +367,7 @@ Summary(pl.UTF-8):	Dowiązania do Subversion dla języka Ruby
 Summary(pt_BR.UTF-8):	Módulos Ruby para acessar os recursos do Subversion
 Group:		Development/Languages
 Requires:	%{name}-libs = %{version}-%{release}
-Obsoletes:	subversion-ruby
+Obsoletes:	subversion-ruby < 1.5.0-1
 
 %description -n ruby-subversion
 Subversion Ruby bindings.
