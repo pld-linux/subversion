@@ -1,0 +1,11 @@
+--- subversion-1.14.2/Makefile.in.orig	2022-07-14 22:54:57.153438576 +0200
++++ subversion-1.14.2/Makefile.in	2022-07-15 16:38:46.332821294 +0200
+@@ -881,7 +881,7 @@ $(SWIG_PL_DIR)/native/Makefile.PL: $(SWI
+ 	./config.status subversion/bindings/swig/perl/native/Makefile.PL
+ 
+ $(SWIG_PL_DIR)/native/Makefile: libsvn_swig_perl $(SWIG_PL_DIR)/native/Makefile.PL
+-	cd $(SWIG_PL_DIR)/native; $(PERL) Makefile.PL PREFIX=$(prefix)
++	cd $(SWIG_PL_DIR)/native; $(PERL) Makefile.PL PREFIX=$(prefix) INSTALLDIRS=vendor
+ 
+ # There is a "readlink -f" command on some systems for the same purpose,
+ # but it's not as portable (e.g. Mac OS X doesn't have it).  These should

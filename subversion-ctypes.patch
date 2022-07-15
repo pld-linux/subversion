@@ -1,0 +1,26 @@
+--- subversion-1.14.2/Makefile.in.orig	2022-07-14 22:54:57.153438576 +0200
++++ subversion-1.14.2/Makefile.in	2022-07-15 16:50:34.931311752 +0200
+@@ -213,7 +213,7 @@ LT_COMPILE = $(LIBTOOL) $(LTFLAGS) --mod
+ LT_COMPILE_CXX = $(LIBTOOL) $(LTCXXFLAGS) --mode=compile $(COMPILE_CXX) $(LT_CFLAGS)
+ LT_COMPILE_CXX_NOWARN = $(LIBTOOL) $(LTCXXFLAGS) --mode=compile $(COMPILE_CXX_NOWARN) $(LT_CFLAGS)
+ # Execute a command that loads libraries from the build dir
+-LT_EXECUTE = $(LIBTOOL) $(LTFLAGS) --mode=execute `for f in $(abs_builddir)/subversion/*/*.la; do echo -dlopen $$f; done`
++LT_EXECUTE = $(LIBTOOL) $(LTFLAGS) --mode=execute `for f in $(abs_builddir)/subversion/*/lib*.la; do echo -dlopen $$f; done`
+ 
+ # special compilation for files destined for mod_dav_svn
+ COMPILE_APACHE_MOD = $(LIBTOOL) $(LTFLAGS) --mode=compile $(CC) $(CMODEFLAGS) $(CPPFLAGS) $(CFLAGS) $(CMAINTAINERFLAGS) $(LT_CFLAGS) $(APACHE_INCLUDES) $(INCLUDES) -o $@ -c -shared
+@@ -1000,11 +1000,12 @@ install-swig-rb-doc:
+ 
+ # ctypes-python make targets
+ ctypes-python: local-all
+-	$(SHELL) $(abs_srcdir)/build/run_ctypesgen.sh "$(LT_EXECUTE)" "$(CPPFLAGS)" "$(EXTRA_CTYPES_LDFLAGS)" "$(PYTHON)" "$(CTYPESGEN)" "$(abs_srcdir)" "$(abs_builddir)" "$(libdir)" "$(SVN_APR_CONFIG)" "$(SVN_APRUTIL_CONFIG)" "$(CPP)"
++	$(SHELL) $(abs_srcdir)/build/run_ctypesgen.sh "$(LT_EXECUTE)" "$(CPPFLAGS)" "$(EXTRA_CTYPES_LDFLAGS)" "$(PYTHON)" "$(CTYPESGEN)" "$(abs_srcdir)" "$(abs_builddir)" "$(libdir)" "$(SVN_APR_CONFIG)" "$(SVN_APRUTIL_CONFIG)" "$(CPP)" && \
++	  cd $(CTYPES_PYTHON_SRC_DIR) && $(PYTHON) setup.py build --build-base="$(abs_builddir)"
+ 
+ install-ctypes-python: ctypes-python
+ 	cd $(CTYPES_PYTHON_SRC_DIR); \
+-	  $(PYTHON) setup.py install --prefix="$(DESTDIR)$(prefix)"
++	  $(PYTHON) setup.py build --build-base="$(abs_builddir)" install --optimize=2 --prefix="$(prefix)" --root="$(DESTDIR)" $(PY_INSTALLOPTS)
+ 
+ check-ctypes-python: ctypes-python
+ 	cd $(CTYPES_PYTHON_SRC_DIR); \

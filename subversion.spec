@@ -1,22 +1,22 @@
-# TODO: python3 module (using swig >= 4.0.0) instead of python2
 #
 # Conditional build:
-%bcond_with	net_client_only		# build only net client
-%bcond_without	swig			# disable bindings generation with Swig
-%bcond_without	python			# build without Python bindings
-%bcond_without	csvn			# build Python csvn bindings
-%bcond_without	perl			# build without Perl bindings
-%bcond_with	ruby			# build without Ruby bindings
-%bcond_without	apache			# build without Apache support (webdav, etc)
-%bcond_without	java			# build without javahl support (Java high-level bindings)
-%bcond_with	tests			# don't perform "make check"
-%bcond_without	kwallet			# build without kde5 wallet support
-%bcond_without	kde			# build without kde5 support (alias for kwallet)
-%bcond_without	gnome			# build without gnome keyring support
-%bcond_without	db			# disable Subversion Berkeley DB based filesystem library
+%bcond_with	net_client_only		# only net client (disables: apache db swig java csvn gnome kde)
+%bcond_without	swig			# swig-based bindings (perl python ruby)
+%bcond_without	python			# Python bindings (any)
+%bcond_without	python2			# CPython 2.x bindings
+%bcond_without	python3			# CPython 3.x bindings
+%bcond_without	csvn			# Python csvn bindings
+%bcond_without	swigpy			# Python swig bindings
+%bcond_without	perl			# Perl bindings
+%bcond_with	ruby			# Ruby bindings
+%bcond_without	apache			# Apache support (webdav, etc)
+%bcond_without	java			# javahl support (Java high-level bindings)
+%bcond_with	tests			# "make check" tests
+%bcond_without	kwallet			# KDE5 wallet support
+%bcond_without	kde			# KDE5 support (alias for kwallet)
+%bcond_without	gnome			# GNOME keyring support
+%bcond_without	db			# Subversion Berkeley DB based filesystem library
 %bcond_with	db6			# allow BDB6 (not tested by upstream, released on AGPL)
-
-# for AC: --without csvn,gnome,java,kde,ruby
 
 %if %{with net_client_only}
 %undefine	with_apache
@@ -27,18 +27,21 @@
 %undefine	with_gnome
 %undefine	with_kde
 %endif
-
 %if %{without swig}
 %undefine	with_perl
-%undefine	with_python
 %undefine	with_ruby
+%undefine	with_swigpy
 %endif
-
 %if %{without kde}
 %undefine	with_kwallet
 %endif
-
-%if %{without python} && %{without perl} && %{without ruby}
+%if %{without python}
+%undefine	with_python2
+%undefine	with_python3
+%undefine	with_csvn
+%undefine	with_swigpy
+%endif
+%if %{without swigpy} && %{without perl} && %{without ruby}
 %undefine	with_swig
 %endif
 
@@ -53,7 +56,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.14.2
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -62,16 +65,15 @@ Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
 Source4:	%{name}-svnserve.sysconfig
-# current subversion tarball has correct *.swg files
-# but after regeneration these are broken again, so
-# we still need this script
-Source5:	%{name}-convert-typemaps-to-ifdef.py
 Patch0:		%{name}-home_etc.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 Patch4:		x32-libdir.patch
 Patch5:		%{name}-sh.patch
+Patch6:		%{name}-ctypes.patch
+Patch7:		%{name}-perl.patch
+Patch8:		%{name}-swig-py.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.4
@@ -98,8 +100,14 @@ BuildRequires:	libtool >= 2:2
 BuildRequires:	libutf8proc-devel >= 1.3.1-4
 BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
+%if %{with python2}
 BuildRequires:	python >= 1:2.7
 %{?with_csvn:BuildRequires:	python-ctypesgen >= 1.0.2}
+%endif
+%if %{with python3}
+BuildRequires:	python3 >= 1:3.2
+%{?with_csvn:BuildRequires:	python3-ctypesgen >= 1.0.2}
+%endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.752
@@ -118,11 +126,17 @@ BuildRequires:	perl-devel >= 1:5.8.0
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	swig-perl >= 1.3.24
 %endif
-%if %{with python}
+%if %{with python2} || %{with python3}
 BuildRequires:	py3c
-BuildRequires:	python-devel >= 1:2.4
+%endif
+%if %{with python2}
+BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	swig3-python >= 3.0.12
 BuildRequires:	swig3-python < 4.0.0
+%endif
+%if %{with python3}
+BuildRequires:	python3-devel >= 1:3.2
+BuildRequires:	swig-python >= 4.0.0
 %endif
 %if %{with ruby}
 BuildRequires:	rpm-rubyprov
@@ -139,7 +153,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
 %define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
-%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_perl-1.so.* libsvn_fs_x-1.so.*
+%define		skip_post_check_so	libsvn_swig_py-1.so.* libsvn_swig_py2-1.so.* libsvn_swig_perl-1.so.* libsvn_fs_x-1.so.*
 
 %description
 The goal of the Subversion project is to build a version control
@@ -265,9 +279,8 @@ Serwer subversion svnserve.
 Summary:	Subversion tools and scripts
 Summary(pl.UTF-8):	Narzędzia oraz skrypty dla subversion
 Summary(pt_BR.UTF-8):	Módulos python para acessar os recursos do Subversion
-Group:		Applications
+Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
-Requires:	python
 
 %description tools
 Subversion tools and scripts.
@@ -310,39 +323,74 @@ pisaniu klas Javy np. modyfikujących repozytorium Subversion lub kopię
 roboczą. Więcej informacji w pakiecie subversion.
 
 %package -n python-subversion
-Summary:	Subversion Python bindings
-Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona
-Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
+Summary:	Subversion Python 2 bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 2
+Summary(pt_BR.UTF-8):	Módulos Python 2 para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	python
+Requires:	python-modules >= 1:2.7
 Obsoletes:	subversion-python < 0.14.1
 
 %description -n python-subversion
-Subversion Python bindings.
+Subversion Python 2 bindings.
 
 %description -n python-subversion -l pl.UTF-8
-Dowiązania do Subversion dla Pythona.
+Dowiązania do Subversion dla Pythona 2.
 
 %description -n python-subversion -l pt_BR.UTF-8
-Módulos Python para acessar os recursos do Subversion.
+Módulos Python 2 para acessar os recursos do Subversion.
 
 %package -n python-csvn
-Summary:	CTypes Subversion Python bindings
-Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona
-Summary(pt_BR.UTF-8):	Módulos Python para acessar os recursos do Subversion
+Summary:	CTypes Subversion Python 2 bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 2
+Summary(pt_BR.UTF-8):	Módulos Python 2 para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	python
+Requires:	python-modules >= 1:2.7
 
 %description -n python-csvn
-Subversion CTypes Python bindings.
+Subversion CTypes Python 2 bindings.
 
 %description -n python-csvn -l pl.UTF-8
-Dowiązania do Subversion dla Pythona używające CTypes.
+Dowiązania do Subversion dla Pythona 2 używające CTypes.
 
 %description -n python-csvn -l pt_BR.UTF-8
-Módulos Python para acessar os recursos do Subversion.
+Módulos Python 2 para acessar os recursos do Subversion.
+
+%package -n python3-subversion
+Summary:	Subversion Python 3 bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 3
+Summary(pt_BR.UTF-8):	Módulos Python 3 para acessar os recursos do Subversion
+Group:		Development/Languages/Python
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	python3-modules >= 1:3.2
+Obsoletes:	subversion-python < 0.14.1
+
+%description -n python3-subversion
+Subversion Python 3 bindings.
+
+%description -n python3-subversion -l pl.UTF-8
+Dowiązania do Subversion dla Pythona 3.
+
+%description -n python3-subversion -l pt_BR.UTF-8
+Módulos Python 3 para acessar os recursos do Subversion.
+
+%package -n python3-csvn
+Summary:	CTypes Subversion Python 3 bindings
+Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 3
+Summary(pt_BR.UTF-8):	Módulos Python 3 para acessar os recursos do Subversion
+Group:		Development/Languages/Python
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	python3-modules >= 1:3.2
+
+%description -n python3-csvn
+Subversion CTypes Python 3 bindings.
+
+%description -n python3-csvn -l pl.UTF-8
+Dowiązania do Subversion dla Pythona 3 używające CTypes.
+
+%description -n python3-csvn -l pt_BR.UTF-8
+Módulos Python 3 para acessar os recursos do Subversion.
 
 %package -n perl-subversion
 Summary:	Subversion Perl bindings
@@ -457,30 +505,66 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
 
-sed -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
+%{__sed} -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
-sed -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
-	tools/backup/hot-backup.py.in \
-	tools/examples/blame.py \
-	tools/examples/check-modified.py \
-	tools/examples/dumpprops.py \
-	tools/examples/get-location-segments.py \
-	tools/examples/getfile.py \
-	tools/examples/geturl.py \
-	tools/examples/putfile.py \
-	tools/examples/revplist.py \
-	tools/examples/svnlook.py \
-	tools/examples/svnshell.py \
-	tools/examples/walk-config-auth.py
+%{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' tools/backup/hot-backup.py.in
 
 %build
-# disabled regeneration - subversion 1.6.13 is not ready for swig 2.0.x
-#%{__rm} subversion/bindings/swig/proxy/*.swg
-#cd subversion/bindings/swig && python "%{SOURCE5}" && cd ../../..
+# FIXME: don't hide autotools invocation
+# (but this script could do more, e.g. swig regeneration)
 chmod +x ./autogen.sh && ./autogen.sh
-#{__libtoolize}
-%configure \
+%if %{with python2}
+install -d builddir-python2
+cd builddir-python2
+../%configure \
+	ac_cv_path_RUBY=none \
+	--disable-javahl \
+	--disable-mod-activation \
+	--without-apxs \
+	--without-berkeley-db \
+%if %{with csvn}
+	--with-ctypesgen=%{_bindir}/ctypesgen-2 \
+%endif
+	--without-gnome-keyring \
+	--without-kwallet \
+	--with-serf=%{_prefix} \
+	--with-swig=/usr/bin/swig-3 \
+	--with-zlib=%{_libdir}
+
+# required with separate builddir
+install -d subversion/{mod_dav_svn/{posts,reports},po} tools/server-side/mod_dontdothat
+
+%if %{with csvn}
+# Python ctypes bindings
+%{__make} ctypes-python
+%endif
+%if %{with swigpy}
+# Python swig bindings
+%{__make} swig-py \
+	PY_SUF=2 \
+	swig_pydir=%{py_sitedir}/libsvn \
+	swig_pydir_extra=%{py_sitedir}/svn
+%endif
+
+%if %{with tests}
+%if %{with csvn}
+%{__make} -j1 check-ctypes-python
+%endif
+%if %{with swigpy}
+%{__make} -j1 check-swig-py
+%endif
+%endif
+cd ..
+%endif
+
+install -d builddir
+cd builddir
+../%configure \
+	PYTHON=%{__python3} \
 	--disable-mod-activation \
 	--disable-runtime-module-search \
 	--with-apr=%{_bindir}/apr-1-config \
@@ -500,8 +584,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 %else
 	--without-berkeley-db \
 %endif
-%if %{with csvn}
-	--with-ctypesgen=%{_bindir}/ctypesgen-2 \
+%if %{with python3} && %{with csvn}
+	--with-ctypesgen=%{_bindir}/ctypesgen-3 \
 %endif
 %if %{with gnome}
 	--with-gnome-keyring \
@@ -512,8 +596,8 @@ chmod +x ./autogen.sh && ./autogen.sh
 %if %{without swig}
 	--without-swig \
 %endif
-%if %{with python}
-	--with-swig=/usr/bin/swig-3 \
+%if %{with swigpy}
+	--with-swig=/usr/bin/swig \
 %endif
 %if %{with ruby}
 	svn_cv_ruby_sitedir_libsuffix="" \
@@ -534,23 +618,22 @@ chmod +x ./autogen.sh && ./autogen.sh
 
 %{__make} tools
 
+%if %{with python3}
 %if %{with csvn}
 # Python ctypes bindings
 %{__make} ctypes-python
 %endif
-%if %{with python}
+%if %{with swigpy}
 # Python swig bindings
 %{__make} swig-py \
-	swig_pydir=%{py_sitedir}/libsvn \
-	swig_pydir_extra=%{py_sitedir}/svn
+	swig_pydir=%{py3_sitedir}/libsvn \
+	swig_pydir_extra=%{py3_sitedir}/svn
 %endif
+%endif
+
 %if %{with perl}
 # Perl swig bindings
-%{__make} -j1 swig-pl-lib
-cd subversion/bindings/swig/perl/native
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-%{__make} -j1
-cd -
+%{__make} -j1 swig-pl
 %endif
 %if %{with java}
 %{__make} -j1 javahl \
@@ -563,10 +646,10 @@ cd -
 
 %if %{with tests}
 %{__make} -j1 check
-%if %{with csvn}
+%if %{with python3} && %{with csvn}
 %{__make} -j1 check-ctypes-python
 %endif
-%if %{with python}
+%if %{with python3} && %{with swigpy}
 %{__make} -j1 check-swig-py
 %endif
 %if %{with perl}
@@ -582,11 +665,27 @@ cd -
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT{%{apacheconfdir},%{apachelibdir},%{_infodir}} \
-	$RPM_BUILD_ROOT%{_examplesdir}/{%{name}-%{version},python-%{name}-%{version}} \
+	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
-	$RPM_BUILD_ROOT/home/services/subversion{,/repos}
+	$RPM_BUILD_ROOT/home/services/subversion/repos
 
-%{__make} -j1 install \
+%if %{with python2}
+%if %{with csvn}
+%{__make} -C builddir-python2 -j1 install-ctypes-python \
+	DESTDIR=$RPM_BUILD_ROOT \
+	PY_INSTALLOPTS="--install-purelib=%{py_sitescriptdir}"
+%endif
+
+%if %{with swigpy}
+%{__make} -C builddir-python2 -j1 install-swig-py \
+	DESTDIR=$RPM_BUILD_ROOT \
+	PY_SUF=2 \
+	swig_pydir=%{py_sitedir}/libsvn \
+	swig_pydir_extra=%{py_sitedir}/svn
+%endif
+%endif
+
+%{__make} -C builddir -j1 install \
 	pkgconfig_dir=%{_pkgconfigdir} \
 	toolsdir=%{_bindir} \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -595,14 +694,18 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
-%if %{with python}
+%if %{with python3} && %{with csvn}
+	install-ctypes-python \
+	PY_INSTALLOPTS="--install-purelib=%{py3_sitescriptdir}" \
+%endif
+%if %{with python3} && %{with swigpy}
 	install-swig-py \
-	swig_pydir=%{py_sitedir}/libsvn \
-	swig_pydir_extra=%{py_sitedir}/svn \
+	swig_pydir=%{py3_sitedir}/libsvn \
+	swig_pydir_extra=%{py3_sitedir}/svn \
 %endif
 	install-tools
 
-%if %{with csvn}
+%if 0 && %{with csvn}
 # manually execute install-ctypes-python target
 cd subversion/bindings/ctypes-python
 %py_install
@@ -610,7 +713,7 @@ cd ../../..
 %endif
 
 %if %{with ruby}
-%{__make} -j1 install-swig-rb install-swig-rb-doc \
+%{__make} -C builddir -j1 install-swig-rb install-swig-rb-doc \
 	SWIG_RB_RI_DATADIR=$RPM_BUILD_ROOT%{ruby_ridir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
@@ -625,12 +728,8 @@ cd ../../..
 %endif
 
 %if %{with perl}
-%{__make} install-swig-pl-lib \
+%{__make} -C builddir install-swig-pl \
 	DESTDIR=$RPM_BUILD_ROOT
-%{__make} -C subversion/bindings/swig/perl/native install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
-	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 %endif
 
 %if %{with apache}
@@ -641,7 +740,7 @@ install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/svnserve
 %endif
 
 %if %{without net_client_only}
-install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
+install -p builddir/tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %endif
 
 # rename not to conflict with standard packages. (are these needed at all?)
@@ -649,16 +748,25 @@ install -p tools/backup/hot-backup.py $RPM_BUILD_ROOT%{_bindir}/svn-hot-backup
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/{,svn}diff3
 %{__mv} $RPM_BUILD_ROOT%{_bindir}/{,svn}diff4
 
-%if %{with python} || %{with csvn}
+%if %{with python2}
+%if %{with swigpy}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.la
+install -d $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
+cp -p tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
+%{__sed} -i -e '1s,/usr/bin/env python$,%{__python},' $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}/*.py
+%endif
 %py_postclean
 %endif
-%if %{with python}
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.la
-# .a created on ac only
-%{__rm} -f $RPM_BUILD_ROOT%{py_sitedir}/libsvn/*.a
-cp -p tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python-%{name}-%{version}
+
+%if %{with python3} && %{with swigpy}
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}
+%py3_comp $RPM_BUILD_ROOT%{py3_sitedir}
+%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/libsvn/*.la
+install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-%{name}-%{version}
+cp -p tools/examples/*.py $RPM_BUILD_ROOT%{_examplesdir}/python3-%{name}-%{version}
+%{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' $RPM_BUILD_ROOT%{_examplesdir}/python3-%{name}-%{version}/*.py
 %endif
 
 cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{name}
@@ -758,7 +866,8 @@ fi
 %defattr(644,root,root,755)
 %doc BUGS CHANGES INSTALL README
 %doc doc/*/*.html
-%doc tools/hook-scripts/*.{pl,py,example}
+%doc builddir/tools/hook-scripts/*.pl
+%doc tools/hook-scripts/*.{py,example}
 %doc tools/hook-scripts/mailer/*.{py,example}
 %doc tools/xslt/*
 %attr(755,root,root) %{_bindir}/fsfs-stats
@@ -974,13 +1083,13 @@ fi
 %{_javadir}/svn-javahl.jar
 %endif
 
-%if %{with python}
+%if %{with python2}
+%if %{with swigpy}
 %files -n python-subversion
 %defattr(644,root,root,755)
-%doc tools/backup/*.py
-%attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsvn_swig_py-1.so.0
-%attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so
+%attr(755,root,root) %{_libdir}/libsvn_swig_py2-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_swig_py2-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_swig_py2-1.so
 %dir %{py_sitedir}/libsvn
 %attr(755,root,root) %{py_sitedir}/libsvn/_*.so
 %{py_sitedir}/libsvn/*.py[co]
@@ -994,13 +1103,36 @@ fi
 %defattr(644,root,root,755)
 %doc subversion/bindings/ctypes-python/{README,TODO}
 %doc subversion/bindings/ctypes-python/examples/*.py
-%dir %{py_sitescriptdir}/csvn
-%{py_sitescriptdir}/csvn/*.py[co]
-%dir %{py_sitescriptdir}/csvn/core
-%{py_sitescriptdir}/csvn/core/*.py[co]
-%dir %{py_sitescriptdir}/csvn/ext
-%{py_sitescriptdir}/csvn/ext/*.py[co]
+%{py_sitescriptdir}/csvn
 %{py_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
+%endif
+%endif
+
+%if %{with python3}
+%if %{with swigpy}
+%files -n python3-subversion
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsvn_swig_py-1.so.0
+%attr(755,root,root) %{_libdir}/libsvn_swig_py-1.so
+%dir %{py3_sitedir}/libsvn
+%attr(755,root,root) %{py3_sitedir}/libsvn/_*.so
+%{py3_sitedir}/libsvn/*.py
+%{py3_sitedir}/libsvn/__pycache__
+%dir %{py3_sitedir}/svn
+%{py3_sitedir}/svn/*.py
+%{py3_sitedir}/svn/__pycache__
+%{_examplesdir}/python3-%{name}-%{version}
+%endif
+
+%if %{with csvn}
+%files -n python3-csvn
+%defattr(644,root,root,755)
+%doc subversion/bindings/ctypes-python/{README,TODO}
+%doc subversion/bindings/ctypes-python/examples/*.py
+%{py3_sitescriptdir}/csvn
+%{py3_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
+%endif
 %endif
 
 %if %{with perl}
