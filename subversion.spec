@@ -535,16 +535,16 @@ cd builddir-python2
 	--with-swig=/usr/bin/swig-3 \
 	--with-zlib=%{_libdir}
 
-# required with separate builddir
-install -d subversion/{mod_dav_svn/{posts,reports},po} tools/server-side/mod_dontdothat
+# required with separate builddir and only some subcomponents
+install -d subversion/{bindings/swig/python,mod_dav_svn/{posts,reports},po} tools/server-side/mod_dontdothat
 
 %if %{with csvn}
 # Python ctypes bindings
-%{__make} ctypes-python
+%{__make} -j1 ctypes-python
 %endif
 %if %{with swigpy}
 # Python swig bindings
-%{__make} swig-py \
+%{__make} -j1 swig-py \
 	PY_SUF=2 \
 	swig_pydir=%{py_sitedir}/libsvn \
 	swig_pydir_extra=%{py_sitedir}/svn
