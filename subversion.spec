@@ -673,7 +673,8 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %if %{with csvn}
 %{__make} -C builddir-python2 -j1 install-lib install-fsmod-lib install-ctypes-python \
 	DESTDIR=$RPM_BUILD_ROOT \
-	PY_INSTALLOPTS="--install-purelib=%{py_sitescriptdir}"
+	PY_INSTALLOPTS="--install-purelib=%{py_sitescriptdir}" \
+	pkgconfig_dir=%{_pkgconfigdir}
 %endif
 
 %if %{with swigpy}
