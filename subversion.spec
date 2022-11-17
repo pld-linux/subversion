@@ -56,7 +56,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.14.2
-Release:	3
+Release:	4
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -146,7 +146,6 @@ BuildRequires:	ruby-rubygems
 BuildRequires:	swig-ruby >= 3.0.9
 %endif
 Requires:	%{name}-libs = %{version}-%{release}
-%requires_ge	sqlite3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_libexecdir		%{_libdir}/svn
@@ -204,6 +203,7 @@ Group:		Libraries
 Requires:	apr >= 1:1.4
 Requires:	apr-util >= 1:1.3
 Requires:	serf >= 1.3.4
+%requires_ge_to	sqlite3-libs sqlite3-devel
 Requires:	zlib >= 1.2
 Obsoletes:	libsubversion0 < 1
 
