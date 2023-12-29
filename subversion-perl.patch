@@ -4,8 +4,8 @@
  	./config.status subversion/bindings/swig/perl/native/Makefile.PL
  
  $(SWIG_PL_DIR)/native/Makefile: libsvn_swig_perl $(SWIG_PL_DIR)/native/Makefile.PL
--	cd $(SWIG_PL_DIR)/native; $(PERL) Makefile.PL PREFIX=$(prefix)
-+	cd $(SWIG_PL_DIR)/native; $(PERL) Makefile.PL PREFIX=$(prefix) INSTALLDIRS=vendor
+-	cd $(SWIG_PL_DIR)/native; $(SWIG_PL_PERL) Makefile.PL PREFIX=$(prefix)
++	cd $(SWIG_PL_DIR)/native; $(SWIG_PL_PERL) Makefile.PL PREFIX=$(prefix) INSTALLDIRS=vendor
  
  # There is a "readlink -f" command on some systems for the same purpose,
  # but it's not as portable (e.g. Mac OS X doesn't have it).  These should
