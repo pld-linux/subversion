@@ -103,10 +103,12 @@ BuildRequires:	pkgconfig
 %if %{with python2}
 BuildRequires:	python >= 1:2.7
 %{?with_csvn:BuildRequires:	python-ctypesgen >= 1.0.2}
+%{?with_swigpy:BuildRequires:	python-modules >= 1:2.7}
 %endif
 %if %{with python3}
 BuildRequires:	python3 >= 1:3.2
 %{?with_csvn:BuildRequires:	python3-ctypesgen >= 1.0.2}
+%{?with_swigpy:BuildRequires:	python3-modules >= 1:3.2}
 %endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
