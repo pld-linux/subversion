@@ -49,7 +49,7 @@
 %define	pdir	SVN
 %define	pnam	_Core
 
-%define		use_jdk		openjdk8
+%{?with_java:%{?use_default_jdk}}
 
 Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
@@ -112,7 +112,7 @@ BuildRequires:	python3 >= 1:3.2
 %endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.021
 BuildRequires:	sed >= 4.0
 BuildRequires:	serf-devel >= 1.3.4
 BuildRequires:	sqlite3-devel >= 3.8.11.1
@@ -120,7 +120,7 @@ BuildRequires:	texinfo
 BuildRequires:	which
 BuildRequires:	zlib-devel >= 1.2
 %if %{with java}
-BuildRequires:	openjdk8-jdk-base
+%buildrequires_jdk
 BuildRequires:	libstdc++-devel >= 6:4.7
 %endif
 %if %{with perl}
