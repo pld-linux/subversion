@@ -814,6 +814,9 @@ rm -rf $RPM_BUILD_ROOT
 %post	-n python-subversion -p /sbin/ldconfig
 %postun	-n python-subversion -p /sbin/ldconfig
 
+%post	-n python3-subversion -p /sbin/ldconfig
+%postun	-n python3-subversion -p /sbin/ldconfig
+
 %post	-n ruby-subversion -p /sbin/ldconfig
 %postun	-n ruby-subversion -p /sbin/ldconfig
 
