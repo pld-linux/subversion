@@ -17,6 +17,7 @@
 %bcond_without	gnome			# GNOME keyring support
 %bcond_without	db			# Subversion Berkeley DB based filesystem library
 %bcond_with	db6			# allow BDB6 (not tested by upstream, released on AGPL)
+%bcond_without	static_libs		# static libraries
 
 %if %{with net_client_only}
 %undefine	with_apache
@@ -526,6 +527,7 @@ cd builddir-python2
 	ac_cv_path_RUBY=none \
 	--disable-javahl \
 	--disable-mod-activation \
+	%{__enable_disable static_libs static} \
 	--without-apxs \
 	--without-berkeley-db \
 %if %{with csvn}
@@ -569,6 +571,7 @@ cd builddir
 	PYTHON=%{__python3} \
 	--disable-mod-activation \
 	--disable-runtime-module-search \
+	%{__enable_disable static_libs static} \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-apr-util=%{_bindir}/apu-1-config \
 	--with-editor=vi \
@@ -776,10 +779,12 @@ cp -p tools/client-side/bash_completion $RPM_BUILD_ROOT/etc/bash_completion.d/%{
 cp -p tools/examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %if %{with java}
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.la
+%{?with_static_libs:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvnjavahl*.a}
 %endif
 %if %{with swig}
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.la
+%{?with_static_libs:%{__rm} $RPM_BUILD_ROOT%{_libdir}/libsvn_swig*.a}
 %if %{with ruby}
 %{__rm} $RPM_BUILD_ROOT%{ruby_vendorarchdir}/svn/ext/*.la
 %endif
@@ -997,6 +1002,7 @@ fi
 %{_includedir}/%{name}-1
 %{_examplesdir}/%{name}-%{version}
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libsvn_client-1.a
@@ -1016,6 +1022,7 @@ fi
 %{_libdir}/libsvn_repos-1.a
 %{_libdir}/libsvn_subr-1.a
 %{_libdir}/libsvn_wc-1.a
+%endif
 
 %if %{with gnome}
 %files -n gnome-keyring-subversion
