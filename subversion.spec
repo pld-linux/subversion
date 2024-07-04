@@ -516,10 +516,13 @@ uwierzytelniać się przy użyciu Portfela KDE.
 
 %{__sed} -i -e '1s,/usr/bin/env python$,%{__python3},' tools/backup/hot-backup.py.in
 
+# force swig regeneration
+touch build/generator/swig/*.py
+
 %build
 # FIXME: don't hide autotools invocation
 # (but this script could do more, e.g. swig regeneration)
-chmod +x ./autogen.sh && ./autogen.sh
+chmod +x ./autogen.sh && ./autogen.sh --release
 %if %{with python2}
 install -d builddir-python2
 cd builddir-python2
@@ -626,7 +629,7 @@ cd builddir
 %if %{with python3}
 %if %{with csvn}
 # Python ctypes bindings
-%{__make} ctypes-python
+%{__make} -j1 ctypes-python
 %endif
 %if %{with swigpy}
 # Python swig bindings
