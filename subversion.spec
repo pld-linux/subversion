@@ -57,7 +57,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.14.3
-Release:	4
+Release:	5
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -522,11 +522,12 @@ touch build/generator/swig/*.py
 %build
 # FIXME: don't hide autotools invocation
 # (but this script could do more, e.g. swig regeneration)
-chmod +x ./autogen.sh && ./autogen.sh --release
+chmod +x ./autogen.sh && PYTHON=%{__python} ./autogen.sh --release
 %if %{with python2}
 install -d builddir-python2
 cd builddir-python2
 ../%configure \
+	PYTHON=%{__python} \
 	ac_cv_path_RUBY=none \
 	--disable-javahl \
 	--disable-mod-activation \
