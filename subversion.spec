@@ -56,12 +56,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.14.3
-Release:	5
+Version:	1.14.4
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	19756a5ceb32a022698a66e48616ef6b
+# Source0-md5:	be9f6c5e8bb80e465152b4c5160d7f54
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -520,6 +520,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 touch build/generator/swig/*.py
 
 %build
+%{__sed} -i -e 's/^swig-languages[[:space:]]*=.*/swig-languages =%{?with_swigpy: python}%{?with_perl: perl}%{?with_ruby: ruby}/' build.conf
 # FIXME: don't hide autotools invocation
 # (but this script could do more, e.g. swig regeneration)
 chmod +x ./autogen.sh && PYTHON=%{__python} ./autogen.sh --release
