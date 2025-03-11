@@ -502,15 +502,15 @@ uwierzytelniać się przy użyciu Portfela KDE.
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p1
-%patch2 -p0
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
+%patch -P 0 -p0
+%patch -P 1 -p1
+%patch -P 2 -p0
+%patch -P 3 -p1
+%patch -P 4 -p1
+%patch -P 5 -p1
+%patch -P 6 -p1
+%patch -P 7 -p1
+%patch -P 8 -p1
 
 %{__sed} -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
