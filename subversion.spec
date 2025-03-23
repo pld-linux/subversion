@@ -57,7 +57,7 @@ Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
 Version:	1.14.5
-Release:	3
+Release:	4
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
@@ -113,7 +113,7 @@ BuildRequires:	python3 >= 1:3.2
 %endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 2.021
+BuildRequires:	rpmbuild(macros) >= 2.043
 BuildRequires:	sed >= 4.0
 BuildRequires:	serf-devel >= 1.3.4
 BuildRequires:	sqlite3-devel >= 3.8.11.1
@@ -527,7 +527,8 @@ chmod +x ./autogen.sh && PYTHON=%{__python} ./autogen.sh --release
 %if %{with python2}
 install -d builddir-python2
 cd builddir-python2
-../%configure \
+%define configuredir ..
+%configure \
 	PYTHON=%{__python} \
 	ac_cv_path_RUBY=none \
 	--disable-javahl \
@@ -572,7 +573,8 @@ cd ..
 
 install -d builddir
 cd builddir
-../%configure \
+%define configuredir ..
+%configure \
 	PYTHON=%{__python3} \
 	--disable-mod-activation \
 	--disable-runtime-module-search \
