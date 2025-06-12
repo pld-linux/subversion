@@ -98,7 +98,6 @@ BuildRequires:	gettext-tools
 %{?with_gnome:BuildRequires:	libsecret-devel}
 BuildRequires:	libmagic-devel
 BuildRequires:	libtool >= 2:2
-BuildRequires:	libutf8proc-devel >= 1.3.1-4
 BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
 %if %{with python2}
@@ -118,6 +117,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	serf-devel >= 1.3.4
 BuildRequires:	sqlite3-devel >= 3.8.11.1
 BuildRequires:	texinfo
+BuildRequires:	utf8proc-devel >= 1.3.1-4
 BuildRequires:	which
 BuildRequires:	zlib-devel >= 1.2
 %if %{with java}
@@ -223,8 +223,8 @@ Summary(pt_BR.UTF-8):	Arquivos de desenvolvimento para o Subversion
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	apr-util-devel >= 1:1.3
-Requires:	libutf8proc-devel >= 1.3.1-4
 Requires:	serf-devel >= 1.3.4
+Requires:	utf8proc-devel >= 1.3.1-4
 Obsoletes:	libsubversion0-devel < 1
 
 %description devel
