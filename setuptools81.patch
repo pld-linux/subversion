@@ -1,0 +1,15 @@
+--- subversion-1.14.5/subversion/bindings/ctypes-python/setup.py.orig	2013-05-05 15:57:03.000000000 +0200
++++ subversion-1.14.5/subversion/bindings/ctypes-python/setup.py	2026-07-26 23:17:12.574187631 +0200
+@@ -112,12 +112,6 @@
+   def finalize_options (self):
+     _build.finalize_options(self)
+ 
+-    # Distutils doesn't appear to like when you have --dry-run after the build
+-    # build command so fail out if this is the case.
+-    if self.dry_run != self.distribution.dry_run:
+-      raise DistutilsOptionError("The --dry-run flag must be specified " \
+-                                 "before the 'build' command")
+-
+   # finalize_options()
+ 
+   ##############################################################################

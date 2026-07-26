@@ -75,6 +75,7 @@ Patch5:		%{name}-sh.patch
 Patch6:		%{name}-ctypes.patch
 Patch7:		%{name}-perl.patch
 Patch8:		%{name}-swig-py.patch
+Patch9:		setuptools81.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.4
@@ -511,6 +512,7 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch -P 6 -p1
 %patch -P 7 -p1
 %patch -P 8 -p1
+%patch -P 9 -p1
 
 %{__sed} -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
