@@ -1,11 +1,10 @@
 #
 # Conditional build:
-%bcond_with	net_client_only		# only net client (disables: apache db swig java csvn gnome kde)
+%bcond_with	net_client_only		# only net client (disables: apache db swig java gnome kde)
 %bcond_without	swig			# swig-based bindings (perl python ruby)
 %bcond_without	python			# Python bindings (any)
 %bcond_without	python2			# CPython 2.x bindings
 %bcond_without	python3			# CPython 3.x bindings
-%bcond_without	csvn			# Python csvn bindings
 %bcond_without	swigpy			# Python swig bindings
 %bcond_without	perl			# Perl bindings
 %bcond_with	ruby			# Ruby bindings
@@ -24,7 +23,6 @@
 %undefine	with_db
 %undefine	with_swig
 %undefine	with_java
-%undefine	with_csvn
 %undefine	with_gnome
 %undefine	with_kde
 %endif
@@ -39,7 +37,6 @@
 %if %{without python}
 %undefine	with_python2
 %undefine	with_python3
-%undefine	with_csvn
 %undefine	with_swigpy
 %endif
 %if %{without swigpy} && %{without perl} && %{without ruby}
@@ -56,12 +53,12 @@ Summary:	A Concurrent Versioning system similar to but better than CVS
 Summary(pl.UTF-8):	System kontroli wersji podobny, ale lepszy, niż CVS
 Summary(pt_BR.UTF-8):	Sistema de versionamento concorrente
 Name:		subversion
-Version:	1.14.5
-Release:	7
+Version:	1.15.0
+Release:	1
 License:	Apache v2.0
 Group:		Development/Version Control
 Source0:	https://www.apache.org/dist/subversion/%{name}-%{version}.tar.bz2
-# Source0-md5:	af6001dc7af2f1242a4f72e8a5c565d2
+# Source0-md5:	7585618067e2780b7501020fa904bb3a
 Source1:	%{name}-dav_svn.conf
 Source2:	%{name}-authz_svn.conf
 Source3:	%{name}-svnserve.init
@@ -72,10 +69,8 @@ Patch2:		%{name}-ruby-datadir-path.patch
 Patch3:		%{name}-tests.patch
 Patch4:		x32-libdir.patch
 Patch5:		%{name}-sh.patch
-Patch6:		%{name}-ctypes.patch
 Patch7:		%{name}-perl.patch
 Patch8:		%{name}-swig-py.patch
-Patch9:		setuptools81.patch
 URL:		http://subversion.apache.org/
 %{?with_apache:BuildRequires:	apache-devel >= 2.4.14}
 BuildRequires:	apr-devel >= 1:1.4
@@ -103,12 +98,10 @@ BuildRequires:	lz4-devel
 BuildRequires:	pkgconfig
 %if %{with python2}
 BuildRequires:	python >= 1:2.7
-%{?with_csvn:BuildRequires:	python-ctypesgen >= 1.0.2}
 %{?with_swigpy:BuildRequires:	python-modules >= 1:2.7}
 %endif
 %if %{with python3}
 BuildRequires:	python3 >= 1:3.2
-%{?with_csvn:BuildRequires:	python3-ctypesgen >= 1.0.2}
 %{?with_swigpy:BuildRequires:	python3-modules >= 1:3.2}
 %endif
 BuildRequires:	rpm-build >= 4.6
@@ -116,13 +109,14 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 2.043
 BuildRequires:	sed >= 4.0
 BuildRequires:	serf-devel >= 1.3.4
-BuildRequires:	sqlite3-devel >= 3.8.11.1
+BuildRequires:	sqlite3-devel >= 3.39.4
 BuildRequires:	texinfo
 BuildRequires:	utf8proc-devel >= 1.3.1-4
 BuildRequires:	which
 BuildRequires:	zlib-devel >= 1.2
 %if %{with java}
 %buildrequires_jdk
+BuildRequires:	java-junit
 BuildRequires:	libstdc++-devel >= 6:4.7
 %endif
 %if %{with perl}
@@ -333,6 +327,7 @@ Summary(pt_BR.UTF-8):	Módulos Python 2 para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	python-modules >= 1:2.7
+Obsoletes:	python-csvn < 1.15.0
 Obsoletes:	subversion-python < 0.14.1
 
 %description -n python-subversion
@@ -344,23 +339,6 @@ Dowiązania do Subversion dla Pythona 2.
 %description -n python-subversion -l pt_BR.UTF-8
 Módulos Python 2 para acessar os recursos do Subversion.
 
-%package -n python-csvn
-Summary:	CTypes Subversion Python 2 bindings
-Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 2
-Summary(pt_BR.UTF-8):	Módulos Python 2 para acessar os recursos do Subversion
-Group:		Development/Languages/Python
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	python-modules >= 1:2.7
-
-%description -n python-csvn
-Subversion CTypes Python 2 bindings.
-
-%description -n python-csvn -l pl.UTF-8
-Dowiązania do Subversion dla Pythona 2 używające CTypes.
-
-%description -n python-csvn -l pt_BR.UTF-8
-Módulos Python 2 para acessar os recursos do Subversion.
-
 %package -n python3-subversion
 Summary:	Subversion Python 3 bindings
 Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 3
@@ -368,6 +346,7 @@ Summary(pt_BR.UTF-8):	Módulos Python 3 para acessar os recursos do Subversion
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	python3-modules >= 1:3.2
+Obsoletes:	python3-csvn < 1.15.0
 Obsoletes:	subversion-python < 0.14.1
 
 %description -n python3-subversion
@@ -377,23 +356,6 @@ Subversion Python 3 bindings.
 Dowiązania do Subversion dla Pythona 3.
 
 %description -n python3-subversion -l pt_BR.UTF-8
-Módulos Python 3 para acessar os recursos do Subversion.
-
-%package -n python3-csvn
-Summary:	CTypes Subversion Python 3 bindings
-Summary(pl.UTF-8):	Dowiązania do Subversion dla Pythona 3
-Summary(pt_BR.UTF-8):	Módulos Python 3 para acessar os recursos do Subversion
-Group:		Development/Languages/Python
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	python3-modules >= 1:3.2
-
-%description -n python3-csvn
-Subversion CTypes Python 3 bindings.
-
-%description -n python3-csvn -l pl.UTF-8
-Dowiązania do Subversion dla Pythona 3 używające CTypes.
-
-%description -n python3-csvn -l pt_BR.UTF-8
 Módulos Python 3 para acessar os recursos do Subversion.
 
 %package -n perl-subversion
@@ -509,10 +471,8 @@ uwierzytelniać się przy użyciu Portfela KDE.
 %patch -P 3 -p1
 %patch -P 4 -p1
 %patch -P 5 -p1
-%patch -P 6 -p1
 %patch -P 7 -p1
 %patch -P 8 -p1
-%patch -P 9 -p1
 
 %{__sed} -i -e 's#serf_prefix/lib#serf_prefix/%{_lib}#g' build/ac-macros/serf.m4
 
@@ -538,22 +498,14 @@ cd builddir-python2
 	%{__enable_disable static_libs static} \
 	--without-apxs \
 	--without-berkeley-db \
-%if %{with csvn}
-	--with-ctypesgen=%{_bindir}/ctypesgen-2 \
-%endif
 	--without-gnome-keyring \
 	--without-kwallet \
 	--with-serf=%{_prefix} \
-	--with-swig=/usr/bin/swig-3 \
 	--with-zlib=%{_libdir}
 
 # required with separate builddir and only some subcomponents
 install -d subversion/{bindings/swig/python,mod_dav_svn/{posts,reports},po} tools/server-side/mod_dontdothat
 
-%if %{with csvn}
-# Python ctypes bindings
-%{__make} -j1 ctypes-python
-%endif
 %if %{with swigpy}
 # Python swig bindings
 %{__make} -j1 swig-py \
@@ -563,9 +515,6 @@ install -d subversion/{bindings/swig/python,mod_dav_svn/{posts,reports},po} tool
 %endif
 
 %if %{with tests}
-%if %{with csvn}
-%{__make} -j1 check-ctypes-python
-%endif
 %if %{with swigpy}
 %{__make} -j1 check-swig-py
 %endif
@@ -598,9 +547,6 @@ cd builddir
 %else
 	--without-berkeley-db \
 %endif
-%if %{with python3} && %{with csvn}
-	--with-ctypesgen=%{_bindir}/ctypesgen-3 \
-%endif
 %if %{with gnome}
 	--with-gnome-keyring \
 %endif
@@ -609,9 +555,6 @@ cd builddir
 %endif
 %if %{without swig}
 	--without-swig \
-%endif
-%if %{with swigpy}
-	--with-swig=/usr/bin/swig \
 %endif
 %if %{with ruby}
 	svn_cv_ruby_sitedir_libsuffix="" \
@@ -624,6 +567,7 @@ cd builddir
 	--enable-javahl \
 	--with-jdk="%{java_home}" \
 	--without-jikes \
+	--with-junit=%{_javadir}/junit.jar \
 %else
 	--disable-javahl \
 %endif
@@ -633,10 +577,6 @@ cd builddir
 %{__make} tools
 
 %if %{with python3}
-%if %{with csvn}
-# Python ctypes bindings
-%{__make} -j1 ctypes-python
-%endif
 %if %{with swigpy}
 # Python swig bindings
 %{__make} swig-py \
@@ -660,9 +600,6 @@ cd builddir
 
 %if %{with tests}
 %{__make} -j1 check
-%if %{with python3} && %{with csvn}
-%{__make} -j1 check-ctypes-python
-%endif
 %if %{with python3} && %{with swigpy}
 %{__make} -j1 check-swig-py
 %endif
@@ -683,23 +620,6 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
 	$RPM_BUILD_ROOT/home/services/subversion/repos
 
-%if %{with python2}
-%if %{with csvn}
-%{__make} -C builddir-python2 -j1 install-lib install-fsmod-lib install-ctypes-python \
-	DESTDIR=$RPM_BUILD_ROOT \
-	PY_INSTALLOPTS="--install-purelib=%{py_sitescriptdir}" \
-	pkgconfig_dir=%{_pkgconfigdir}
-%endif
-
-%if %{with swigpy}
-%{__make} -C builddir-python2 -j1 install-swig-py \
-	DESTDIR=$RPM_BUILD_ROOT \
-	PY_SUF=2 \
-	swig_pydir=%{py_sitedir}/libsvn \
-	swig_pydir_extra=%{py_sitedir}/svn
-%endif
-%endif
-
 %{__make} -C builddir -j1 install \
 	pkgconfig_dir=%{_pkgconfigdir} \
 	toolsdir=%{_bindir} \
@@ -709,10 +629,6 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 	install-javahl \
 	javahl_javadir="%{_javadir}" \
 %endif
-%if %{with python3} && %{with csvn}
-	install-ctypes-python \
-	PY_INSTALLOPTS="--install-purelib=%{py3_sitescriptdir}" \
-%endif
 %if %{with python3} && %{with swigpy}
 	install-swig-py \
 	swig_pydir=%{py3_sitedir}/libsvn \
@@ -720,11 +636,14 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig,bash_completion.d} \
 %endif
 	install-tools
 
-%if 0 && %{with csvn}
-# manually execute install-ctypes-python target
-cd subversion/bindings/ctypes-python
-%py_install
-cd ../../..
+%if %{with python2}
+%if %{with swigpy}
+%{__make} -C builddir-python2 -j1 install-swig-py \
+	DESTDIR=$RPM_BUILD_ROOT \
+	PY_SUF=2 \
+	swig_pydir=%{py_sitedir}/libsvn \
+	swig_pydir_extra=%{py_sitedir}/svn
+%endif
 %endif
 
 %if %{with ruby}
@@ -897,7 +816,6 @@ fi
 %attr(755,root,root) %{_bindir}/svnconflict
 %attr(755,root,root) %{_bindir}/svndumpfilter
 %attr(755,root,root) %{_bindir}/svnlook
-%attr(755,root,root) %{_bindir}/svnmover
 %attr(755,root,root) %{_bindir}/svnmucc
 %attr(755,root,root) %{_bindir}/svnrdump
 %attr(755,root,root) %{_bindir}/svnsync
@@ -1120,14 +1038,6 @@ fi
 %{_examplesdir}/python-%{name}-%{version}
 %endif
 
-%if %{with csvn}
-%files -n python-csvn
-%defattr(644,root,root,755)
-%doc subversion/bindings/ctypes-python/{README,TODO}
-%doc subversion/bindings/ctypes-python/examples/*.py
-%{py_sitescriptdir}/csvn
-%{py_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
-%endif
 %endif
 
 %if %{with python3}
@@ -1147,14 +1057,6 @@ fi
 %{_examplesdir}/python3-%{name}-%{version}
 %endif
 
-%if %{with csvn}
-%files -n python3-csvn
-%defattr(644,root,root,755)
-%doc subversion/bindings/ctypes-python/{README,TODO}
-%doc subversion/bindings/ctypes-python/examples/*.py
-%{py3_sitescriptdir}/csvn
-%{py3_sitescriptdir}/svn_ctypes_python_bindings-0.1-py*.egg-info
-%endif
 %endif
 
 %if %{with perl}

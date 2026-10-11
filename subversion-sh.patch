@@ -3,7 +3,7 @@
 @@ -83,11 +83,11 @@ AC_DEFUN(SVN_FIND_SWIG,
      # the minor is zero padded to two places,
      # and the patch level is zero padded to three places.
-     # e.g. 1.3.24 becomes 103024
+     # e.g. 1.3.40 becomes 103040
 -    SWIG_VERSION="`echo \"$SWIG_VERSION_RAW\" | \
 +    SWIG_VERSION="$(echo "$SWIG_VERSION_RAW" | \
                    $SED -e 's/[[^0-9\.]].*$//' \

@@ -8,4 +8,4 @@
 +SWIG_RB_RI_DATADIR = $(DESTDIR)$(datadir)/ri/$(RUBY_MAJOR).$(RUBY_MINOR)/system
  SWIG_RB_ERRMSG = @SWIG_RB_ERRMSG@
  
- CTYPESGEN = @CTYPESGEN@
+ JAVAHL_JAR=subversion/bindings/javahl/svn-javahl.jar

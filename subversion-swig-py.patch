@@ -1,6 +1,6 @@
---- subversion-1.14.2/build-outputs.mk.orig	2022-04-02 13:38:35.000000000 +0200
-+++ subversion-1.14.2/build-outputs.mk	2022-07-15 16:27:35.677946147 +0200
-@@ -538,8 +538,8 @@ subversion/bindings/swig/perl/libsvn_swi
+--- subversion-1.15.0/build-outputs.mk.orig	2026-09-24 12:40:22.000000000 +0200
++++ subversion-1.15.0/build-outputs.mk	2026-10-09 14:06:26.688135305 +0200
+@@ -548,8 +548,8 @@
  libsvn_swig_py_PATH = subversion/bindings/swig/python/libsvn_swig_py
  libsvn_swig_py_DEPS = subversion/bindings/swig/python/libsvn_swig_py/swigutil_py.lo subversion/libsvn_client/libsvn_client-1.la subversion/libsvn_wc/libsvn_wc-1.la subversion/libsvn_ra/libsvn_ra-1.la subversion/libsvn_delta/libsvn_delta-1.la subversion/libsvn_subr/libsvn_subr-1.la
  libsvn_swig_py_OBJECTS = swigutil_py.lo
@@ -11,7 +11,7 @@
  
  libsvn_swig_ruby_PATH = subversion/bindings/swig/ruby/libsvn_swig_ruby
  libsvn_swig_ruby_DEPS = subversion/bindings/swig/ruby/libsvn_swig_ruby/swigutil_rb.lo subversion/libsvn_client/libsvn_client-1.la subversion/libsvn_wc/libsvn_wc-1.la subversion/libsvn_delta/libsvn_delta-1.la subversion/libsvn_subr/libsvn_subr-1.la
-@@ -714,52 +714,52 @@ subversion/tests/libsvn_wc/pristine-stor
+@@ -724,49 +724,49 @@
  	cd subversion/tests/libsvn_wc && $(LINK) $(pristine_store_test_LDFLAGS) -o pristine-store-test$(EXEEXT)  $(pristine_store_test_OBJECTS) ../../../subversion/libsvn_client/libsvn_client-1.la ../../../subversion/tests/libsvn_test-1.la ../../../subversion/libsvn_wc/libsvn_wc-1.la ../../../subversion/libsvn_subr/libsvn_subr-1.la $(SVN_APRUTIL_LIBS) $(SVN_APR_LIBS) $(LIBS)
  
  python_client_PATH = subversion/bindings/swig/python
@@ -75,12 +75,8 @@
 +python_wc_DEPS = subversion/bindings/swig/python/svn_wc.lo subversion/bindings/swig/python/libsvn_swig_py/libsvn_swig_py$(PY_SUF)-1.la subversion/libsvn_wc/libsvn_wc-1.la subversion/libsvn_subr/libsvn_subr-1.la subversion/bindings/swig/python/_core.la
  python_wc_OBJECTS = svn_wc.lo
  subversion/bindings/swig/python/_wc.la: $(python_wc_DEPS)
--	cd subversion/bindings/swig/python && $(LINK_PY_WRAPPER) $(python_wc_LDFLAGS) -o _wc.la $(LT_NO_UNDEFINED) $(python_wc_OBJECTS) ../../../../subversion/bindings/swig/python/libsvn_swig_py/libsvn_swig_py-1.la ../../../../subversion/libsvn_wc/libsvn_wc-1.la ../../../../subversion/libsvn_subr/libsvn_subr-1.la $(SVN_APR_LIBS) $(LIBS)
-+	cd subversion/bindings/swig/python && $(LINK_PY_WRAPPER) $(python_wc_LDFLAGS) -o _wc.la $(LT_NO_UNDEFINED) $(python_wc_OBJECTS) ../../../../subversion/bindings/swig/python/libsvn_swig_py/libsvn_swig_py$(PY_SUF)-1.la ../../../../subversion/libsvn_wc/libsvn_wc-1.la ../../../../subversion/libsvn_subr/libsvn_subr-1.la $(SVN_APR_LIBS) $(LIBS)
- 
- ra_local_test_PATH = subversion/tests/libsvn_ra_local
- ra_local_test_DEPS = subversion/tests/libsvn_ra_local/ra-local-test.lo subversion/tests/libsvn_test-1.la subversion/libsvn_ra_local/libsvn_ra_local-1.la subversion/libsvn_ra/libsvn_ra-1.la subversion/libsvn_fs/libsvn_fs-1.la subversion/libsvn_delta/libsvn_delta-1.la subversion/libsvn_subr/libsvn_subr-1.la
-@@ -1152,7 +1152,7 @@ swig-pl-lib: subversion/bindings/swig/pe
+ 	cd subversion/bindings/swig/python && $(LINK_PY_WRAPPER) $(python_wc_LDFLAGS) -o _wc.la $(LT_NO_UNDEFINED) $(python_wc_OBJECTS) ../../../../subversion/bindings/swig/python/libsvn_swig_py/libsvn_swig_py-1.la ../../../../subversion/libsvn_wc/libsvn_wc-1.la ../../../../subversion/libsvn_subr/libsvn_subr-1.la $(SVN_APR_LIBS) $(LIBS)
+@@ -1162,7 +1162,7 @@
  
  swig-py: subversion/bindings/swig/python/_client.la subversion/bindings/swig/python/_core.la subversion/bindings/swig/python/_delta.la subversion/bindings/swig/python/_diff.la subversion/bindings/swig/python/_fs.la subversion/bindings/swig/python/_ra.la subversion/bindings/swig/python/_repos.la subversion/bindings/swig/python/_wc.la
  
@@ -89,7 +85,7 @@
  
  swig-rb: subversion/bindings/swig/ruby/client.la subversion/bindings/swig/ruby/core.la subversion/bindings/swig/ruby/delta.la subversion/bindings/swig/ruby/diff.la subversion/bindings/swig/ruby/fs.la subversion/bindings/swig/ruby/ra.la subversion/bindings/swig/ruby/repos.la subversion/bindings/swig/ruby/wc.la
  
-@@ -1358,9 +1358,9 @@ install-swig-py: subversion/bindings/swi
+@@ -1368,9 +1368,9 @@
  	
  	$(INSTALL_EXTRA_SWIG_PY)
  
@@ -101,7 +97,7 @@
  	
  
  install-swig-rb: subversion/bindings/swig/ruby/core.la subversion/bindings/swig/ruby/client.la subversion/bindings/swig/ruby/delta.la subversion/bindings/swig/ruby/diff.la subversion/bindings/swig/ruby/fs.la subversion/bindings/swig/ruby/ra.la subversion/bindings/swig/ruby/repos.la subversion/bindings/swig/ruby/wc.la
-@@ -1530,7 +1530,7 @@ libsvn_ra_svn: subversion/libsvn_ra_svn/
+@@ -1538,7 +1538,7 @@
  libsvn_repos: subversion/libsvn_repos/libsvn_repos-1.la
  libsvn_subr: subversion/libsvn_subr/libsvn_subr-1.la
  libsvn_swig_perl: subversion/bindings/swig/perl/libsvn_swig_perl/libsvn_swig_perl-1.la
