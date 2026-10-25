@@ -840,7 +840,7 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libsvn_diff-1.so.0
 %attr(755,root,root) %{_libdir}/libsvn_fs-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs-1.so.0
-%if %{without net_client_only}
+%if %{without net_client_only} && %{with db}
 %attr(755,root,root) %{_libdir}/libsvn_fs_base-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libsvn_fs_base-1.so.0
 %endif
@@ -871,7 +871,7 @@ fi
 %attr(755,root,root) %{_libdir}/libsvn_delta-1.so
 %attr(755,root,root) %{_libdir}/libsvn_diff-1.so
 %attr(755,root,root) %{_libdir}/libsvn_fs-1.so
-%if %{without net_client_only}
+%if %{without net_client_only} && %{with db}
 %attr(755,root,root) %{_libdir}/libsvn_fs_base-1.so
 %endif
 %attr(755,root,root) %{_libdir}/libsvn_fs_fs-1.so
@@ -888,7 +888,7 @@ fi
 %{_libdir}/libsvn_delta-1.la
 %{_libdir}/libsvn_diff-1.la
 %{_libdir}/libsvn_fs-1.la
-%if %{without net_client_only}
+%if %{without net_client_only} && %{with db}
 %{_libdir}/libsvn_fs_base-1.la
 %endif
 %{_libdir}/libsvn_fs_fs-1.la
@@ -913,7 +913,7 @@ fi
 %{_pkgconfigdir}/libsvn_delta.pc
 %{_pkgconfigdir}/libsvn_diff.pc
 %{_pkgconfigdir}/libsvn_fs.pc
-%if %{without net_client_only}
+%if %{without net_client_only} && %{with db}
 %{_pkgconfigdir}/libsvn_fs_base.pc
 %endif
 %{_pkgconfigdir}/libsvn_fs_fs.pc
@@ -936,7 +936,7 @@ fi
 %{_libdir}/libsvn_delta-1.a
 %{_libdir}/libsvn_diff-1.a
 %{_libdir}/libsvn_fs-1.a
-%if %{without net_client_only}
+%if %{without net_client_only} && %{with db}
 %{_libdir}/libsvn_fs_base-1.a
 %endif
 %{_libdir}/libsvn_fs_fs-1.a
